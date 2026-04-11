@@ -18,6 +18,26 @@ export interface AIResponse {
 }
 
 /**
+ * 结构化 AI 响应 - 支持卡片和链接
+ */
+export interface StructuredAIResponse {
+  text: string;              // AI 文本回复
+  recommendations?: {
+    type: 'attraction' | 'restaurant' | 'transport' | 'hotel';
+    id: string;              // 本地数据 ID
+    name: string;            // 名称
+    nameEn?: string;         // 英文名
+    reason: string;          // 推荐理由
+  }[];
+  actions?: {
+    type: 'book' | 'navigate' | 'info';
+    provider: 'klook' | 'trip' | 'amap' | 'didi' | 'meituan';
+    url: string;             // 链接
+    text: string;            // 按钮文字
+  }[];
+}
+
+/**
  * 旅行规划 Prompt 模板
  */
 const PROMPT_TEMPLATES = {
@@ -152,6 +172,29 @@ function detectIntent(message: string): string {
 }
 
 /**
+ * 解析 AI 响应 - 提取 JSON 结构化数据
+ */
+export function parseAIResponse(content: string): StructuredAIResponse {
+  // 尝试提取 JSON
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    try {
+      const parsed = JSON.parse(jsonMatch[0]);
+      return {
+        text: parsed.text || content,
+        recommendations: parsed.recommendations || [],
+        actions: parsed.actions || []
+      };
+    } catch (e) {
+      // JSON 解析失败，返回纯文本
+      return { text: content };
+    }
+  }
+  // 纯文本 fallback
+  return { text: content };
+}
+
+/**
  * 发送消息到 MiniMax AI
  */
 export async function sendToAI(
@@ -160,6 +203,7 @@ export async function sendToAI(
     intent?: string;
     variables?: Record<string, string>;
     language?: string;
+    structured?: boolean;  // 是否要求结构化响应
   }
 ): Promise<AIResponse> {
   // 如果没有 API Key，返回 Mock 回复
@@ -182,14 +226,19 @@ export async function sendToAI(
     }
 
     // 构建 API 请求
+    const systemMessage = {
+      role: 'system' as const,
+      content: systemPrompt + (options?.structured ? '\n\n请用 JSON 格式回复，包含 text, recommendations, actions 字段。' : '')
+    };
+    
     const requestBody = {
       model: 'MiniMax-M2.7',
       messages: [
-        { role: 'system', content: systemPrompt },
+        systemMessage,
         ...messages,
       ],
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 1500,
     };
 
     // 发送请求

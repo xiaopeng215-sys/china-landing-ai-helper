@@ -1,12 +1,20 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { generateAllLinks, type BookingLink } from '@/lib/booking-links';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  cards?: Array<{
+    type: 'attraction' | 'restaurant' | 'transport';
+    title: string;
+    description: string;
+    image?: string;
+  }>;
+  links?: BookingLink[];
 }
 
 export default function ChatView() {
@@ -45,17 +53,14 @@ export default function ChatView() {
     setIsTyping(true);
 
     try {
-      // 调用 OpenClaw 后端（通过 Gateway）
-      const response = await fetch('http://127.0.0.1:18789/api/chat', {
+      // 调用本地 API
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 17f0793580d3954ab3c6c46dcde0722a5bd70df63fe5b1bb',
         },
         body: JSON.stringify({
           message: userMessage.content,
-          agentId: 'main',
-          sessionKey: 'agent:main:main',
         }),
       });
 
@@ -63,11 +68,14 @@ export default function ChatView() {
 
       const data = await response.json();
 
+      // 解析结构化响应
       const aiMessage: Message = {
         id: Date.now().toString() + 'ai',
         role: 'assistant',
         content: data.reply || "抱歉，我暂时无法回答这个问题。",
         timestamp: new Date(),
+        cards: [],
+        links: [],
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -78,7 +86,7 @@ export default function ChatView() {
       const errorMessage: Message = {
         id: Date.now().toString() + 'error',
         role: 'assistant',
-        content: "⚠️ 连接后端失败，请检查 OpenClaw 是否正在运行。",
+        content: "⚠️ 连接 AI 失败，请稍后重试。",
         timestamp: new Date(),
       };
 
