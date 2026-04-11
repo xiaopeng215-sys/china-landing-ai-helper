@@ -30,46 +30,62 @@ export default function ChatView() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputValue,
+      content: inputValue.trim(),
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI response (TODO: Connect to real AI backend)
-    setTimeout(() => {
-      const responses: Record<string, string> = {
-        'shanghai': "🗽 Shanghai is amazing! Here's what I recommend:\n\n📍 **Day 1**: The Bund + Yu Garden\n🍜 **Lunch**: Nanxiang Steamed Bun Restaurant\n🚴 **Afternoon**: Riverside cycling\n🌃 **Evening**: Bund night view\n\nWould you like me to create a detailed itinerary?",
-        'beijing': "🏛️ Beijing, the capital! Must-see spots:\n\n📍 **Forbidden City** (book in advance!)\n📍 **Great Wall** (Mutianyu section)\n🦆 **Dinner**: Peking Duck at Quanjude\n\nHow many days are you planning?",
-        'food': "🍜 Chinese food is incredible! What are you craving?\n\n• 🥟 Dumplings (Jiaozi)\n• 🍜 Noodles (Lamian)\n• 🍲 Hot Pot\n• 🦆 Peking Duck\n• 🥘 Dim Sum\n\nTell me your preference!",
-        'metro': "🚇 Metro is the easiest way!\n\n1. Download **Metro Man** app\n2. Or use **Alipay** → Transport\n3. Most signs are in English\n4. Avoid rush hour (8-9am, 5-6pm)\n\nWhich city are you in?",
-        'payment': "💳 Payment setup is crucial!\n\n**Before you arrive**:\n1. Download Alipay/WeChat\n2. Link your international card\n3. Verify your identity\n\n**I can help with step-by-step setup**! Want me to guide you?",
-      };
+    try {
+      // 调用 OpenClaw 后端（通过 Gateway）
+      const response = await fetch('http://127.0.0.1:18789/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer 17f0793580d3954ab3c6c46dcde0722a5bd70df63fe5b1bb',
+        },
+        body: JSON.stringify({
+          message: userMessage.content,
+          agentId: 'main',
+          sessionKey: 'agent:main:main',
+        }),
+      });
 
-      const keyword = Object.keys(responses).find((k) =>
-        inputValue.toLowerCase().includes(k)
-      );
-      
-      const response: Message = {
-        id: (Date.now() + 1).toString(),
+      if (!response.ok) throw new Error('请求失败');
+
+      const data = await response.json();
+
+      const aiMessage: Message = {
+        id: Date.now().toString() + 'ai',
         role: 'assistant',
-        content: keyword
-          ? responses[keyword]
-          : "Thanks for your message! I'm currently in demo mode. In the full version, I'll connect to AI to provide personalized travel advice. For now, try asking about:\n\n• 🗽 Shanghai itinerary\n• 🏛️ Beijing attractions\n• 🍜 Food recommendations\n• 🚇 Metro/taxi help\n• 💳 Payment setup",
+        content: data.reply || "抱歉，我暂时无法回答这个问题。",
         timestamp: new Date(),
       };
 
-      setMessages((prev) => [...prev, response]);
+      setMessages(prev => [...prev, aiMessage]);
+
+    } catch (error) {
+      console.error('发送消息失败:', error);
+
+      const errorMessage: Message = {
+        id: Date.now().toString() + 'error',
+        role: 'assistant',
+        content: "⚠️ 连接后端失败，请检查 OpenClaw 是否正在运行。",
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const quickActions = [

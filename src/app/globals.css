@@ -2,10 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 安全区域支持（iPhone 刘海屏） */
+/* ─── iOS Safe Area ──────────────────────────────────────────────────────── */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav.safe-area-bottom,
+  .fixed.bottom-0 {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   }
 }
 
@@ -15,26 +19,43 @@
   }
 }
 
-/* 移动优先滚动优化 */
+/* ─── Performance ─────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* 禁止文本选择（App 体验） */
-.no-select {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+/* 硬件加速动画 */
+.animate-spin,
+.animate-pulse,
+.animate-in {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
+/* ─── Touch Optimizations ────────────────────────────────────────────────── */
 /* 点击高亮移除 */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 自定义滚动条（隐藏但可滚动） */
+/* 按钮/链接触控区域扩大 */
+button, a, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* 禁用长按弹出菜单 */
+.no-context-menu {
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -42,6 +63,35 @@ html {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: always;
+}
+
+/* ─── Utilities ─────────────────────────────────────────────────────────── */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* 防止下拉刷新冲突 */
+.no-bounce {
+  overscroll-behavior: none;
+}
+
+/* 图片占位符 */
+.img-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* 卡片阴影层次 */
@@ -63,6 +113,12 @@ html {
   
   .text-responsive-lg {
     @apply text-base sm:text-lg;
+  }
+
+  /* Prevent text inflation on mobile */
+  .text-size-normal {
+    text-size-adjust: none;
+    -webkit-text-size-adjust: none;
   }
 }
 
