@@ -19,11 +19,11 @@ interface BottomNavProps {
  */
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const navItems: { id: Tab; label: string; icon: string }[] = [
-    { id: 'chat', label: '聊天', icon: '💬' },
-    { id: 'trips', label: '行程', icon: '📅' },
-    { id: 'food', label: '美食', icon: '🍜' },
-    { id: 'transport', label: '交通', icon: '🚇' },
-    { id: 'profile', label: '我的', icon: '👤' },
+    { id: 'chat', label: 'Chat', icon: '💬' },
+    { id: 'trips', label: 'Trips', icon: '📅' },
+    { id: 'food', label: 'Food', icon: '🍜' },
+    { id: 'transport', label: 'Transport', icon: '🚇' },
+    { id: 'profile', label: 'Profile', icon: '👤' },
   ];
 
   return (

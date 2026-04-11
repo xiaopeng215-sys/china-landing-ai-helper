@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'China Landing AI Helper - 你的中国旅行助手',
-  description: 'AI 驱动的中国旅行规划助手，帮你规划行程、推荐美食、交通指南',
+  title: 'China Landing AI Helper - Your China Travel Companion',
+  description: 'AI-powered China travel planning assistant for itineraries, food recommendations, and transport guidance',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -40,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-CN" className={inter.variable}>
+    <html lang="en" className={inter.variable}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
