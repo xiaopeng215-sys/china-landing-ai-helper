@@ -78,7 +78,10 @@ export function MessageList({ messages, messagesEndRef }: MessageListProps) {
             
             {/* 时间戳 */}
             <div className={`text-xs mt-2 ${message.role === 'user' ? 'text-white/70' : 'text-[#767676]'}`}>
-              {message.timestamp.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
+              {typeof message.timestamp === 'string' 
+                ? new Date(message.timestamp).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+                : message.timestamp.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+              }
             </div>
           </div>
         </div>

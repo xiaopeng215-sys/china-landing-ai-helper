@@ -54,6 +54,7 @@ function isValidConfig(value: string | undefined): boolean {
          value.trim() !== '';
 }
 
+// 导出配置供 NextAuth 使用（不导出为 HTTP 路由）
 const authOptions: NextAuthOptions = {
   providers: [
     // 邮箱密码登录
@@ -257,4 +258,5 @@ const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST, authOptions };
+// 导出 handler 作为 HTTP 路由
+export { handler as GET, handler as POST };

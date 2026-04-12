@@ -91,9 +91,10 @@ export default function ChatView() {
 
     const userMessage: Message = {
       id: Date.now().toString(),
+      type: 'user',
       role: 'user',
       content: inputValue.trim(),
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -118,9 +119,10 @@ export default function ChatView() {
         
         const errorMessageObj: Message = {
           id: (Date.now() + 1).toString(),
+          type: 'ai',
           role: 'assistant',
           content: `⚠️ ${errorMessage}`,
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
         };
         setMessages(prev => [...prev, errorMessageObj]);
         
@@ -156,9 +158,10 @@ export default function ChatView() {
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
+        type: 'ai',
         role: 'assistant',
         content: content,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
         tokens: data.usage?.total_tokens,
         // 结构化响应数据
         recommendations,
@@ -177,9 +180,10 @@ export default function ChatView() {
       // 显示错误消息
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
+        type: 'ai',
         role: 'assistant',
         content: '❌ 发送失败，请检查网络连接后重试',
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {

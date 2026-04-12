@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
     console.log(`🤖 [Chat API] 使用模型：${selectedModel}, 用户：${userId}, 会话：${sessionId}, 消息：${message.substring(0, 50)}...`);
 
     // 修复 CHAT-02: 加载消息历史用于上下文
-    let messageHistory = [];
+    let messageHistory: any[] = [];
     try {
       messageHistory = await getMessagesFromDb(sessionId, 20);
       console.log(`[Chat API] 加载消息历史：${messageHistory.length} 条`);
@@ -284,7 +284,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession();
     
-    if (!(session?.user as any)?.id) {
+    if (!session || !(session.user as any)?.id) {
       throw createValidationError('请先登录');
     }
 

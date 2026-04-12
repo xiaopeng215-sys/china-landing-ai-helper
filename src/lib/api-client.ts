@@ -210,7 +210,7 @@ async function request<T>(
       ) {
         if (attempt < maxRetries) {
           console.warn(`[API] Retry ${attempt + 1}/${maxRetries} for ${endpoint}`);
-          await mockDelay(500 * (attempt + 1)); // 指数退避
+          await simulateNetworkDelay(500 * (attempt + 1)); // 指数退避
           continue;
         }
       }
@@ -232,7 +232,7 @@ async function request<T>(
 export const messagesApi = {
   async getList(): Promise<Message[]> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       return mockMessages;
     }
     return request<Message[]>('/messages');
@@ -240,7 +240,7 @@ export const messagesApi = {
 
   async send(content: string): Promise<Message> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       const newMessage: Message = {
         id: String(Date.now()),
         type: 'user',
@@ -265,7 +265,7 @@ export const messagesApi = {
 export const tripsApi = {
   async getList(): Promise<Trip[]> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       return mockTrips;
     }
     return request<Trip[]>('/trips');
@@ -273,7 +273,7 @@ export const tripsApi = {
 
   async getById(id: string): Promise<Trip> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       const trip = mockTrips.find((t) => t.id === id);
       if (!trip) throw new Error('Trip not found');
       return trip;
@@ -283,7 +283,7 @@ export const tripsApi = {
 
   async create(trip: Omit<Trip, 'id'>): Promise<Trip> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       const newTrip: Trip = { ...trip, id: String(Date.now()) };
       mockTrips.push(newTrip);
       return newTrip;
@@ -296,7 +296,7 @@ export const tripsApi = {
 
   async update(id: string, trip: Partial<Trip>): Promise<Trip> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       const index = mockTrips.findIndex((t) => t.id === id);
       if (index === -1) throw new Error('Trip not found');
       mockTrips[index] = { ...mockTrips[index], ...trip };
@@ -310,7 +310,7 @@ export const tripsApi = {
 
   async delete(id: string): Promise<void> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       const index = mockTrips.findIndex((t) => t.id === id);
       if (index === -1) throw new Error('Trip not found');
       mockTrips.splice(index, 1);
@@ -326,7 +326,7 @@ export const tripsApi = {
 export const foodApi = {
   async getList(category?: string): Promise<Restaurant[]> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       if (!category) return mockRestaurants;
       return mockRestaurants.filter((r) => r.cuisine.includes(category));
     }
@@ -338,7 +338,7 @@ export const foodApi = {
 
   async getById(id: string): Promise<Restaurant> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       const restaurant = mockRestaurants.find((r) => r.id === id);
       if (!restaurant) throw new Error('Restaurant not found');
       return restaurant;
@@ -348,7 +348,7 @@ export const foodApi = {
 
   async search(keyword: string): Promise<Restaurant[]> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       return mockRestaurants.filter(
         (r) =>
           r.name.includes(keyword) ||
@@ -369,7 +369,7 @@ export const foodApi = {
 export const attractionApi = {
   async getList(category?: string): Promise<Attraction[]> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       if (!category) return mockAttractions;
       return mockAttractions.filter((a) => a.tags.includes(category));
     }
@@ -381,7 +381,7 @@ export const attractionApi = {
 
   async getById(id: string): Promise<Attraction> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       const attraction = mockAttractions.find((a) => a.id === id);
       if (!attraction) throw new Error('Attraction not found');
       return attraction;
@@ -396,7 +396,7 @@ export const attractionApi = {
 export const transportApi = {
   async getRoutes(from: string, to: string): Promise<TransportOption[]> {
     if (config.useMock) {
-      await mockDelay();
+      await simulateNetworkDelay();
       return mockTransportRoutes.default || [];
     }
     return request<TransportOption[]>('/transport', {
