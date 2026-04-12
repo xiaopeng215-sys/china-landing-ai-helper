@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { getBrowseHistory, clearBrowseHistory, getFavorites, removeFavorite, getUserItineraries } from '@/lib/database';
+import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 
 interface HistoryItem {
   id: string;
@@ -21,10 +22,22 @@ interface FavoriteItem {
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'profile' | 'history' | 'favorites'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'settings' | 'history' | 'favorites'>('profile');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [loading, setLoading] = useState(false);
+  
+  // Settings state
+  const [language, setLanguage] = useState('zh-CN');
+  const [budget, setBudget] = useState('medium');
+  const [theme, setTheme] = useState('light');
+  const [notifications, setNotifications] = useState(true);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -69,6 +82,76 @@ export default function ProfilePage() {
     setFavorites(favorites.filter(f => f.item_id !== itemId));
   };
 
+  const handleChangePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setPasswordError('两次输入的密码不一致');
+      return;
+    }
+    
+    if (newPassword.length < 6) {
+      setPasswordError('密码至少需要 6 个字符');
+      return;
+    }
+
+    try {
+      // TODO: Implement password change API
+      alert('密码修改成功');
+      setShowPasswordModal(false);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setPasswordError('');
+    } catch (error) {
+      setPasswordError('密码修改失败，请重试');
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!confirm('确定要删除账号吗？此操作不可恢复！')) return;
+    
+    try {
+      // TODO: Implement account deletion API
+      alert('账号已删除');
+      signOut({ callbackUrl: '/' });
+    } catch (error) {
+      alert('删除失败，请重试');
+    }
+  };
+
+  const handleExportData = async () => {
+    if (!session?.user?.id) return;
+    
+    try {
+      // TODO: Implement data export API
+      const data = {
+        user: session.user,
+        history,
+        favorites,
+        itineraries: await getUserItineraries(session.user.id),
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `china-ai-data-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      alert('数据导出成功');
+    } catch (error) {
+      alert('数据导出失败，请重试');
+    }
+  };
+
+  const handleSaveSettings = () => {
+    localStorage.setItem('china-ai-language', language);
+    localStorage.setItem('china-ai-budget', budget);
+    localStorage.setItem('china-ai-theme', theme);
+    localStorage.setItem('china-ai-notifications', notifications.toString());
+    alert('设置已保存');
+  };
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -82,6 +165,9 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
+
       {/* Header */}
       <header className="bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white py-8">
         <div className="max-w-3xl mx-auto px-4">
@@ -98,12 +184,12 @@ export default function ProfilePage() {
       </header>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="flex gap-6">
+          <div className="flex gap-6 overflow-x-auto">
             <button
               onClick={() => setActiveTab('profile')}
-              className={`py-4 px-2 border-b-2 transition-colors ${
+              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
                 activeTab === 'profile'
                   ? 'border-[#ff5a5f] text-[#ff5a5f]'
                   : 'border-transparent text-[#767676]'
@@ -112,8 +198,18 @@ export default function ProfilePage() {
               个人资料
             </button>
             <button
+              onClick={() => setActiveTab('settings')}
+              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
+                activeTab === 'settings'
+                  ? 'border-[#ff5a5f] text-[#ff5a5f]'
+                  : 'border-transparent text-[#767676]'
+              }`}
+            >
+              设置
+            </button>
+            <button
               onClick={() => setActiveTab('history')}
-              className={`py-4 px-2 border-b-2 transition-colors ${
+              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
                 activeTab === 'history'
                   ? 'border-[#ff5a5f] text-[#ff5a5f]'
                   : 'border-transparent text-[#767676]'
@@ -123,7 +219,7 @@ export default function ProfilePage() {
             </button>
             <button
               onClick={() => setActiveTab('favorites')}
-              className={`py-4 px-2 border-b-2 transition-colors ${
+              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
                 activeTab === 'favorites'
                   ? 'border-[#ff5a5f] text-[#ff5a5f]'
                   : 'border-transparent text-[#767676]'
@@ -138,54 +234,176 @@ export default function ProfilePage() {
       {/* Content */}
       <main className="max-w-3xl mx-auto px-4 py-6">
         {activeTab === 'profile' && (
-          <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
-            <h2 className="text-lg font-bold text-[#484848] mb-4">个人信息</h2>
-            
-            <div>
-              <label className="block text-sm font-medium text-[#767676] mb-2">
-                邮箱
-              </label>
-              <input
-                type="email"
-                value={session?.user?.email || ''}
-                disabled
-                className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#767676]"
-              />
+          <div className="space-y-6">
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100">
+                <div className="text-2xl mb-2">📅</div>
+                <div className="text-2xl font-bold text-[#484848]">0</div>
+                <div className="text-xs text-[#767676]">行程</div>
+              </div>
+              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100">
+                <div className="text-2xl mb-2">❤️</div>
+                <div className="text-2xl font-bold text-[#484848]">{favorites.length}</div>
+                <div className="text-xs text-[#767676]">收藏</div>
+              </div>
+              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100">
+                <div className="text-2xl mb-2">📜</div>
+                <div className="text-2xl font-bold text-[#484848]">{history.length}</div>
+                <div className="text-xs text-[#767676]">历史</div>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-[#767676] mb-2">
-                语言偏好
-              </label>
-              <select className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]">
-                <option value="zh-CN">简体中文</option>
-                <option value="en">English</option>
-                <option value="ja">日本語</option>
-                <option value="ko">한국어</option>
-              </select>
+            {/* Quick Actions */}
+            <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
+              <h2 className="text-lg font-bold text-[#484848] mb-4">快捷操作</h2>
+              
+              <button
+                onClick={() => router.push('/install-guide')}
+                className="w-full flex items-center gap-4 p-4 bg-gradient-to-r from-[#ff5a5f]/10 to-[#ff3b3f]/10 rounded-xl hover:from-[#ff5a5f]/20 hover:to-[#ff3b3f]/20 transition-all"
+              >
+                <div className="text-2xl">📱</div>
+                <div className="flex-1 text-left">
+                  <p className="font-medium text-[#484848]">安装应用</p>
+                  <p className="text-sm text-[#767676]">添加到主屏幕，快速访问</p>
+                </div>
+                <div className="text-[#ff5a5f]">→</div>
+              </button>
+
+              <button
+                onClick={handleExportData}
+                className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all"
+              >
+                <div className="text-2xl">💾</div>
+                <div className="flex-1 text-left">
+                  <p className="font-medium text-[#484848]">导出数据</p>
+                  <p className="text-sm text-[#767676]">下载您的个人数据</p>
+                </div>
+                <div className="text-[#767676]">→</div>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'settings' && (
+          <div className="space-y-6">
+            {/* Account Settings */}
+            <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
+              <h2 className="text-lg font-bold text-[#484848] mb-4">账号设置</h2>
+              
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">
+                  邮箱
+                </label>
+                <input
+                  type="email"
+                  value={session?.user?.email || ''}
+                  disabled
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#767676]"
+                />
+              </div>
+
+              <button
+                onClick={() => setShowPasswordModal(true)}
+                className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all"
+              >
+                <div className="text-2xl">🔐</div>
+                <div className="flex-1 text-left">
+                  <p className="font-medium text-[#484848]">修改密码</p>
+                </div>
+                <div className="text-[#767676]">→</div>
+              </button>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-[#767676] mb-2">
-                预算范围
-              </label>
-              <select className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]">
-                <option value="budget">经济型 (¥200-500/天)</option>
-                <option value="medium">舒适型 (¥500-1000/天)</option>
-                <option value="luxury">豪华型 (¥1000+/天)</option>
-              </select>
+            {/* Preferences */}
+            <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
+              <h2 className="text-lg font-bold text-[#484848] mb-4">偏好设置</h2>
+              
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">
+                  语言偏好
+                </label>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                >
+                  <option value="zh-CN">简体中文</option>
+                  <option value="en">English</option>
+                  <option value="ja">日本語</option>
+                  <option value="ko">한국어</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">
+                  预算范围
+                </label>
+                <select
+                  value={budget}
+                  onChange={(e) => setBudget(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                >
+                  <option value="budget">经济型 (¥200-500/天)</option>
+                  <option value="medium">舒适型 (¥500-1000/天)</option>
+                  <option value="luxury">豪华型 (¥1000+/天)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">
+                  主题
+                </label>
+                <select
+                  value={theme}
+                  onChange={(e) => setTheme(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                >
+                  <option value="light">浅色</option>
+                  <option value="dark">深色</option>
+                  <option value="auto">跟随系统</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-[#484848]">通知</p>
+                  <p className="text-sm text-[#767676]">接收重要提醒</p>
+                </div>
+                <button
+                  onClick={() => setNotifications(!notifications)}
+                  className={`w-12 h-6 rounded-full transition-colors ${
+                    notifications ? 'bg-[#ff5a5f]' : 'bg-gray-300'
+                  }`}
+                >
+                  <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
+                    notifications ? 'translate-x-6' : 'translate-x-0.5'
+                  }`} />
+                </button>
+              </div>
+
+              <button
+                onClick={handleSaveSettings}
+                className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                保存设置
+              </button>
             </div>
 
-            <button className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
-              保存设置
-            </button>
-
-            <button
-              onClick={() => signOut({ callbackUrl: '/' })}
-              className="w-full py-3 bg-gray-100 text-[#767676] rounded-xl font-semibold hover:bg-gray-200 transition-all"
-            >
-              退出登录
-            </button>
+            {/* Danger Zone */}
+            <div className="bg-white rounded-2xl shadow-md p-6 border-2 border-red-200">
+              <h2 className="text-lg font-bold text-red-600 mb-4">危险区域</h2>
+              
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="w-full py-3 bg-red-100 text-red-600 rounded-xl font-semibold hover:bg-red-200 transition-all"
+              >
+                删除账号
+              </button>
+              <p className="text-xs text-[#767676] mt-2 text-center">
+                此操作不可恢复，请谨慎操作
+              </p>
+            </div>
           </div>
         )}
 
@@ -266,6 +484,107 @@ export default function ProfilePage() {
           </div>
         )}
       </main>
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <h2 className="text-xl font-bold text-[#484848] mb-4">修改密码</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">
+                  当前密码
+                </label>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                  placeholder="输入当前密码"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">
+                  新密码
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                  placeholder="输入新密码"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">
+                  确认新密码
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                  placeholder="确认新密码"
+                />
+              </div>
+
+              {passwordError && (
+                <p className="text-red-600 text-sm">{passwordError}</p>
+              )}
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowPasswordModal(false);
+                  setPasswordError('');
+                }}
+                className="flex-1 py-3 bg-gray-100 text-[#767676] rounded-xl font-semibold hover:bg-gray-200 transition-all"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleChangePassword}
+                className="flex-1 py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                确认
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Account Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="text-4xl mb-4 text-center">⚠️</div>
+            <h2 className="text-xl font-bold text-red-600 mb-4 text-center">删除账号</h2>
+            
+            <p className="text-[#767676] mb-6 text-center">
+              此操作将永久删除您的账号和所有数据，且无法恢复。确定要继续吗？
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 py-3 bg-gray-100 text-[#767676] rounded-xl font-semibold hover:bg-gray-200 transition-all"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                className="flex-1 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-all"
+              >
+                确认删除
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

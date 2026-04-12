@@ -94,6 +94,26 @@ export interface Favorite {
   created_at: string;
 }
 
+// 聊天会话表
+export interface ChatSession {
+  id: string;
+  user_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// 消息表
+export interface Message {
+  id: string;
+  session_id: string;
+  user_id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  tokens?: number;
+  created_at: string;
+}
+
 // 行程表
 export interface Itinerary {
   id: string;
@@ -388,3 +408,183 @@ export async function clearBrowseHistory(userId: string): Promise<boolean> {
 
 // Alias for getItineraries
 export { getItineraries as getUserItineraries };
+
+/**
+ * 聊天会话操作
+ */
+
+export async function createChatSession(
+  userId: string,
+  title: string = '新对话'
+): Promise<string | null> {
+  const client = getSupabase();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('chat_sessions')
+      .insert({
+        user_id: userId,
+        title,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .select('id')
+      .single();
+
+    if (error) throw error;
+    return data.id;
+  } catch (error) {
+    console.error('创建会话失败:', error);
+    return null;
+  }
+}
+
+export async function getChatSessions(userId: string): Promise<ChatSession[]> {
+  const client = getSupabase();
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from('chat_sessions')
+      .select('*')
+      .eq('user_id', userId)
+      .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('获取会话列表失败:', error);
+    return [];
+  }
+}
+
+export async function updateChatSessionTitle(
+  sessionId: string,
+  title: string
+): Promise<boolean> {
+  const client = getSupabase();
+  if (!client) return false;
+
+  try {
+    const { error } = await client
+      .from('chat_sessions')
+      .update({
+        title,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', sessionId);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('更新会话标题失败:', error);
+    return false;
+  }
+}
+
+export async function deleteChatSession(sessionId: string): Promise<boolean> {
+  const client = getSupabase();
+  if (!client) return false;
+
+  try {
+    // 先删除消息
+    await client
+      .from('messages')
+      .delete()
+      .eq('session_id', sessionId);
+
+    // 再删除会话
+    const { error } = await client
+      .from('chat_sessions')
+      .delete()
+      .eq('id', sessionId);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('删除会话失败:', error);
+    return false;
+  }
+}
+
+/**
+ * 消息操作
+ */
+
+export async function saveMessage(
+  sessionId: string,
+  userId: string,
+  role: 'user' | 'assistant',
+  content: string,
+  tokens?: number
+): Promise<string | null> {
+  const client = getSupabase();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('messages')
+      .insert({
+        session_id: sessionId,
+        user_id: userId,
+        role,
+        content,
+        tokens,
+        created_at: new Date().toISOString(),
+      })
+      .select('id')
+      .single();
+
+    if (error) throw error;
+
+    // 更新会话的 updated_at
+    await client
+      .from('chat_sessions')
+      .update({ updated_at: new Date().toISOString() })
+      .eq('id', sessionId);
+
+    return data.id;
+  } catch (error) {
+    console.error('保存消息失败:', error);
+    return null;
+  }
+}
+
+export async function getMessages(sessionId: string, limit = 50): Promise<Message[]> {
+  const client = getSupabase();
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from('messages')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: true })
+      .limit(limit);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('获取消息失败:', error);
+    return [];
+  }
+}
+
+export async function getUserMessagesCount(userId: string): Promise<number> {
+  const client = getSupabase();
+  if (!client) return 0;
+
+  try {
+    const { count, error } = await client
+      .from('messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return count || 0;
+  } catch (error) {
+    console.error('获取消息数量失败:', error);
+    return 0;
+  }
+}

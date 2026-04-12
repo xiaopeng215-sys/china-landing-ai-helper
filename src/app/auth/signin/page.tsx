@@ -3,23 +3,57 @@
 import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SignInPage() {
   const router = useRouter();
+  const [loginMethod, setLoginMethod] = useState<'password' | 'email'>('password');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  const handlePasswordSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      // 登录成功，跳转到主页
+      router.push('/');
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || '登录失败，请检查邮箱和密码');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setLoading(true);
-    setMessage('');
 
     try {
-      await signIn('email', { email, callbackUrl: '/profile' });
-      setMessage('已发送登录链接到您的邮箱，请查收！');
-    } catch (error) {
-      setMessage('发送失败，请重试');
+      await signIn('email', { 
+        email, 
+        callbackUrl: '/',
+        redirect: false,
+      });
+      // 邮箱验证码登录会发送邮件，显示成功提示
+    } catch (err: any) {
+      setError(err.message || '发送失败，请重试');
     } finally {
       setLoading(false);
     }
@@ -28,15 +62,15 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      await signIn('google', { callbackUrl: '/profile' });
-    } catch (error) {
-      setMessage('Google 登录失败，请重试');
+      await signIn('google', { callbackUrl: '/' });
+    } catch (err: any) {
+      setError('Google 登录失败，请重试');
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -44,39 +78,138 @@ export default function SignInPage() {
             🇨🇳
           </div>
           <h1 className="text-2xl font-bold text-[#484848] mb-2">
-            China AI Helper
+            欢迎回来
           </h1>
           <p className="text-[#767676]">
-            登录以保存您的行程和偏好
+            登录以继续您的中国之旅
           </p>
         </div>
 
         {/* 登录表单 */}
         <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-          {/* 邮箱登录 */}
-          <form onSubmit={handleEmailSignIn} className="space-y-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-[#484848] mb-2">
-                邮箱地址
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
-                placeholder="your@email.com"
-              />
-            </div>
-
+          {/* 登录方式切换 */}
+          <div className="flex gap-2 mb-6">
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setLoginMethod('password')}
+              className={`flex-1 py-2 text-sm font-medium rounded-xl transition-all ${
+                loginMethod === 'password'
+                  ? 'bg-[#ff5a5f] text-white shadow-md'
+                  : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
+              }`}
             >
-              {loading ? '发送中...' : '发送登录链接'}
+              密码登录
             </button>
-          </form>
+            <button
+              onClick={() => setLoginMethod('email')}
+              className={`flex-1 py-2 text-sm font-medium rounded-xl transition-all ${
+                loginMethod === 'email'
+                  ? 'bg-[#ff5a5f] text-white shadow-md'
+                  : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
+              }`}
+            >
+              邮箱验证码
+            </button>
+          </div>
+
+          {/* 密码登录表单 */}
+          {loginMethod === 'password' && (
+            <form onSubmit={handlePasswordSignIn} className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-[#484848] mb-2">
+                  邮箱地址
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
+                  placeholder="your@email.com"
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-sm font-medium text-[#484848]">
+                    密码
+                  </label>
+                  <Link
+                    href="/auth/forgot-password"
+                    className="text-sm text-[#ff5a5f] hover:underline"
+                  >
+                    忘记密码？
+                  </Link>
+                </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 text-[#ff5a5f] border-gray-300 rounded focus:ring-[#ff5a5f]"
+                />
+                <label htmlFor="rememberMe" className="text-sm text-[#767676]">
+                  记住我 (7 天)
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? '登录中...' : '登录'}
+              </button>
+            </form>
+          )}
+
+          {/* 邮箱验证码登录表单 */}
+          {loginMethod === 'email' && (
+            <form onSubmit={handleEmailSignIn} className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-[#484848] mb-2">
+                  邮箱地址
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
+                  placeholder="your@email.com"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? '发送中...' : '发送登录链接'}
+              </button>
+
+              <p className="text-xs text-[#767676] text-center">
+                我们将发送一封包含登录链接的邮件到您的邮箱
+              </p>
+            </form>
+          )}
+
+          {/* 错误提示 */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm">
+              {error}
+            </div>
+          )}
 
           {/* 分割线 */}
           <div className="relative mb-6">
@@ -115,20 +248,17 @@ export default function SignInPage() {
             使用 Google 账号登录
           </button>
 
-          {/* 消息提示 */}
-          {message && (
-            <div className={`mt-4 p-3 rounded-xl text-sm ${
-              message.includes('失败')
-                ? 'bg-red-50 text-red-600'
-                : 'bg-green-50 text-green-600'
-            }`}>
-              {message}
-            </div>
-          )}
+          {/* 注册链接 */}
+          <p className="text-center text-sm text-[#767676] mt-6">
+            还没有账号？{' '}
+            <Link href="/auth/signup" className="text-[#ff5a5f] hover:underline font-medium">
+              立即注册
+            </Link>
+          </p>
         </div>
 
         {/* 底部提示 */}
-        <p className="text-center text-sm text-[#767676] mt-6">
+        <p className="text-center text-xs text-[#767676] mt-6">
           登录即表示您同意我们的{' '}
           <a href="/terms" className="text-[#ff5a5f] hover:underline">
             服务条款

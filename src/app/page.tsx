@@ -1,12 +1,50 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import BottomNav from '@/components/BottomNav';
-import ChatView from '@/components/views/ChatView';
-import TripsView from '@/components/views/TripsView';
-import FoodView from '@/components/views/FoodView';
-import TransportView from '@/components/views/TransportView';
-import ProfileView from '@/components/views/ProfileView';
+import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
+
+// 动态导入 - 按需加载，减少初始包体积
+const ChatView = dynamic(
+  () => import('@/components/views/ChatView'),
+  { 
+    loading: () => <LoadingSkeleton type="chat" />,
+    ssr: false,
+  }
+);
+
+const TripsView = dynamic(
+  () => import('@/components/views/TripsView'),
+  { 
+    loading: () => <LoadingSkeleton type="trips" />,
+    ssr: false,
+  }
+);
+
+const FoodView = dynamic(
+  () => import('@/components/views/FoodView'),
+  { 
+    loading: () => <LoadingSkeleton type="food" />,
+    ssr: false,
+  }
+);
+
+const TransportView = dynamic(
+  () => import('@/components/views/TransportView'),
+  { 
+    loading: () => <LoadingSkeleton type="transport" />,
+    ssr: false,
+  }
+);
+
+const ProfileView = dynamic(
+  () => import('@/components/views/ProfileView'),
+  { 
+    loading: () => <LoadingSkeleton type="profile" />,
+    ssr: false,
+  }
+);
 
 type Tab = 'chat' | 'trips' | 'food' | 'transport' | 'profile';
 
@@ -32,7 +70,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <main>{renderView()}</main>
+      <main>
+        <Suspense fallback={<LoadingSkeleton type={activeTab} />}>
+          {renderView()}
+        </Suspense>
+      </main>
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );

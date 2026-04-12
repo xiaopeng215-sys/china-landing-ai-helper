@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const { withSentryConfig } = require('@sentry/nextjs');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const withPWA = require('next-pwa')({
   dest: 'public',
@@ -49,6 +52,8 @@ const withPWA = require('next-pwa')({
 
 const nextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false, // 移除 X-Powered-By 头
+  compress: true, // 启用 Gzip/Brotli 压缩
   images: {
     remotePatterns: [
       {
@@ -57,14 +62,64 @@ const nextConfig = {
       },
     ],
     formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200],
-    imageSizes: [16, 32, 48, 64, 96],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 60, // 图片缓存优化
+    dangerouslyAllowSVG: false, // 安全：禁止 SVG
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   experimental: {
     optimizePackageImports: ['lucide-react', 'radix-ui'],
+  },
+  // 启用 React Server Components 优化
+  serverExternalPackages: ['bcryptjs'],
+  // Webpack 优化
+  webpack: (config, { isServer, dev }) => {
+    // 生产环境优化
+    if (!isServer && !dev) {
+      // 移除 console.log
+      config.optimization.minimize = true;
+      
+      // 代码分割优化
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          // 分离供应商包
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+            priority: 10,
+          },
+          // 分离 React 相关包
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+            name: 'react',
+            chunks: 'all',
+            priority: 20,
+          },
+          // 分离 UI 组件库
+          ui: {
+            test: /[\\/]node_modules[\\/](lucide-react|radix-ui)[\\/]/,
+            name: 'ui',
+            chunks: 'all',
+            priority: 15,
+          },
+          // 通用代码
+          common: {
+            minChunks: 2,
+            name: 'common',
+            chunks: 'all',
+            priority: 5,
+            reuseExistingChunk: true,
+          },
+        },
+      };
+    }
+    
+    return config;
   },
   async headers() {
     return [
@@ -97,7 +152,7 @@ const nextConfig = {
   },
 };
 
-module.exports = withSentryConfig(withPWA(nextConfig), {
+module.exports = withBundleAnalyzer(withSentryConfig(withPWA(nextConfig), {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
@@ -124,4 +179,4 @@ module.exports = withSentryConfig(withPWA(nextConfig), {
 
   // Disable client-side auto-instrumentation
   disableClientWebpackPlugin: process.env.DISABLE_SENTRY_CLIENT_PLUGIN === 'true',
-});
+}));
