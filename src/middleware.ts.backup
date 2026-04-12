@@ -141,9 +141,10 @@ export default withAuth(
       }
     }
 
-    // 已登录用户访问认证页面，重定向到主页
+    // 已登录用户访问认证页面，重定向到主页 (避免重定向循环)
     if (pathname.startsWith('/auth') && token) {
-      return NextResponse.redirect(new URL('/', nextUrl.origin));
+      // 只在已登录且访问 auth 页面时重定向
+      return NextResponse.redirect(new URL('/', nextUrl));
     }
 
     return response;
