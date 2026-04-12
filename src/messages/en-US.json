@@ -1,0 +1,110 @@
+{
+  "HomePage": {
+    "title": "Land in China, start from here",
+    "subtitle": "From airport to downtown, network, transport, payment & food — we guide you every step.",
+    "cta": "Start Now",
+    "tagline": "Your China Landing Assistant"
+  },
+  "NavBar": {
+    "home": "Home",
+    "chat": "Chat",
+    "trips": "Trips",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "ChatPage": {
+    "title": "AI Travel Assistant",
+    "placeholder": "Ask me anything about your trip...",
+    "send": "Send",
+    "welcome": "Hi! I'm your China travel assistant. How can I help you today?",
+    "suggestions": [
+      "How to get from airport to hotel?",
+      "Best food near me",
+      "How to use Alipay?",
+      "Metro route to Great Wall"
+    ]
+  },
+  "ProfilePage": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "settings": "Settings",
+    "history": "Browse History",
+    "favorites": "Favorites",
+    "editProfile": "Edit Profile",
+    "nickname": "Nickname",
+    "email": "Email",
+    "language": "Language",
+    "budget": "Budget",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "save": "Save",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "deleteAccount": "Delete Account",
+    "exportData": "Export Data"
+  },
+  "AuthPage": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "signInWithGoogle": "Sign in with Google",
+    "signInWithEmail": "Sign in with Email",
+    "sendMagicLink": "Send Magic Link",
+    "checkEmail": "Check your email",
+    "magicLinkSent": "We've sent a magic link to your email",
+    "backToLogin": "Back to Login"
+  },
+  "TripsPage": {
+    "title": "My Trips",
+    "noTrips": "No trips yet",
+    "createTrip": "Create Trip",
+    "destinations": {
+      "shanghai": "Shanghai",
+      "beijing": "Beijing",
+      "xian": "Xi'an",
+      "chengdu": "Chengdu",
+      "guilin": "Guilin",
+      "hangzhou": "Hangzhou"
+    },
+    "duration": "Duration",
+    "days": "{count} days",
+    "viewDetails": "View Details",
+    "delete": "Delete"
+  },
+  "Common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "ascending": "Ascending",
+    "descending": "Descending"
+  },
+  "Errors": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordsDontMatch": "Passwords don't match",
+    "networkError": "Network error. Please try again.",
+    "serverError": "Server error. Please try again later.",
+    "unauthorized": "Please log in to continue",
+    "notFound": "Page not found"
+  },
+  "Footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact Us",
+    "copyright": "© 2026 China Landing AI Helper. All rights reserved."
+  }
+}

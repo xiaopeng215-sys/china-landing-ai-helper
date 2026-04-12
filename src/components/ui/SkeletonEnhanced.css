@@ -1,0 +1,376 @@
+/* ============ 骨架屏基础样式 ============ */
+
+.skeleton-base {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e8e8e8 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 变体 */
+.skeleton-circular {
+  border-radius: 50%;
+}
+
+.skeleton-rounded {
+  border-radius: 9999px;
+}
+
+/* ============ 动画效果 ============ */
+
+/* 脉冲动画 */
+.skeleton-pulse {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* 光泽扫过动画 */
+.skeleton-shine {
+  animation: skeleton-shine 1.5s infinite linear;
+}
+
+@keyframes skeleton-shine {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 波浪动画 */
+.skeleton-wave {
+  animation: skeleton-wave 1.8s ease-in-out infinite;
+}
+
+@keyframes skeleton-wave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ============ 卡片骨架屏 ============ */
+
+.skeleton-card {
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.skeleton-card-image {
+  height: 12rem;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-card-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: skeleton-shimmer 2s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    left: 100%;
+  }
+}
+
+.skeleton-card-content {
+  padding: 1rem;
+}
+
+.skeleton-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+/* ============ 列表骨架屏 ============ */
+
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ============ 文本行骨架屏 ============ */
+
+.skeleton-text-lines {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============ 图表骨架屏 ============ */
+
+.skeleton-chart {
+  background: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.skeleton-chart-body {
+  background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+  border-radius: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-chart-body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  animation: skeleton-shimmer 2s infinite;
+}
+
+/* ============ 表格骨架屏 ============ */
+
+.skeleton-table {
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton-table-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.skeleton-table-body {
+  padding: 0.5rem 1rem;
+}
+
+.skeleton-table-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.skeleton-table-row:last-child {
+  border-bottom: none;
+}
+
+/* ============ 画廊骨架屏 ============ */
+
+.skeleton-gallery-item {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.skeleton-gallery-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: skeleton-shimmer 2s infinite;
+}
+
+/* ============ 对话气泡骨架屏 ============ */
+
+.skeleton-chat-bubbles {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.skeleton-chat-bubbles.align-right {
+  align-items: flex-end;
+}
+
+.skeleton-chat-bubble-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.skeleton-chat-bubble-row.align-right {
+  flex-direction: row-reverse;
+}
+
+.skeleton-chat-bubble {
+  background: #f3f4f6;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  max-width: 70%;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-chat-bubble::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: skeleton-shimmer 2s infinite;
+}
+
+/* ============ 价格骨架屏 ============ */
+
+.skeleton-price {
+  display: flex;
+  align-items: baseline;
+}
+
+/* ============ 进度条骨架屏 ============ */
+
+.skeleton-progress {
+  display: flex;
+  gap: 0.25rem;
+  background: #f3f4f6;
+  border-radius: 9999px;
+  padding: 0.25rem;
+  overflow: hidden;
+}
+
+/* ============ 深色模式支持 ============ */
+
+@media (prefers-color-scheme: dark) {
+  .skeleton-base {
+    background: linear-gradient(
+      90deg,
+      #374151 25%,
+      #4b5563 50%,
+      #374151 75%
+    );
+  }
+
+  .skeleton-card {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .skeleton-card-image {
+    background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+  }
+
+  .skeleton-chart {
+    background: #1f2937;
+  }
+
+  .skeleton-chart-body {
+    background: linear-gradient(180deg, #374151 0%, #4b5563 100%);
+  }
+
+  .skeleton-table {
+    background: #1f2937;
+  }
+
+  .skeleton-table-header {
+    background: #374151;
+    border-color: #4b5563;
+  }
+
+  .skeleton-table-row {
+    border-color: #374151;
+  }
+
+  .skeleton-chat-bubble {
+    background: #374151;
+  }
+
+  .skeleton-progress {
+    background: #374151;
+  }
+}
+
+/* ============ 无障碍支持 ============ */
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-pulse,
+  .skeleton-shine,
+  .skeleton-wave {
+    animation: none;
+    background: #e5e7eb;
+  }
+
+  .skeleton-card-image::after,
+  .skeleton-chart-body::after,
+  .skeleton-gallery-item::after,
+  .skeleton-chat-bubble::after {
+    animation: none;
+  }
+}
+
+/* ============ 响应式优化 ============ */
+
+@media (max-width: 640px) {
+  .skeleton-card-image {
+    height: 10rem;
+  }
+
+  .skeleton-chat-bubble {
+    max-width: 85%;
+  }
+}

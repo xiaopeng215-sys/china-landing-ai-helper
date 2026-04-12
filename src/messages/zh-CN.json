@@ -1,0 +1,292 @@
+{
+  "HomePage": {
+    "title": "落地中国，从这里开始",
+    "subtitle": "从机场到市区，网络、交通、支付、美食 — 我们全程为您指引",
+    "cta": "立即开始",
+    "tagline": "您的中国落地助手"
+  },
+  "NavBar": {
+    "home": "首页",
+    "chat": "对话",
+    "trips": "行程",
+    "profile": "我的",
+    "settings": "设置"
+  },
+  "ChatPage": {
+    "title": "AI 旅行助手",
+    "placeholder": "输入关于旅行的任何问题...",
+    "send": "发送",
+    "welcome": "您好！我是您的中国旅行助手，有什么可以帮您？",
+    "suggestions": [
+      "如何从机场到酒店？",
+      "附近有什么好吃的",
+      "支付宝怎么用？",
+      "去长城的地铁路线"
+    ],
+    "typing": "正在输入...",
+    "error": "消息发送失败，请重试",
+    "clearHistory": "清空对话",
+    "newChat": "新建对话"
+  },
+  "ProfilePage": {
+    "title": "个人中心",
+    "personalInfo": "个人信息",
+    "settings": "设置",
+    "history": "浏览历史",
+    "favorites": "收藏夹",
+    "editProfile": "编辑资料",
+    "nickname": "昵称",
+    "email": "邮箱",
+    "language": "语言",
+    "budget": "预算",
+    "theme": "主题",
+    "notifications": "通知",
+    "save": "保存",
+    "cancel": "取消",
+    "logout": "退出登录",
+    "deleteAccount": "注销账号",
+    "exportData": "导出数据",
+    "version": "版本号",
+    "about": "关于我们",
+    "helpCenter": "帮助中心",
+    "feedback": "意见反馈",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款"
+  },
+  "AuthPage": {
+    "signIn": "登录",
+    "signUp": "注册",
+    "email": "邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "forgotPassword": "忘记密码？",
+    "noAccount": "还没有账号？",
+    "haveAccount": "已有账号？",
+    "signInWithGoogle": "使用 Google 登录",
+    "signInWithEmail": "使用邮箱登录",
+    "sendMagicLink": "发送魔法链接",
+    "checkEmail": "请查收邮件",
+    "magicLinkSent": "我们已向您的邮箱发送了魔法链接",
+    "backToLogin": "返回登录",
+    "agreeTerms": "登录即表示您同意",
+    "and": "和",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款",
+    "continueWithEmail": "继续使用邮箱",
+    "or": "或者"
+  },
+  "TripsPage": {
+    "title": "我的行程",
+    "noTrips": "还没有行程",
+    "createTrip": "创建行程",
+    "editTrip": "编辑行程",
+    "deleteTrip": "删除行程",
+    "destinations": {
+      "shanghai": "上海",
+      "beijing": "北京",
+      "xian": "西安",
+      "chengdu": "成都",
+      "guilin": "桂林",
+      "hangzhou": "杭州",
+      "guangzhou": "广州",
+      "shenzhen": "深圳",
+      "chongqing": "重庆",
+      "nanjing": "南京"
+    },
+    "duration": "行程时长",
+    "days": "{count} 天",
+    "viewDetails": "查看详情",
+    "delete": "删除",
+    "share": "分享",
+    "export": "导出",
+    "startDate": "出发日期",
+    "endDate": "返回日期",
+    "travelers": "出行人数",
+    "budget": "预算范围",
+    "preferences": "偏好设置",
+    "notes": "备注"
+  },
+  "Common": {
+    "loading": "加载中...",
+    "error": "出错了",
+    "retry": "重试",
+    "close": "关闭",
+    "confirm": "确认",
+    "cancel": "取消",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "ascending": "升序",
+    "descending": "降序",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "update": "更新",
+    "submit": "提交",
+    "reset": "重置",
+    "refresh": "刷新",
+    "done": "完成",
+    "yes": "是",
+    "no": "否",
+    "ok": "好的",
+    "apply": "应用",
+    "clear": "清除",
+    "selectAll": "全选",
+    "deselectAll": "取消全选",
+    "more": "更多",
+    "less": "收起",
+    "seeAll": "查看全部",
+    "showMore": "显示更多",
+    "showLess": "收起"
+  },
+  "Errors": {
+    "required": "此项为必填项",
+    "invalidEmail": "请输入有效的邮箱地址",
+    "passwordTooShort": "密码长度不能少于 8 位",
+    "passwordsDontMatch": "两次输入的密码不一致",
+    "networkError": "网络连接失败，请检查网络后重试",
+    "serverError": "服务器开小差了，请稍后再试",
+    "unauthorized": "请先登录后再继续",
+    "notFound": "页面不存在或已被移除",
+    "timeout": "请求超时，请重试",
+    "forbidden": "您没有权限执行此操作",
+    "conflict": "数据冲突，请刷新后重试",
+    "rateLimit": "操作过于频繁，请稍后再试",
+    "invalidInput": "输入内容无效",
+    "fileTooLarge": "文件过大，请选择更小的文件",
+    "unsupportedFileType": "不支持的文件类型",
+    "sessionExpired": "登录已过期，请重新登录",
+    "generic": "发生未知错误，请稍后重试"
+  },
+  "Loading": {
+    "initial": "正在准备...",
+    "fetching": "正在获取数据...",
+    "processing": "正在处理...",
+    "saving": "正在保存...",
+    "uploading": "正在上传...",
+    "downloading": "正在下载...",
+    "generating": "正在生成...",
+    "searching": "正在搜索...",
+    "loading": "加载中..."
+  },
+  "EmptyStates": {
+    "noData": {
+      "title": "暂无数据",
+      "description": "数据正在加载中，请稍后再试"
+    },
+    "noHistory": {
+      "title": "还没有浏览历史",
+      "description": "去探索精彩的中国之旅吧"
+    },
+    "noFavorites": {
+      "title": "还没有收藏",
+      "description": "看到喜欢的内容就收藏起来，方便随时查看"
+    },
+    "noResults": {
+      "title": "没有找到匹配结果",
+      "description": "换个关键词试试，或者浏览热门推荐"
+    },
+    "noMessages": {
+      "title": "还没有消息",
+      "description": "当你收到新消息时，会显示在这里"
+    },
+    "noNotifications": {
+      "title": "还没有通知",
+      "description": "重要更新和提醒会显示在这里"
+    },
+    "offline": {
+      "title": "网络连接已断开",
+      "description": "请检查网络设置后重试"
+    },
+    "firstTime": {
+      "title": "欢迎开始你的中国之旅",
+      "description": "让我帮你规划完美的行程"
+    },
+    "permissionDenied": {
+      "title": "暂无权限",
+      "description": "你还没有权限查看此内容"
+    },
+    "expired": {
+      "title": "内容已过期",
+      "description": "此内容已失效或已被删除"
+    }
+  },
+  "Actions": {
+    "browseRecommendations": "浏览推荐",
+    "explore": "去探索",
+    "browseHot": "浏览热门",
+    "clearFilters": "清除筛选",
+    "retry": "重试",
+    "startPlanning": "开始规划",
+    "refresh": "刷新",
+    "goBack": "返回首页",
+    "viewDetails": "查看详情",
+    "share": "分享",
+    "copy": "复制",
+    "download": "下载"
+  },
+  "Footer": {
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "contact": "联系我们",
+    "copyright": "© 2026 中国落地 AI 助手。保留所有权利。",
+    "madeWith": "用心制作",
+    "in": "于",
+    "china": "中国"
+  },
+  "Notifications": {
+    "success": "操作成功",
+    "error": "操作失败",
+    "warning": "请注意",
+    "info": "提示信息",
+    "confirmDelete": "确定要删除吗？此操作不可恢复",
+    "confirmLogout": "确定要退出登录吗？",
+    "unsavedChanges": "您有未保存的更改，确定要离开吗？",
+    "copiedToClipboard": "已复制到剪贴板",
+    "downloadStarted": "下载已开始",
+    "uploadSuccess": "上传成功",
+    "uploadFailed": "上传失败"
+  },
+  "Validation": {
+    "minLength": "长度不能少于 {min} 个字符",
+    "maxLength": "长度不能超过 {max} 个字符",
+    "minValue": "数值不能小于 {min}",
+    "maxValue": "数值不能大于 {max}",
+    "pattern": "格式不正确",
+    "unique": "此值已被使用",
+    "url": "请输入有效的网址",
+    "phone": "请输入有效的手机号码",
+    "date": "请输入有效的日期",
+    "number": "请输入有效的数字"
+  },
+  "Time": {
+    "justNow": "刚刚",
+    "minutesAgo": "{count} 分钟前",
+    "hoursAgo": "{count} 小时前",
+    "daysAgo": "{count} 天前",
+    "weeksAgo": "{count} 周前",
+    "monthsAgo": "{count} 个月前",
+    "yearsAgo": "{count} 年前",
+    "yesterday": "昨天",
+    "today": "今天",
+    "tomorrow": "明天"
+  },
+  "Accessibility": {
+    "skipToContent": "跳过导航直达内容",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单",
+    "search": "搜索",
+    "notifications": "通知",
+    "settings": "设置",
+    "profile": "个人资料",
+    "back": "返回",
+    "close": "关闭",
+    "loading": "加载中",
+    "error": "错误",
+    "success": "成功"
+  }
+}

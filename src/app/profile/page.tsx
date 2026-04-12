@@ -398,12 +398,15 @@ export default function ProfilePage() {
             </div>
 
             {/* Danger Zone */}
-            <div className="bg-white rounded-2xl shadow-md p-6 border-2 border-red-200">
-              <h2 className="text-lg font-bold text-red-600 mb-4">危险区域</h2>
+            <div className="bg-white rounded-2xl shadow-md p-6 border-2 border-red-200 animate-slide-up" style={{ animationDelay: '0.25s' }}>
+              <h2 className="text-lg font-bold text-red-600 mb-4 flex items-center gap-2">
+                <span className="animate-pulse">⚠️</span>
+                危险区域
+              </h2>
               
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="w-full py-3 bg-red-100 text-red-600 rounded-xl font-semibold hover:bg-red-200 transition-all"
+                className="w-full py-3 bg-red-100 text-red-600 rounded-xl font-semibold hover:bg-red-200 transition-all hover-lift tap-feedback"
               >
                 删除账号
               </button>
@@ -494,8 +497,8 @@ export default function ProfilePage() {
 
       {/* Password Change Modal */}
       {showPasswordModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-bounce-in">
             <h2 className="text-xl font-bold text-[#484848] mb-4">修改密码</h2>
             
             <div className="space-y-4">
@@ -566,9 +569,9 @@ export default function ProfilePage() {
 
       {/* Delete Account Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div className="text-4xl mb-4 text-center">⚠️</div>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-bounce-in">
+            <div className="text-4xl mb-4 text-center animate-wiggle">⚠️</div>
             <h2 className="text-xl font-bold text-red-600 mb-4 text-center">删除账号</h2>
             
             <p className="text-[#767676] mb-6 text-center">

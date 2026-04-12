@@ -103,6 +103,46 @@ body {
   }
 }
 
+/* Shimmer Animation for Skeleton Loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Dark mode shimmer */
+.dark .shimmer-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-overlay,
+  .animate-pulse {
+    animation: none;
+    background: rgba(229, 231, 235, 0.5);
+  }
+}
+
 @keyframes wiggle {
   0%, 100% {
     transform: rotate(-3deg);

@@ -1,10 +1,35 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
 import EmailProvider from 'next-auth/providers/email';
 import { SupabaseAdapter } from '@auth/supabase-adapter';
 import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
+
+// 自定义 OpenAI Provider (NextAuth.js v4 格式)
+const OpenAIProvider = {
+  id: 'openai',
+  name: 'OpenAI',
+  type: 'oauth' as const,
+  version: '2.0',
+  authorization: {
+    url: 'https://api.openai.com/oauth/authorize',
+    params: { scope: 'openid profile email' },
+  },
+  token: 'https://api.openai.com/oauth/token',
+  userinfo: 'https://api.openai.com/oauth/userinfo',
+  clientId: process.env.OPENAI_CLIENT_ID,
+  clientSecret: process.env.OPENAI_CLIENT_SECRET,
+  profile(profile: any) {
+    return {
+      id: profile.sub,
+      email: profile.email,
+      name: profile.name || profile.email,
+      avatar: profile.picture,
+    };
+  },
+};
 
 // 创建 Supabase 客户端
 function getSupabaseClient() {
@@ -74,14 +99,35 @@ const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      authorization: {
+        params: {
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code'
+        }
+      }
     }),
+    
+    // Facebook 登录
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID || '',
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || '',
+      authorization: {
+        params: {
+          scope: 'email,public_profile'
+        }
+      }
+    }),
+    
+    // OpenAI 登录
+    OpenAIProvider,
   ],
   
   adapter: process.env.NEXT_PUBLIC_SUPABASE_URL
-    ? SupabaseAdapter({
+    ? (SupabaseAdapter({
         url: process.env.NEXT_PUBLIC_SUPABASE_URL,
         secret: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
-      })
+      }) as any) // 类型断言以解决 @auth/supabase-adapter 与 next-auth v4 的类型不兼容
     : undefined,
   
   session: {
@@ -97,11 +143,56 @@ const authOptions: NextAuthOptions = {
   },
   
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account, profile }) {
+      // OAuth 登录时的用户数据同步
+      if (account?.provider && user?.email) {
+        const supabase = getSupabaseClient();
+        if (supabase) {
+          // 检查是否已有相同邮箱的用户
+          const { data: existingUser } = await supabase
+            .from('users')
+            .select('id, email, provider_accounts')
+            .eq('email', user.email)
+            .single();
+          
+          if (existingUser) {
+            // 已有用户，更新 provider_accounts 以支持多账号关联
+            const currentAccounts = existingUser.provider_accounts || [];
+            const accountInfo = {
+              provider: account.provider,
+              provider_account_id: account.provider_account_id,
+              linked_at: new Date().toISOString()
+            };
+            
+            // 避免重复添加
+            const exists = currentAccounts.some(
+              (acc: any) => acc.provider === account.provider && acc.provider_account_id === account.provider_account_id
+            );
+            
+            if (!exists) {
+              await supabase
+                .from('users')
+                .update({
+                  provider_accounts: [...currentAccounts, accountInfo]
+                })
+                .eq('id', existingUser.id);
+            }
+          }
+        }
+      }
+      return true;
+    },
+    
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
+        token.avatar = user.avatar || user.image;
+      }
+      // 保存 provider 信息
+      if (account) {
+        token.provider = account.provider;
       }
       return token;
     },
@@ -111,6 +202,8 @@ const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
+        session.user.avatar = token.avatar as string;
+        session.user.provider = token.provider as string;
       }
       return session;
     },

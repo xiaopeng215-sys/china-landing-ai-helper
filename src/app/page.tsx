@@ -7,7 +7,7 @@ import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 
 // 动态导入 - 按需加载，减少初始包体积
 const ChatView = dynamic(
-  () => import('@/components/views/ChatView'),
+  () => import('@/components/views/ChatView/index'),
   { 
     loading: () => <LoadingSkeleton type="chat" />,
     ssr: false,

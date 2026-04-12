@@ -62,6 +62,63 @@ export const supabase = {
  * 数据库 Schema
  */
 
+// 会员等级
+export interface MembershipTier {
+  id: string;
+  name: string;
+  name_zh: string;
+  level: number;
+  icon: string;
+  color: string;
+  benefits: string[];
+  price_monthly: number;
+  price_yearly: number;
+  max_daily_queries: number;
+  max_concurrent_sessions: number;
+  priority_support: boolean;
+  custom_themes: boolean;
+  data_export: boolean;
+}
+
+// 用户会员信息
+export interface UserMembership {
+  id: string;
+  user_id: string;
+  tier_id: string;
+  status: 'active' | 'expired' | 'cancelled' | 'trial';
+  started_at: string;
+  expires_at?: string;
+  cancelled_at?: string;
+  payment_method?: string;
+  auto_renew: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// 会员积分
+export interface MembershipPoints {
+  id: string;
+  user_id: string;
+  points: number;
+  lifetime_points: number;
+  level: number;
+  last_activity_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// 积分流水
+export interface PointsTransaction {
+  id: string;
+  user_id: string;
+  points_change: number;
+  balance_after: number;
+  transaction_type: 'earn' | 'spend' | 'bonus' | 'refund' | 'adjustment';
+  reason: string;
+  reference_id?: string;
+  created_at: string;
+}
+
 // 用户表
 export interface User {
   id: string;
@@ -71,6 +128,9 @@ export interface User {
   language: string;
   budget_range: string;
   interests: string[];
+  membership_tier: string;
+  membership_points: number;
+  is_premium: boolean;
   created_at: string;
   updated_at: string;
 }

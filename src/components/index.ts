@@ -12,6 +12,9 @@ export { default as ErrorBoundary } from './ui/ErrorBoundary';
 export { default as OptimizedImage } from './ui/OptimizedImage';
 export { default as EstimatedTime } from './ui/EstimatedTime';
 export { default as UndoButton } from './ui/UndoButton';
+export { default as AnimatedButton } from './ui/AnimatedButton';
+export { default as LoadingDots } from './ui/LoadingDots';
+export { default as ProgressBar } from './ui/ProgressBar';
 
 // Card Components
 export { default as AttractionCard } from './cards/AttractionCard';
@@ -36,10 +39,11 @@ export { default as StyleSwitcher } from './pages/StyleSwitcher';
 // Other Components
 export { default as BottomNav } from './BottomNav';
 export { default as ChatBubble } from './ChatBubble';
-export { default as TripCard } from './TripCard';
+export { default as TripCard } from './trips/TripCard';
 export { default as RestaurantCard } from './RestaurantCard';
 export { default as DayCard } from './DayCard';
 export { default as Providers } from './Providers';
 export { default as NetworkStatus } from './NetworkStatus';
 export { default as PWAInstallPrompt } from './PWAInstallPrompt';
 export { default as Transition } from './Transition';
+export { default as AnimatedPage } from './AnimatedPage';

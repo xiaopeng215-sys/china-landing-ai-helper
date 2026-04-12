@@ -85,12 +85,15 @@ export default function PWAInstallPrompt() {
   }
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 z-50 animate-slide-up">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 sm:p-6">
-        <div className="flex items-start gap-4">
+    <div className="fixed bottom-20 left-4 right-4 z-50 animate-bounce-in">
+      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 sm:p-6 relative overflow-hidden">
+        {/* Animated Background Accent */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#ff5a5f]/5 to-[#ff3b3f]/5 rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse"></div>
+        
+        <div className="flex items-start gap-4 relative z-10">
           {/* Icon */}
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-xl flex items-center justify-center shadow-lg animate-float">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
@@ -99,29 +102,29 @@ export default function PWAInstallPrompt() {
 
           {/* Content */}
           <div className="flex-1">
-            <h3 className="font-bold text-[#484848] mb-1">
-              安装应用
+            <h3 className="font-bold text-[#484848] mb-1 animate-fade-in">
+              📲 安装应用
             </h3>
-            <p className="text-sm text-[#767676] mb-3">
+            <p className="text-sm text-[#767676] mb-3 animate-fade-in" style={{ animationDelay: '0.1s' }}>
               将 China AI Helper 添加到主屏幕，快速访问您的旅行助手
             </p>
 
             {/* Benefits */}
-            <div className="flex gap-3 mb-4">
-              <div className="flex items-center gap-1 text-xs text-[#767676]">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex gap-3 mb-4 animate-slide-up" style={{ animationDelay: '0.15s' }}>
+              <div className="flex items-center gap-1 text-xs text-[#767676] hover:text-green-600 transition-colors">
+                <svg className="w-4 h-4 text-green-500 animate-scale-in" style={{ animationDelay: '0.2s' }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>离线访问</span>
               </div>
-              <div className="flex items-center gap-1 text-xs text-[#767676]">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center gap-1 text-xs text-[#767676] hover:text-green-600 transition-colors">
+                <svg className="w-4 h-4 text-green-500 animate-scale-in" style={{ animationDelay: '0.25s' }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>快速启动</span>
               </div>
-              <div className="flex items-center gap-1 text-xs text-[#767676]">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center gap-1 text-xs text-[#767676] hover:text-green-600 transition-colors">
+                <svg className="w-4 h-4 text-green-500 animate-scale-in" style={{ animationDelay: '0.3s' }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>消息通知</span>
@@ -129,16 +132,16 @@ export default function PWAInstallPrompt() {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-2">
+            <div className="flex gap-2 animate-slide-up" style={{ animationDelay: '0.2s' }}>
               <button
                 onClick={handleInstall}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold text-sm shadow-lg hover:shadow-xl transition-all"
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold text-sm shadow-lg hover:shadow-xl transition-all hover-lift tap-feedback"
               >
-                立即安装
+                ⚡ 立即安装
               </button>
               <button
                 onClick={handleDismiss}
-                className="px-4 py-2 bg-gray-100 text-[#767676] rounded-xl font-semibold text-sm hover:bg-gray-200 transition-all"
+                className="px-4 py-2 bg-gray-100 text-[#767676] rounded-xl font-semibold text-sm hover:bg-gray-200 transition-all tap-feedback"
               >
                 稍后再说
               </button>
@@ -148,7 +151,7 @@ export default function PWAInstallPrompt() {
           {/* Close button */}
           <button
             onClick={handleDismiss}
-            className="flex-shrink-0 text-[#767676] hover:text-[#484848] transition-colors"
+            className="flex-shrink-0 text-[#767676] hover:text-[#484848] hover:rotate-90 transition-all duration-300 tap-feedback"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

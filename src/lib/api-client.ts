@@ -403,6 +403,6 @@ export const apiConfig = {
 
 // 导出配置供调试使用
 if (typeof window !== 'undefined') {
-  (window as Record<string, unknown>).__API_CONFIG__ = apiConfig;
-  (window as Record<string, unknown>).__API_INTERCEPTORS__ = apiInterceptors;
+  (window as unknown as Record<string, unknown>).__API_CONFIG__ = apiConfig;
+  (window as unknown as Record<string, unknown>).__API_INTERCEPTORS__ = apiInterceptors;
 }

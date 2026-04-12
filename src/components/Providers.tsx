@@ -1,40 +1,69 @@
 'use client';
 
 import { SessionProvider } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { registerServiceWorker, isPWAInstalled } from '@/lib/serviceWorker';
+import { useEffect } from 'react';
+import { initClientMonitoring, reportWebVitals } from '@/lib/monitoring';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
+/**
+ * 应用 Providers - 包装整个应用的全局提供者
+ */
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const [isMounted, setIsMounted] = useState(false);
-  const [isPWA, setIsPWA] = useState(false);
-
   useEffect(() => {
-    setIsMounted(true);
-    setIsPWA(isPWAInstalled());
+    // 初始化客户端监控
+    initClientMonitoring();
 
-    // Register service worker
-    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      registerServiceWorker();
+    // 报告 Web Vitals
+    if (typeof window !== 'undefined') {
+      // 使用 PerformanceObserver 监控 Core Web Vitals
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          reportWebVitals({
+            name: entry.name,
+            value: entry.startTime,
+            rating: getRating(entry.name, entry.startTime),
+          });
+        }
+      });
+
+      // 观察 LCP (Largest Contentful Paint)
+      observer.observe({ type: 'largest-contentful-paint', buffered: true });
+
+      // 观察 FID (First Input Delay)
+      observer.observe({ type: 'first-input', buffered: true });
+
+      // 观察 CLS (Cumulative Layout Shift)
+      observer.observe({ type: 'layout-shift', buffered: true });
+
+      // 观察 FCP (First Contentful Paint)
+      observer.observe({ type: 'paint', buffered: true });
     }
-  }, []);
-
-  // Listen for SW updates
-  useEffect(() => {
-    const handleSwUpdate = (event: CustomEvent) => {
-      console.log('Service Worker update available');
-      // Could show update prompt here
-    };
-
-    window.addEventListener('swUpdate', handleSwUpdate as EventListener);
-
-    return () => {
-      window.removeEventListener('swUpdate', handleSwUpdate as EventListener);
-    };
   }, []);
 
   return (
     <SessionProvider>
-      {children}
+      <ErrorBoundary>
+        {children}
+      </ErrorBoundary>
     </SessionProvider>
   );
+}
+
+/**
+ * 根据指标类型和值获取评级
+ */
+function getRating(name: string, value: number): 'good' | 'needs-improvement' | 'poor' {
+  const thresholds: Record<string, { good: number; poor: number }> = {
+    'largest-contentful-paint': { good: 2500, poor: 4000 },
+    'first-input': { good: 100, poor: 300 },
+    'first-contentful-paint': { good: 1800, poor: 3000 },
+    'cumulative-layout-shift': { good: 0.1, poor: 0.25 },
+  };
+
+  const threshold = thresholds[name];
+  if (!threshold) return 'needs-improvement';
+
+  if (value <= threshold.good) return 'good';
+  if (value <= threshold.poor) return 'needs-improvement';
+  return 'poor';
 }

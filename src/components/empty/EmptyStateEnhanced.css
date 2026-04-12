@@ -1,0 +1,632 @@
+/* ============ 空状态基础样式 ============ */
+
+.empty-state {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============ 装饰背景 ============ */
+
+.empty-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.empty-decoration-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 90, 95, 0.05) 0%,
+    rgba(255, 59, 63, 0.02) 100%
+  );
+  animation: float 6s ease-in-out infinite;
+}
+
+.empty-decoration-circle:nth-child(1) {
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  right: -100px;
+}
+
+.empty-decoration-circle:nth-child(2) {
+  width: 200px;
+  height: 200px;
+  bottom: -50px;
+  left: -50px;
+  animation-delay: -2s;
+}
+
+.empty-decoration-circle:nth-child(3) {
+  width: 150px;
+  height: 150px;
+  top: 50%;
+  left: 50%;
+  animation-delay: -4s;
+}
+
+.delay-1 {
+  animation-delay: -2s !important;
+}
+
+.delay-2 {
+  animation-delay: -4s !important;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+/* ============ 内容区域 ============ */
+
+.empty-content {
+  text-align: center;
+  max-width: 28rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============ 插图 ============ */
+
+.empty-illustration-wrapper {
+  margin-bottom: 2rem;
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.empty-illustration {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+}
+
+/* 通用插图样式 */
+.empty-circle-outer {
+  stroke: #e5e7eb;
+  stroke-width: 3;
+  fill: none;
+}
+
+.empty-circle-inner {
+  fill: #f3f4f6;
+}
+
+.empty-line {
+  stroke: #6366f1;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.empty-center-dot {
+  fill: #6366f1;
+}
+
+/* 搜索插图 */
+.empty-search-ring {
+  stroke: #e5e7eb;
+  stroke-width: 6;
+  fill: none;
+}
+
+.empty-search-handle {
+  stroke: #e5e7eb;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.empty-search-magnifier {
+  fill: #f3f4f6;
+}
+
+/* 爱心插图 */
+.empty-heart {
+  stroke: #e5e7eb;
+  stroke-width: 6;
+  fill: none;
+  stroke-linejoin: round;
+}
+
+.empty-heart-inner {
+  fill: #fef2f2;
+  stroke: #fecaca;
+  stroke-width: 2;
+}
+
+/* 消息插图 */
+.empty-message-bubble {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  fill: #fafafa;
+}
+
+.empty-message-tail {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  fill: #fafafa;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.empty-message-line {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.empty-message-line.short {
+  width: 50px;
+}
+
+/* 铃铛插图 */
+.empty-bell {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  fill: #fafafa;
+}
+
+.empty-bell-clapper {
+  fill: #e5e7eb;
+}
+
+.empty-bell-vibration {
+  stroke: #9ca3af;
+  stroke-width: 3;
+  stroke-linecap: round;
+  animation: vibrate 0.5s ease-in-out infinite;
+}
+
+@keyframes vibrate {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+/* WiFi 插图 */
+.empty-wifi-arc {
+  stroke: #e5e7eb;
+  stroke-width: 6;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.empty-wifi-dot-stem {
+  stroke: #9ca3af;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.empty-wifi-dot {
+  fill: #9ca3af;
+}
+
+.empty-wifi-cross {
+  stroke: #ef4444;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+/* 文件夹插图 */
+.empty-folder {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  fill: #fafafa;
+}
+
+.empty-folder-line {
+  stroke: #d1d5db;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.empty-folder-line.short {
+  width: 70px;
+}
+
+/* 日历插图 */
+.empty-calendar-body {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  fill: #fafafa;
+}
+
+.empty-calendar-header {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+}
+
+.empty-calendar-loop {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.empty-calendar-dot {
+  fill: #e5e7eb;
+}
+
+/* 星星插图 */
+.empty-star {
+  stroke: #fbbf24;
+  stroke-width: 3;
+  fill: #fef3c7;
+  stroke-linejoin: round;
+}
+
+.empty-star-inner {
+  fill: #fde68a;
+}
+
+/* 时钟插图 */
+.empty-clock-face {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  fill: #fafafa;
+}
+
+.empty-clock-hand-hour {
+  stroke: #6b7280;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.empty-clock-hand-minute {
+  stroke: #9ca3af;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.empty-clock-center {
+  fill: #6b7280;
+}
+
+.empty-clock-mark {
+  stroke: #d1d5db;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+/* 锁插图 */
+.empty-lock-body {
+  stroke: #e5e7eb;
+  stroke-width: 4;
+  fill: #fafafa;
+}
+
+.empty-lock-shackle {
+  stroke: #e5e7eb;
+  stroke-width: 6;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.empty-lock-hole {
+  fill: #e5e7eb;
+}
+
+.empty-lock-key {
+  stroke: #6b7280;
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+}
+
+/* 闪光插图 */
+.empty-sparkle-large {
+  fill: #fbbf24;
+  stroke: #f59e0b;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.empty-sparkle-medium {
+  fill: #fde68a;
+  stroke: #fbbf24;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.empty-sparkle-small {
+  fill: #fbbf24;
+}
+
+.empty-sparkle-tiny {
+  fill: #fde68a;
+}
+
+/* ============ 标题和描述 ============ */
+
+.empty-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.3;
+}
+
+.empty-description {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+}
+
+/* ============ 操作按钮 ============ */
+
+.empty-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.empty-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: inherit;
+}
+
+.empty-action-btn.primary {
+  background: linear-gradient(135deg, #ff5a5f 0%, #ff3b3f 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(255, 90, 95, 0.3);
+}
+
+.empty-action-btn.primary:hover {
+  box-shadow: 0 6px 12px rgba(255, 90, 95, 0.4);
+  transform: translateY(-2px);
+}
+
+.empty-action-btn.primary:active {
+  transform: translateY(0);
+}
+
+.empty-action-btn.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.empty-action-btn.secondary:hover {
+  background: #e5e7eb;
+}
+
+.empty-action-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.empty-action-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ============ 推荐操作 ============ */
+
+.empty-recommendations {
+  margin-top: 1.5rem;
+}
+
+.empty-recommendations-title {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.empty-recommendations-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.empty-recommendation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.empty-recommendation-chip:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.empty-chip-icon {
+  font-size: 1rem;
+}
+
+/* ============ 动画 ============ */
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============ 深色模式 ============ */
+
+@media (prefers-color-scheme: dark) {
+  .empty-title {
+    color: #f9fafb;
+  }
+
+  .empty-description {
+    color: #9ca3af;
+  }
+
+  .empty-circle-outer {
+    stroke: #4b5563;
+  }
+
+  .empty-circle-inner {
+    fill: #374151;
+  }
+
+  .empty-message-bubble {
+    fill: #1f2937;
+  }
+
+  .empty-message-tail {
+    fill: #1f2937;
+  }
+
+  .empty-bell {
+    fill: #1f2937;
+  }
+
+  .empty-folder {
+    fill: #1f2937;
+  }
+
+  .empty-calendar-body {
+    fill: #1f2937;
+  }
+
+  .empty-clock-face {
+    fill: #1f2937;
+  }
+
+  .empty-lock-body {
+    fill: #1f2937;
+  }
+
+  .empty-star {
+    fill: #78350f;
+    stroke: #92400e;
+  }
+
+  .empty-star-inner {
+    fill: #92400e;
+  }
+
+  .empty-heart-inner {
+    fill: #450a0a;
+    stroke: #7f1d1d;
+  }
+
+  .empty-recommendation-chip {
+    background: #1f2937;
+    border-color: #374151;
+    color: #d1d5db;
+  }
+
+  .empty-recommendation-chip:hover {
+    background: #374151;
+  }
+
+  .empty-action-btn.secondary {
+    background: #374151;
+    color: #e5e7eb;
+    border-color: #4b5563;
+  }
+
+  .empty-action-btn.secondary:hover {
+    background: #4b5563;
+  }
+}
+
+/* ============ 响应式优化 ============ */
+
+@media (max-width: 640px) {
+  .empty-state {
+    min-height: 50vh;
+    padding: 1.5rem 1rem;
+  }
+
+  .empty-illustration {
+    width: 140px;
+    height: 140px;
+  }
+
+  .empty-title {
+    font-size: 1.25rem;
+  }
+
+  .empty-description {
+    font-size: 0.875rem;
+  }
+
+  .empty-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .empty-action-btn {
+    width: 100%;
+    max-width: 200px;
+    justify-content: center;
+  }
+}
+
+/* ============ 无障碍支持 ============ */
+
+@media (prefers-reduced-motion: reduce) {
+  .empty-illustration-wrapper,
+  .empty-decoration-circle,
+  .empty-bell-vibration {
+    animation: none;
+  }
+}
+
+.empty-state:focus {
+  outline: none;
+}
+
+.empty-action-btn:focus-visible {
+  outline: 2px solid #ff5a5f;
+  outline-offset: 2px;
+}
+
+.empty-recommendation-chip:focus-visible {
+  outline: 2px solid #ff5a5f;
+  outline-offset: 2px;
+}
