@@ -6,7 +6,9 @@ import { Redis } from '@upstash/redis';
 import DOMPurify from 'dompurify';
 import * as Sentry from '@sentry/nextjs';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../[...nextauth]/route';
+
+// TODO(#AUTH-CONFIG): 重构认证配置以避免循环导入
+// 临时方案：直接在这里定义简化的 auth 配置
 
 /**
  * 用户注册 API

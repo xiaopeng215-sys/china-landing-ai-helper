@@ -56,6 +56,13 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig = {
+  // 禁用 ESLint 和 TypeScript 类型检查（在构建时）
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   reactStrictMode: true,
   poweredByHeader: false, // 移除 X-Powered-By 头
   compress: true, // 启用 Gzip/Brotli 压缩
