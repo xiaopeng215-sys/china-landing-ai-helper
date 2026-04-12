@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface NavItem {
   id: string;
@@ -6,7 +6,7 @@ interface NavItem {
   icon: string;
 }
 
-type Tab = 'chat' | 'trips' | 'food' | 'transport' | 'profile';
+type Tab = "chat" | "trips" | "food" | "transport" | "profile";
 
 interface BottomNavProps {
   activeTab: string;
@@ -19,32 +19,41 @@ interface BottomNavProps {
  */
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const navItems: { id: Tab; label: string; icon: string }[] = [
-    { id: 'chat', label: 'Chat', icon: '💬' },
-    { id: 'trips', label: 'Trips', icon: '📅' },
-    { id: 'food', label: 'Food', icon: '🍜' },
-    { id: 'transport', label: 'Transport', icon: '🚇' },
-    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: "chat", label: "Chat", icon: "💬" },
+    { id: "trips", label: "Trips", icon: "📅" },
+    { id: "food", label: "Food", icon: "🍜" },
+    { id: "transport", label: "Transport", icon: "🚇" },
+    { id: "profile", label: "Profile", icon: "👤" },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 safe-area-bottom z-50">
-      <div className="flex items-center justify-around py-2 max-w-lg mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 safe-area-bottom">
+      <div className="flex items-center justify-around py-2 max-w-lg mx-auto safe-area-bottom">
         {navItems.map((item) => {
           const isActive = activeTab === item.id;
           return (
             <button
               key={item.id}
               onClick={() => onTabChange(item.id)}
-              className={`flex flex-col items-center justify-center w-full py-2 px-1 transition-colors ${
+              className={`flex flex-col items-center justify-center w-full py-2 px-1 transition-colors tap-feedback ${
                 isActive
-                  ? 'text-emerald-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? "text-emerald-600"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
+              type="button"
+              aria-current={isActive ? "page" : undefined}
             >
-              <span className="text-xl mb-1">{item.icon}</span>
-              <span className="text-xs font-medium">{item.label}</span>
+              <span className="text-[20px] mb-1" aria-hidden="true">
+                {item.icon}
+              </span>
+              <span className="text-[11px] font-medium leading-tight">
+                {item.label}
+              </span>
               {isActive && (
-                <div className="w-1 h-1 bg-emerald-600 rounded-full mt-1" />
+                <div
+                  className="w-1 h-1 bg-emerald-600 rounded-full mt-1"
+                  aria-hidden="true"
+                />
               )}
             </button>
           );

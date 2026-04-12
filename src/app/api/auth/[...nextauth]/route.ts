@@ -70,19 +70,20 @@ const authOptions: NextAuthOptions = {
 
         const supabase = getSupabaseClient();
         
-        // 内存存储 Fallback - 开发模式
+        // 内存存储 Fallback - 仅用于本地开发测试
         if (!supabase) {
-          console.log('[Auth Fallback] 使用内存存储模式，允许任意有效邮箱登录');
-          // 开发模式：允许任意有效格式的邮箱登录
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(credentials.email)) {
-            throw new Error('请输入有效的邮箱地址');
+          console.warn('[Auth Fallback] ⚠️ 开发模式：使用内存存储，仅限本地测试');
+          // 开发模式：仅允许特定测试邮箱
+          const allowedDevEmails = ['test@example.com', 'demo@example.com', 'admin@example.com'];
+          if (!allowedDevEmails.includes(credentials.email)) {
+            throw new Error('开发模式仅允许测试账号登录：test@example.com / demo@example.com / admin@example.com');
           }
-          // 开发模式密码：任意 6 位以上密码
-          if (credentials.password.length < 6) {
-            throw new Error('密码至少 6 位');
+          // 开发模式密码：固定测试密码
+          if (credentials.password !== 'Test123456') {
+            throw new Error('开发模式测试密码：Test123456');
           }
           
+          console.warn('[Auth Fallback] ⚠️ 警告：生产环境必须配置 Supabase 数据库！');
           return {
             id: `dev_user_${credentials.email.replace(/[^a-zA-Z0-9]/g, '_')}`,
             email: credentials.email,
@@ -256,4 +257,4 @@ const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, authOptions };

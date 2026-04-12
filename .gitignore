@@ -25,10 +25,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# local env files - NEVER commit environment variables
+# All .env files except .env.example should be ignored
+.env
+.env.*
+!.env.example
+*.env
 
-# vercel
+# vercel (exclude .vercel folder entirely)
 .vercel
 
 # typescript

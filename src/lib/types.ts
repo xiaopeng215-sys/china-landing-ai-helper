@@ -1,11 +1,34 @@
 // TypeScript 类型定义
+// 统一的消息类型定义，所有组件都应使用此定义
 
 export interface Message {
   id: string;
   type: 'ai' | 'user';
+  role?: 'user' | 'assistant'; // 兼容 AI API 的 role 字段 (可选)
   content: string;
-  timestamp: string;
+  timestamp: string | Date; // 支持 string 和 Date 两种格式
   tripPreview?: TripPreview;
+  tokens?: number; // 可选的 token 计数
+  recommendations?: Array<{
+    type: 'attraction' | 'restaurant' | 'hotel' | 'transport';
+    id: string;
+    name: string;
+    nameEn?: string;
+    reason: string;
+    price?: string;
+    location?: string;
+    image?: string;
+  }>;
+  actions?: Array<{
+    type: 'book' | 'navigate' | 'info';
+    provider: 'klook' | 'trip' | 'amap' | 'didi' | 'meituan';
+    url: string;
+    text: string;
+  }>;
+  images?: Array<{
+    url: string;
+    caption: string;
+  }>;
 }
 
 export interface TripPreview {

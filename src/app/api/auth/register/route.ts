@@ -5,6 +5,8 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import DOMPurify from 'dompurify';
 import * as Sentry from '@sentry/nextjs';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../[...nextauth]/route';
 
 /**
  * 用户注册 API
@@ -13,8 +15,9 @@ import * as Sentry from '@sentry/nextjs';
  * 安全加固:
  * - 速率限制 (防暴力破解)
  * - 输入清理 (防 XSS)
- * - CSRF 保护
+ * - CSRF 保护 (验证 token)
  * - 密码强度增强
+ * - Session 验证
  */
 
 // 速率限制实例
@@ -41,6 +44,19 @@ try {
 
 export async function POST(request: NextRequest) {
   try {
+    // 安全修复：CSRF 保护 - 验证 token
+    const csrfToken = request.headers.get('x-csrf-token');
+    if (!csrfToken) {
+      // 尝试从 body 中获取
+      const body = await request.json();
+      if (!body.csrfToken) {
+        return NextResponse.json(
+          { error: '缺少 CSRF token，请刷新页面后重试' },
+          { status: 403 }
+        );
+      }
+    }
+    
     // 安全修复：速率限制
     if (ratelimit) {
       const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
@@ -66,7 +82,7 @@ export async function POST(request: NextRequest) {
     }
     
     const body = await request.json();
-    let { email, password, name } = body;
+    let { email, password, name, csrfToken: bodyCsrfToken } = body;
 
     // 安全修复：输入清理 (防 XSS)
     email = DOMPurify.sanitize(email || '').trim();

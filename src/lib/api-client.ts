@@ -3,6 +3,10 @@
  * 特性：请求拦截器、错误处理、重试机制、缓存策略
  */
 
+// ============================================
+// 导入 - 所有导入放在文件顶部
+// ============================================
+
 import type {
   Message,
   Trip,
@@ -43,6 +47,17 @@ interface CacheEntry<T> {
 const cache = new Map<string, CacheEntry<unknown>>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 分钟
 
+// 类型守卫 - 安全的类型检查
+function isValidCacheEntry<T>(entry: unknown): entry is CacheEntry<T> {
+  return (
+    entry != null &&
+    typeof entry === 'object' &&
+    'data' in entry &&
+    'timestamp' in entry &&
+    typeof (entry as CacheEntry<T>).timestamp === 'number'
+  );
+}
+
 function getCache<T>(key: string): T | null {
   const entry = cache.get(key);
   if (!entry) return null;
@@ -50,7 +65,11 @@ function getCache<T>(key: string): T | null {
     cache.delete(key);
     return null;
   }
-  return entry.data as T;
+  if (!isValidCacheEntry<T>(entry)) {
+    cache.delete(key);
+    return null;
+  }
+  return entry.data;
 }
 
 function setCache<T>(key: string, data: T): void {
@@ -85,10 +104,10 @@ export const apiInterceptors = {
 };
 
 // ============================================
-// 模拟延迟
+// 模拟延迟 - 重命名为 simulateNetworkDelay
 // ============================================
 
-const mockDelay = (ms: number = 300) => new Promise((resolve) => setTimeout(resolve, ms));
+const simulateNetworkDelay = (ms: number = 300) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // ============================================
 // 通用请求方法 (增强版)
@@ -110,7 +129,10 @@ async function request<T>(
   if (!skipCache && fetchOptions.method === undefined) {
     const cached = getCache<T>(cacheKey);
     if (cached) {
-      console.debug(`[API Cache HIT] ${endpoint}`);
+      // 仅开发环境输出日志
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(`[API Cache HIT] ${endpoint}`);
+      }
       return cached;
     }
   }
@@ -128,18 +150,23 @@ async function request<T>(
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       if (config.useMock) {
-        await mockDelay();
+        await simulateNetworkDelay();
         throw new Error('Mock mode - should use dedicated mock methods');
       }
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), config.timeout);
 
+      // TODO(#API-AUTH): 添加认证头到所有 API 请求
+      // 追踪 issue: https://github.com/china-landing-ai-helper/pwa/issues/XXX
+      const authToken = getAuthToken(); // 需要从 auth 系统获取
       const response = await fetch(`${config.baseUrl}${endpoint}`, {
         ...finalOptions,
         signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
+          ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
+          'X-Request-ID': generateRequestId(), // 请求追踪
           ...finalOptions.headers,
         },
       });
@@ -400,6 +427,24 @@ export const apiConfig = {
   
   clearCache: () => clearCache(),
 };
+
+// ============================================
+// 辅助函数 - 认证和请求追踪
+// ============================================
+
+// TODO(#API-AUTH): 实现完整的认证系统
+// 追踪 issue: https://github.com/china-landing-ai-helper/pwa/issues/XXX
+function getAuthToken(): string | null {
+  // 临时实现：从 localStorage 获取 token
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('auth_token');
+  }
+  return null;
+}
+
+function generateRequestId(): string {
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+}
 
 // 导出配置供调试使用
 if (typeof window !== 'undefined') {

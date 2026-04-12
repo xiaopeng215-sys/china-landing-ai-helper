@@ -398,6 +398,11 @@
   box-shadow: 0 4px 6px rgba(255, 90, 95, 0.3);
 }
 
+.empty-action-btn.primary {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .empty-action-btn.primary:hover {
   box-shadow: 0 6px 12px rgba(255, 90, 95, 0.4);
   transform: translateY(-2px);
@@ -405,6 +410,7 @@
 
 .empty-action-btn.primary:active {
   transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 90, 95, 0.3);
 }
 
 .empty-action-btn.secondary {
