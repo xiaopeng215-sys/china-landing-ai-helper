@@ -148,6 +148,17 @@
       "source": "/.well-known/assetlinks.json",
       "destination": "/api/assetlinks",
       "permanent": false
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.travelerlocal.ai"
+        }
+      ],
+      "destination": "https://travelerlocal.ai/:path*",
+      "permanent": true
     }
   ],
   "crons": [],
