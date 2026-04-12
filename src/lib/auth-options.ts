@@ -88,7 +88,22 @@ export const authOptions: NextAuthOptions = {
         
         if (!supabase) {
           console.warn('Supabase 未配置，使用 Mock 认证');
-          // Mock 认证（开发/演示模式）
+          
+          // 演示模式 - 允许任意邮箱登录（用于临时解决生产环境问题）
+          if (process.env.USE_MOCK_AUTH === 'true' || process.env.NODE_ENV === 'development') {
+            // 简单的密码验证（演示用，生产环境不应这样）
+            if (credentials.password.length >= 6) {
+              return {
+                id: `mock-${credentials.email.replace(/[^a-zA-Z0-9]/g, '-')}`,
+                email: credentials.email,
+                name: credentials.email.split('@')[0],
+                avatar: null,
+              };
+            }
+            throw new Error('密码长度至少 6 位');
+          }
+          
+          // 生产模式 - 仅允许测试账号
           if (credentials.email === 'test@example.com' && credentials.password === 'test123') {
             return {
               id: 'mock-user-1',
@@ -97,7 +112,7 @@ export const authOptions: NextAuthOptions = {
               avatar: null,
             };
           }
-          throw new Error('认证服务未配置');
+          throw new Error('认证服务未配置，请联系管理员');
         }
 
         // 从数据库查询用户
