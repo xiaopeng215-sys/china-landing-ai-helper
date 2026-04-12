@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-04-12T11-39-36-910Z",
+  "status": "success",
+  "summary": {
+    "totalTests": 0,
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0
+  },
+  "coverage": {
+    "lines": 22.04,
+    "statements": 20.37,
+    "functions": 20.35,
+    "branches": 6.06
+  },
+  "thresholds": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "passed": false
+}

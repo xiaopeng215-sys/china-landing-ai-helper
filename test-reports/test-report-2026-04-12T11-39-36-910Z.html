@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Report - 2026-04-12T11-39-36-910Z</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+    }
+    .header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .header p { opacity: 0.9; }
+    .content { padding: 2rem; }
+    .status-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-weight: bold;
+      color: white;
+      background: #ef4444;
+      margin-bottom: 1rem;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .metric-card {
+      background: #f9fafb;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+    .metric-card h3 {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+    .metric-card .value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #1f2937;
+    }
+    .metric-card .value.pass { color: #22c55e; }
+    .metric-card .value.fail { color: #ef4444; }
+    .section { margin: 2rem 0; }
+    .section h2 {
+      font-size: 1.5rem;
+      color: #1f2937;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #374151;
+    }
+    tr:hover { background: #f9fafb; }
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #ef4444;
+      transition: width 0.3s ease;
+    }
+    .footer {
+      background: #f9fafb;
+      padding: 1rem 2rem;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧪 Test Report</h1>
+      <p>Generated: 2026-04-12T11-39-36-910Z</p>
+    </div>
+    
+    <div class="content">
+      <div class="status-badge">FAILED</div>
+      
+      <div class="metrics">
+        <div class="metric-card">
+          <h3>Line Coverage</h3>
+          <div class="value fail">22.0%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 22.04%"></div>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <h3>Statements</h3>
+          <div class="value">20.4%</div>
+        </div>
+        
+        <div class="metric-card">
+          <h3>Functions</h3>
+          <div class="value">20.4%</div>
+        </div>
+        
+        <div class="metric-card">
+          <h3>Branches</h3>
+          <div class="value">6.1%</div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <h2>Test Summary</h2>
+        <table>
+          <tr>
+            <th>Metric</th>
+            <th>Value</th>
+            <th>Threshold</th>
+            <th>Status</th>
+          </tr>
+          <tr>
+            <td>Line Coverage</td>
+            <td>22.0%</td>
+            <td>80%</td>
+            <td>❌</td>
+          </tr>
+          <tr>
+            <td>Statements</td>
+            <td>20.4%</td>
+            <td>80%</td>
+            <td>❌</td>
+          </tr>
+          <tr>
+            <td>Functions</td>
+            <td>20.4%</td>
+            <td>80%</td>
+            <td>❌</td>
+          </tr>
+          <tr>
+            <td>Branches</td>
+            <td>6.1%</td>
+            <td>80%</td>
+            <td>❌</td>
+          </tr>
+        </table>
+      </div>
+      
+      
+      <div class="section">
+        <h2>Coverage by File</h2>
+        <table>
+          <tr>
+            <th>File</th>
+            <th>Lines</th>
+            <th>Statements</th>
+            <th>Functions</th>
+            <th>Branches</th>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/index.ts</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>100.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useAttractionData.ts</td>
+            <td>94.4%</td>
+            <td>94.4%</td>
+            <td>100.0%</td>
+            <td>0.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useChatData.ts</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useFoodData.ts</td>
+            <td>100.0%</td>
+            <td>100.0%</td>
+            <td>100.0%</td>
+            <td>50.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useRealtimeChat.ts</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useRealtimeQuery.ts</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useRealtimeTrips.ts</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useTransportData.ts</td>
+            <td>95.0%</td>
+            <td>95.0%</td>
+            <td>100.0%</td>
+            <td>60.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useTripData.ts</td>
+            <td>95.5%</td>
+            <td>95.7%</td>
+            <td>100.0%</td>
+            <td>25.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/hooks/useTripGeneration.ts</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+            <td>0.0%</td>
+          </tr>
+          
+          <tr>
+            <td>/Users/xiaopeng/.openclaw/workspace/products/china-landing-ai-helper/pwa/src/lib/api-client.ts</td>
+            <td>21.7%</td>
+            <td>19.2%</td>
+            <td>27.0%</td>
+            <td>8.8%</td>
+          </tr>
+          
+        </table>
+      </div>
+      
+    </div>
+    
+    <div class="footer">
+      <p>Generated by CI/CD Pipeline | PWA Project</p>
+    </div>
+  </div>
+</body>
+</html>
