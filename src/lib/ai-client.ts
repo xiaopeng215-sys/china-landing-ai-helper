@@ -311,8 +311,9 @@ async function sendToQwen(
 }
 
 /**
- * 发送消息到 AI (支持多模型 fallback)
+ * 发送消息到 AI (支持多模型 fallback 或指定模型)
  * Fallback 策略：MiniMax → Qwen → Mock
+ * 如果指定了 model 参数，则直接使用指定模型
  */
 export async function sendToAI(
   messages: Message[],
@@ -321,8 +322,32 @@ export async function sendToAI(
     variables?: Record<string, string>;
     language?: string;
     structured?: boolean;  // 是否要求结构化响应
+    model?: AIModel;  // 指定使用的模型，不指定则使用 fallback 策略
   }
 ): Promise<AIResponse> {
+  // 如果指定了模型，直接使用指定模型
+  if (options?.model) {
+    const selectedModel = options.model;
+    console.log(`🎯 使用指定模型：${selectedModel.toUpperCase()}`);
+    
+    try {
+      if (selectedModel === 'minimax') {
+        if (!MINIMAX_API_KEY || MINIMAX_API_KEY === 'your-minimax-api-key') {
+          console.warn('⚠️ MiniMax API Key 未配置，回退到 Qwen');
+          return await sendToQwen(messages, options);
+        }
+        return await sendToMiniMax(messages, options);
+      } else if (selectedModel === 'qwen') {
+        return await sendToQwen(messages, options);
+      } else if (selectedModel === 'mock') {
+        return getMockResponse(messages);
+      }
+    } catch (error) {
+      console.warn(`⚠️ ${selectedModel.toUpperCase()} 失败，尝试 fallback 策略`, error);
+      // 回退到 fallback 策略
+    }
+  }
+  
   // Fallback 策略：MiniMax → Qwen → Mock
   const providers = [
     {

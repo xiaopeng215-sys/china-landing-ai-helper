@@ -10,35 +10,59 @@
   "scope": "/",
   "lang": "zh-CN",
   "dir": "ltr",
-  "categories": ["travel", "lifestyle", "navigation"],
+  "categories": [
+    "travel",
+    "lifestyle",
+    "navigation"
+  ],
   "shortcuts": [
     {
       "name": "规划行程",
       "short_name": "行程",
       "description": "用 AI 规划你的中国之旅",
       "url": "/?tab=trips",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "美食推荐",
       "short_name": "美食",
       "description": "发现地道中国美食",
       "url": "/?tab=food",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "交通指南",
       "short_name": "交通",
       "description": "获取交通出行帮助",
       "url": "/?tab=transport",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "安装指南",
       "short_name": "安装",
       "description": "查看如何安装此应用",
       "url": "/install-guide",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
   "icons": [
@@ -109,14 +133,35 @@
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Home Screen"
+      "label": "Home"
     },
     {
       "src": "/screenshots/chat.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "AI Chat"
+      "label": "Chat"
+    },
+    {
+      "src": "/screenshots/trips.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Trips"
+    },
+    {
+      "src": "/screenshots/food.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Food"
+    },
+    {
+      "src": "/screenshots/transport.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Transport"
     }
   ],
   "prefer_related_applications": false,

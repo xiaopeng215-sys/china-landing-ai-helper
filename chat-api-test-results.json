@@ -1,0 +1,94 @@
+{
+  "timestamp": "2026-04-12T11:30:55.021Z",
+  "tests": [
+    {
+      "name": "MiniMax API Key",
+      "passed": true,
+      "details": "已配置",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "Qwen API Key",
+      "passed": false,
+      "details": "未配置 (使用 Mock 回复)",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "组件文件：src/components/views/ChatView/index.tsx",
+      "passed": true,
+      "details": "存在",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "组件文件：src/components/views/ChatView/MessageList.tsx",
+      "passed": true,
+      "details": "存在",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "组件文件：src/components/views/ChatView/ChatInput.tsx",
+      "passed": true,
+      "details": "存在",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "组件文件：src/app/api/chat/route.ts",
+      "passed": true,
+      "details": "存在",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "组件文件：src/lib/ai-client.ts",
+      "passed": true,
+      "details": "存在",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "API 结构化解析",
+      "passed": true,
+      "details": "支持 JSON 解析",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "前端卡片渲染",
+      "passed": true,
+      "details": "支持卡片组件",
+      "timestamp": "2026-04-12T11:30:55.023Z"
+    },
+    {
+      "name": "MiniMax API 连接",
+      "passed": true,
+      "details": "状态码：200",
+      "timestamp": "2026-04-12T11:31:04.439Z"
+    },
+    {
+      "name": "MiniMax 响应格式",
+      "passed": true,
+      "details": "回复长度：776 字符",
+      "timestamp": "2026-04-12T11:31:04.440Z"
+    },
+    {
+      "name": "MiniMax 内容质量",
+      "passed": true,
+      "details": "内容预览：<think>\n用户请求推荐北京旅游景点。作为中国旅行规划师，我应该提供一个具体、实用且有吸引力的景点推荐。由于用户没有明确偏好，我会选择一个最具代表性的景点。\n\n我会推荐故宫（紫禁城），这是北京最著...",
+      "timestamp": "2026-04-12T11:31:04.440Z"
+    },
+    {
+      "name": "Qwen API 连接",
+      "passed": false,
+      "details": "API Key 未配置或无效 (sk-your-qwen-api-key)",
+      "timestamp": "2026-04-12T11:31:04.585Z"
+    },
+    {
+      "name": "Chat API 端点",
+      "passed": false,
+      "details": "服务器未运行 (localhost:3000)",
+      "timestamp": "2026-04-12T11:31:04.586Z"
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "passed": 11,
+    "failed": 3
+  }
+}

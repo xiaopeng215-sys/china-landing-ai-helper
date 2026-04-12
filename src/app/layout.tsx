@@ -10,43 +10,123 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://china-ai-helper.com';
+
 export const metadata: Metadata = {
-  title: 'China Landing AI Helper - Your China Travel Companion',
-  description: 'AI-powered China travel planning assistant for itineraries, food recommendations, and transport guidance',
+  // 基础 SEO
+  title: {
+    default: 'China Landing AI Helper - 你的中国旅行 AI 助手',
+    template: '%s | China AI Helper',
+  },
+  description: 'AI 驱动的中国旅行规划助手 - 智能行程定制、地道美食推荐、交通出行指南。支持北京、上海、西安、成都、桂林、杭州等热门目的地。',
+  keywords: [
+    '中国旅行',
+    'AI 旅行助手',
+    '行程规划',
+    '美食推荐',
+    '交通指南',
+    'China travel',
+    'AI assistant',
+    'travel planning',
+    'Beijing travel',
+    'Shanghai travel',
+    'Xian travel',
+    'Chengdu travel',
+    'Guilin travel',
+    'Hangzhou travel',
+  ],
+  authors: [
+    { name: 'China Landing AI Helper', url: SITE_URL },
+  ],
+  creator: 'China Landing AI Helper',
+  publisher: 'China Landing AI Helper',
+  
+  // 规范 URL
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'zh-CN': '/zh-CN',
+      'en-US': '/en-US',
+      'ko-KR': '/ko-KR',
+    },
+  },
+  
+  // PWA 配置
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'China AI Helper',
   },
+  
+  // 图标
   icons: {
     icon: [
       { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
       { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: '/icons/icon-192.png',
   },
+  
+  // 主题色
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#10B981' },
     { media: '(prefers-color-scheme: dark)', color: '#059669' },
   ],
-  keywords: ['China travel', 'AI assistant', 'travel planning', ' itinerary', 'food guide', 'transport'],
-  authors: [{ name: 'China Landing AI Helper' }],
+  
+  // Open Graph - 社交媒体分享优化
   openGraph: {
-    title: 'China Landing AI Helper',
-    description: 'Your AI-powered China travel companion',
     type: 'website',
     locale: 'zh_CN',
+    alternateLocale: ['en_US', 'ko_KR'],
+    url: SITE_URL,
     siteName: 'China AI Helper',
+    title: 'China Landing AI Helper - 你的中国旅行 AI 助手',
+    description: 'AI 驱动的中国旅行规划助手 - 智能行程定制、地道美食推荐、交通出行指南',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'China Landing AI Helper - AI 旅行助手',
+        type: 'image/png',
+      },
+      {
+        url: '/icons/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'China AI Helper Logo',
+        type: 'image/png',
+      },
+    ],
+  },
+  
+  // Twitter Cards
+  twitter: {
+    card: 'summary_large_image',
+    site: '@ChinaAIHelper',
+    creator: '@ChinaAIHelper',
+    title: 'China Landing AI Helper - 你的中国旅行 AI 助手',
+    description: 'AI 驱动的中国旅行规划助手 - 智能行程定制、地道美食推荐、交通出行指南',
+    images: ['/og-image.png'],
+  },
+  
+  // 其他验证
+  verification: {
+    google: 'your-google-verification-code',
+    yandex: 'your-yandex-verification-code',
+    // 可添加其他搜索引擎验证
   },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
   minimumScale: 1,
-  userScalable: false,
+  userScalable: true,
   viewportFit: 'cover',
   themeColor: '#10B981',
 };
@@ -70,6 +150,106 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased bg-gray-50 min-h-screen`}>
         <Providers>
           <NetworkStatus />
+          {/* 结构化数据 - Schema.org JSON-LD */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'WebApplication',
+                name: 'China Landing AI Helper',
+                alternateName: ['China AI Helper', '中国旅行 AI 助手'],
+                url: SITE_URL,
+                description: 'AI 驱动的中国旅行规划助手 - 智能行程定制、地道美食推荐、交通出行指南',
+                applicationCategory: 'TravelApplication',
+                operatingSystem: 'All',
+                browserRequirements: 'Requires JavaScript',
+                offers: {
+                  '@type': 'Offer',
+                  price: '0',
+                  priceCurrency: 'CNY',
+                },
+                author: {
+                  '@type': 'Organization',
+                  name: 'China Landing AI Helper',
+                  url: SITE_URL,
+                },
+                keywords: '中国旅行，AI 助手，行程规划，美食推荐，交通指南，Beijing, Shanghai, Xian, Chengdu, Guilin, Hangzhou',
+                featureList: 'AI 行程规划，美食推荐，交通指南，离线模式，多语言支持',
+                screenshot: `${SITE_URL}/screenshots/home.png`,
+                sameAs: [
+                  'https://twitter.com/ChinaAIHelper',
+                  'https://www.facebook.com/ChinaAIHelper',
+                ],
+              }),
+            }}
+          />
+          {/* 旅行服务结构化数据 */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'TravelAgency',
+                name: 'China Landing AI Helper',
+                description: 'AI 驱动的中国旅行规划服务',
+                url: SITE_URL,
+                priceRange: '¥¥',
+                currenciesAccepted: 'CNY',
+                paymentAccepted: 'Cash, Credit Card, Alipay, WeChat Pay',
+                areaServed: [
+                  {
+                    '@type': 'City',
+                    name: 'Beijing',
+                    address: {
+                      '@type': 'PostalAddress',
+                      addressCountry: 'CN',
+                    },
+                  },
+                  {
+                    '@type': 'City',
+                    name: 'Shanghai',
+                    address: {
+                      '@type': 'PostalAddress',
+                      addressCountry: 'CN',
+                    },
+                  },
+                  {
+                    '@type': 'City',
+                    name: 'Xian',
+                    address: {
+                      '@type': 'PostalAddress',
+                      addressCountry: 'CN',
+                    },
+                  },
+                  {
+                    '@type': 'City',
+                    name: 'Chengdu',
+                    address: {
+                      '@type': 'PostalAddress',
+                      addressCountry: 'CN',
+                    },
+                  },
+                  {
+                    '@type': 'City',
+                    name: 'Guilin',
+                    address: {
+                      '@type': 'PostalAddress',
+                      addressCountry: 'CN',
+                    },
+                  },
+                  {
+                    '@type': 'City',
+                    name: 'Hangzhou',
+                    address: {
+                      '@type': 'PostalAddress',
+                      addressCountry: 'CN',
+                    },
+                  },
+                ],
+              }),
+            }}
+          />
           <div className="safe-top safe-bottom">
             {children}
           </div>

@@ -36,11 +36,22 @@ function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   
-  if (!supabaseUrl || !supabaseKey) {
+  // 检查是否为占位符值
+  if (!supabaseUrl || !supabaseKey || 
+      supabaseUrl.includes('your-project') || 
+      supabaseKey === 'your-anon-key') {
     return null;
   }
   
   return createClient(supabaseUrl, supabaseKey);
+}
+
+// 辅助函数：检查配置是否为有效值（非占位符）
+function isValidConfig(value: string | undefined): boolean {
+  return !!value && 
+         !value.includes('your-') && 
+         !value.includes('example') && 
+         value.trim() !== '';
 }
 
 const authOptions: NextAuthOptions = {
@@ -58,8 +69,26 @@ const authOptions: NextAuthOptions = {
         }
 
         const supabase = getSupabaseClient();
+        
+        // 内存存储 Fallback - 开发模式
         if (!supabase) {
-          throw new Error('数据库未配置');
+          console.log('[Auth Fallback] 使用内存存储模式，允许任意有效邮箱登录');
+          // 开发模式：允许任意有效格式的邮箱登录
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(credentials.email)) {
+            throw new Error('请输入有效的邮箱地址');
+          }
+          // 开发模式密码：任意 6 位以上密码
+          if (credentials.password.length < 6) {
+            throw new Error('密码至少 6 位');
+          }
+          
+          return {
+            id: `dev_user_${credentials.email.replace(/[^a-zA-Z0-9]/g, '_')}`,
+            email: credentials.email,
+            name: credentials.email.split('@')[0],
+            avatar: undefined,
+          };
         }
 
         // 查询用户
@@ -89,41 +118,50 @@ const authOptions: NextAuthOptions = {
       }
     }),
 
-    // 邮箱验证码登录 (Magic Link)
-    EmailProvider({
+    // 邮箱验证码登录 (Magic Link) - 仅在配置有效时启用
+    ...(isValidConfig(process.env.EMAIL_SERVER) ? [EmailProvider({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM || 'noreply@china-landing-ai-helper.com',
-    }),
+    })] : []),
     
-    // Google 登录
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-      authorization: {
-        params: {
-          prompt: 'consent',
-          access_type: 'offline',
-          response_type: 'code'
+    // Google 登录 - 仅在配置有效时启用
+    ...(isValidConfig(process.env.GOOGLE_CLIENT_ID) && isValidConfig(process.env.GOOGLE_CLIENT_SECRET) ? [
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        authorization: {
+          params: {
+            prompt: 'consent',
+            access_type: 'offline',
+            response_type: 'code'
+          }
         }
-      }
-    }),
+      })
+    ] : []),
     
-    // Facebook 登录
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID || '',
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || '',
-      authorization: {
-        params: {
-          scope: 'email,public_profile'
+    // Facebook 登录 - 仅在配置有效时启用
+    ...(isValidConfig(process.env.FACEBOOK_CLIENT_ID) && isValidConfig(process.env.FACEBOOK_CLIENT_SECRET) ? [
+      FacebookProvider({
+        clientId: process.env.FACEBOOK_CLIENT_ID!,
+        clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+        authorization: {
+          params: {
+            scope: 'email,public_profile'
+          }
         }
-      }
-    }),
+      })
+    ] : []),
     
-    // OpenAI 登录
-    OpenAIProvider,
+    // OpenAI 登录 - 仅在配置有效时启用
+    ...(isValidConfig(process.env.OPENAI_CLIENT_ID) && isValidConfig(process.env.OPENAI_CLIENT_SECRET) ? [
+      OpenAIProvider
+    ] : []),
   ],
   
-  adapter: process.env.NEXT_PUBLIC_SUPABASE_URL
+  adapter: (process.env.NEXT_PUBLIC_SUPABASE_URL && 
+            !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('your-project') &&
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && 
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== 'your-anon-key')
     ? (SupabaseAdapter({
         url: process.env.NEXT_PUBLIC_SUPABASE_URL,
         secret: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',

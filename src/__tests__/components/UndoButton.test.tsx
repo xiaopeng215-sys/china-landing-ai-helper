@@ -3,7 +3,7 @@
  * 覆盖率目标：> 80%
  */
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import UndoButton, { useUndoHistory, UndoHistoryManager } from '@/components/ui/UndoButton';
 
@@ -35,65 +35,83 @@ describe('UndoButton', () => {
     expect(button).toBeDisabled();
   });
 
-  it('应该在点击时调用 onUndo 回调', () => {
+  it('应该在点击时调用 onUndo 回调', async () => {
     const onUndo = jest.fn();
     const { unmount } = render(<UndoButton onUndo={onUndo} />);
     
     // 添加一个撤销动作
     const manager = UndoHistoryManager.getInstance();
-    manager.addAction({
-      id: 'test-1',
-      type: 'test',
-      description: 'Test action',
-      timestamp: Date.now(),
+    await act(async () => {
+      manager.addAction({
+        id: 'test-1',
+        type: 'test',
+        description: 'Test action',
+        timestamp: Date.now(),
+      });
     });
     
     const button = screen.getByText('撤销').closest('button');
-    fireEvent.click(button!);
+    await act(async () => {
+      fireEvent.click(button!);
+    });
     
-    expect(onUndo).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onUndo).toHaveBeenCalled();
+    });
     
     unmount();
     manager.clear();
   });
 
-  it('应该支持键盘快捷键 Ctrl+Z', () => {
+  it('应该支持键盘快捷键 Ctrl+Z', async () => {
     const onUndo = jest.fn();
     const { unmount } = render(<UndoButton onUndo={onUndo} />);
     
     // 添加一个撤销动作
     const manager = UndoHistoryManager.getInstance();
-    manager.addAction({
-      id: 'test-2',
-      type: 'test',
-      description: 'Test action',
-      timestamp: Date.now(),
+    await act(async () => {
+      manager.addAction({
+        id: 'test-2',
+        type: 'test',
+        description: 'Test action',
+        timestamp: Date.now(),
+      });
     });
     
-    fireEvent.keyDown(window, { key: 'z', ctrlKey: true });
+    await act(async () => {
+      fireEvent.keyDown(window, { key: 'z', ctrlKey: true });
+    });
     
-    expect(onUndo).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onUndo).toHaveBeenCalled();
+    });
     
     unmount();
     manager.clear();
   });
 
-  it('应该支持键盘快捷键 Cmd+Z (Mac)', () => {
+  it('应该支持键盘快捷键 Cmd+Z (Mac)', async () => {
     const onUndo = jest.fn();
     const { unmount } = render(<UndoButton onUndo={onUndo} />);
     
     // 添加一个撤销动作
     const manager = UndoHistoryManager.getInstance();
-    manager.addAction({
-      id: 'test-3',
-      type: 'test',
-      description: 'Test action',
-      timestamp: Date.now(),
+    await act(async () => {
+      manager.addAction({
+        id: 'test-3',
+        type: 'test',
+        description: 'Test action',
+        timestamp: Date.now(),
+      });
     });
     
-    fireEvent.keyDown(window, { key: 'z', metaKey: true });
+    await act(async () => {
+      fireEvent.keyDown(window, { key: 'z', metaKey: true });
+    });
     
-    expect(onUndo).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onUndo).toHaveBeenCalled();
+    });
     
     unmount();
     manager.clear();

@@ -1,0 +1,96 @@
+# China Landing AI Helper - Robots.txt
+# 最后更新：2026-04-12
+
+# 允许所有搜索引擎抓取
+User-agent: *
+Allow: /
+
+# 允许抓取的主要页面
+Allow: /
+Allow: /install-guide
+Allow: /legal/privacy
+Allow: /legal/terms
+Allow: /legal/cookies
+
+# 允许抓取 API 文档 (如果有)
+Allow: /api/
+
+# 网站地图位置
+Sitemap: https://china-ai-helper.com/sitemap.xml
+
+# 通用规则
+# 不抓取管理路径 (如果有)
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /api/auth/
+Disallow: /api/health/
+
+# 特定搜索引擎优化
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Google Images
+User-agent: Googlebot-Image
+Allow: /
+Allow: /icons/
+Allow: /screenshots/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# Baidu (中国市场重要)
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 3
+
+# 360 搜索 (中国市场)
+User-agent: 360Spider
+Allow: /
+Crawl-delay: 3
+
+# Sogou 搜索 (中国市场)
+User-agent: Sogou web spider
+Allow: /
+Crawl-delay: 3
+
+# 社交媒体爬虫 (用于链接预览)
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# 阻止恶意爬虫
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# 通用安全规则
+# 阻止抓取敏感文件
+Disallow: /*.sql$
+Disallow: /*.log$
+Disallow: /*.env$
+Disallow: /private/
+
+# 阻止抓取参数过多的 URL
+Disallow: /*?*sessionid=
+Disallow: /*?*token=
+Disallow: /*?*auth=
+
+# 爬虫礼貌性设置
+Crawl-delay: 1

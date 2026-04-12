@@ -36,8 +36,9 @@ export default function Header({
             <button
               onClick={onBack}
               className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="返回上一页"
             >
-              <span className="text-xl">←</span>
+              <span className="text-xl" aria-hidden="true">←</span>
             </button>
           )}
           <h1 className="text-xl font-bold text-gray-900">{title}</h1>
@@ -50,6 +51,9 @@ export default function Header({
             <button
               onClick={() => setShowMenu(!showMenu)}
               className="w-9 h-9 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-full flex items-center justify-center text-white font-semibold shadow-md hover:shadow-lg transition-all"
+              aria-label="打开用户菜单"
+              aria-expanded={showMenu}
+              aria-haspopup="true"
             >
               {session.user?.name?.charAt(0).toUpperCase() || 'U'}
             </button>
@@ -89,6 +93,7 @@ export default function Header({
                   <button
                     onClick={handleSignOut}
                     className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    aria-label="退出登录"
                   >
                     🚪 退出登录
                   </button>
@@ -100,6 +105,7 @@ export default function Header({
           <Link
             href="/profile"
             className="w-9 h-9 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-full flex items-center justify-center text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            aria-label="查看个人资料"
           >
             {session.user?.name?.charAt(0).toUpperCase() || 'U'}
           </Link>
@@ -107,6 +113,7 @@ export default function Header({
           <Link
             href="/auth/signin"
             className="px-4 py-2 text-sm font-medium text-[#ff5a5f] bg-[#ff5a5f]/10 rounded-full hover:bg-[#ff5a5f]/20 transition-colors"
+            aria-label="登录账号"
           >
             登录
           </Link>

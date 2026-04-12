@@ -90,11 +90,11 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 flex items-center justify-center px-4 py-12" role="main" aria-label="登录页面">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-2xl flex items-center justify-center text-4xl shadow-lg mx-auto mb-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-2xl flex items-center justify-center text-4xl shadow-lg mx-auto mb-4" aria-hidden="true">
             🇨🇳
           </div>
           <h1 className="text-2xl font-bold text-[#484848] mb-2">
@@ -108,7 +108,7 @@ export default function SignInPage() {
         {/* 登录表单 */}
         <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
           {/* 登录方式切换 */}
-          <div className="flex gap-2 mb-6">
+          <div className="flex gap-2 mb-6" role="group" aria-label="选择登录方式">
             <button
               onClick={() => setLoginMethod('password')}
               className={`flex-1 py-2 text-sm font-medium rounded-xl transition-all ${
@@ -116,6 +116,8 @@ export default function SignInPage() {
                   ? 'bg-[#ff5a5f] text-white shadow-md'
                   : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
               }`}
+              aria-pressed={loginMethod === 'password'}
+              aria-label="使用密码登录"
             >
               密码登录
             </button>
@@ -126,6 +128,8 @@ export default function SignInPage() {
                   ? 'bg-[#ff5a5f] text-white shadow-md'
                   : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
               }`}
+              aria-pressed={loginMethod === 'email'}
+              aria-label="使用邮箱验证码登录"
             >
               邮箱验证码
             </button>
@@ -133,40 +137,45 @@ export default function SignInPage() {
 
           {/* 密码登录表单 */}
           {loginMethod === 'password' && (
-            <form onSubmit={handlePasswordSignIn} className="space-y-4 mb-6">
+            <form onSubmit={handlePasswordSignIn} className="space-y-4 mb-6" aria-label="密码登录表单">
               <div>
-                <label className="block text-sm font-medium text-[#484848] mb-2">
+                <label htmlFor="signin-email-password" className="block text-sm font-medium text-[#484848] mb-2">
                   邮箱地址
                 </label>
                 <input
+                  id="signin-email-password"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
                   placeholder="your@email.com"
+                  aria-required="true"
                 />
               </div>
 
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="block text-sm font-medium text-[#484848]">
+                  <label htmlFor="signin-password" className="block text-sm font-medium text-[#484848]">
                     密码
                   </label>
                   <Link
                     href="/auth/forgot-password"
                     className="text-sm text-[#ff5a5f] hover:underline"
+                    aria-label="忘记密码？点击重置"
                   >
                     忘记密码？
                   </Link>
                 </div>
                 <input
+                  id="signin-password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
                   placeholder="••••••••"
+                  aria-required="true"
                 />
               </div>
 
@@ -187,6 +196,7 @@ export default function SignInPage() {
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label={loading ? '登录中' : '登录'}
               >
                 {loading ? '登录中...' : '登录'}
               </button>
@@ -195,18 +205,20 @@ export default function SignInPage() {
 
           {/* 邮箱验证码登录表单 */}
           {loginMethod === 'email' && (
-            <form onSubmit={handleEmailSignIn} className="space-y-4 mb-6">
+            <form onSubmit={handleEmailSignIn} className="space-y-4 mb-6" aria-label="邮箱验证码登录表单">
               <div>
-                <label className="block text-sm font-medium text-[#484848] mb-2">
+                <label htmlFor="signin-email-otp" className="block text-sm font-medium text-[#484848] mb-2">
                   邮箱地址
                 </label>
                 <input
+                  id="signin-email-otp"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
                   placeholder="your@email.com"
+                  aria-required="true"
                 />
               </div>
 
@@ -214,11 +226,12 @@ export default function SignInPage() {
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label={loading ? '发送中' : '发送登录链接'}
               >
                 {loading ? '发送中...' : '发送登录链接'}
               </button>
 
-              <p className="text-xs text-[#767676] text-center">
+              <p className="text-xs text-[#767676] text-center" id="email-help">
                 我们将发送一封包含登录链接的邮件到您的邮箱
               </p>
             </form>
@@ -226,7 +239,7 @@ export default function SignInPage() {
 
           {/* 错误提示 */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm">
+            <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm" role="alert" aria-live="polite">
               {error}
             </div>
           )}
@@ -242,14 +255,15 @@ export default function SignInPage() {
           </div>
 
           {/* 第三方登录 */}
-          <div className="space-y-3 mb-6">
+          <div className="space-y-3 mb-6" role="group" aria-label="第三方登录选项">
             {/* Google 登录 */}
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
               className="w-full py-3 bg-white border border-gray-200 rounded-xl font-semibold text-[#484848] hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50"
+              aria-label="使用 Google 账号登录"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -275,8 +289,9 @@ export default function SignInPage() {
               onClick={handleFacebookSignIn}
               disabled={loading}
               className="w-full py-3 bg-white border border-gray-200 rounded-xl font-semibold text-[#484848] hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50"
+              aria-label="使用 Facebook 账号登录"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
               使用 Facebook 账号登录
@@ -287,6 +302,7 @@ export default function SignInPage() {
               onClick={handleOpenAISignIn}
               disabled={loading}
               className="w-full py-3 bg-white border border-gray-200 rounded-xl font-semibold text-[#484848] hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50"
+              aria-label="使用 OpenAI 账号登录"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#412991">
                 <path d="M22.281 9.821a5.984 5.984 0 0 0-.516-3.909 6.046 6.046 0 0 0-6.509-2.9A6.065 6.065 0 0 0 4.977 4.18a5.983 5.983 0 0 0-3.993 2.9 6.046 6.046 0 0 0 .745 7.097 5.98 5.98 0 0 0 .51 3.91 6.051 6.051 0 0 0 6.515 2.9 5.984 5.984 0 0 0 3.988-2.91 6.056 6.056 0 0 0 10.032-1.174 5.987 5.987 0 0 0-.494-7.082zM13.94 19.407a4.462 4.462 0 0 1-4.449-2.145 4.345 4.345 0 0 1-.434-3.248 10.575 10.575 0 0 0 2.187.69 10.727 10.727 0 0 0 2.126.239c.18.897.568 1.736 1.118 2.436a4.466 4.466 0 0 1-.548 2.028zm-8.863-4.592a4.455 4.455 0 0 1-1.88-3.923 4.354 4.354 0 0 1 1.588-2.866 10.566 10.566 0 0 0 1.337 1.962 10.728 10.728 0 0 0 1.493 1.545 4.459 4.459 0 0 1-2.538 3.282zm1.034-8.863a4.462 4.462 0 0 1 4.45 2.145 4.345 4.345 0 0 1 .433 3.248 10.575 10.575 0 0 0-2.187-.69 10.727 10.727 0 0 0-2.126-.239 4.466 4.466 0 0 1-1.118-2.436 4.466 4.466 0 0 1 .548-2.028zm8.863 4.592a4.455 4.455 0 0 1 1.88 3.923 4.354 4.354 0 0 1-1.588 2.866 10.566 10.566 0 0 0-1.337-1.962 10.728 10.728 0 0 0-1.493-1.545 4.459 4.459 0 0 1 2.538-3.282z"/>
@@ -298,7 +314,11 @@ export default function SignInPage() {
           {/* 注册链接 */}
           <p className="text-center text-sm text-[#767676] mt-6">
             还没有账号？{' '}
-            <Link href="/auth/signup" className="text-[#ff5a5f] hover:underline font-medium">
+            <Link 
+              href="/auth/signup" 
+              className="text-[#ff5a5f] hover:underline font-medium"
+              aria-label="注册新账号"
+            >
               立即注册
             </Link>
           </p>
@@ -307,11 +327,19 @@ export default function SignInPage() {
         {/* 底部提示 */}
         <p className="text-center text-xs text-[#767676] mt-6">
           登录即表示您同意我们的{' '}
-          <a href="/terms" className="text-[#ff5a5f] hover:underline">
+          <a 
+            href="/terms" 
+            className="text-[#ff5a5f] hover:underline"
+            aria-label="查看服务条款"
+          >
             服务条款
           </a>{' '}
           和{' '}
-          <a href="/privacy" className="text-[#ff5a5f] hover:underline">
+          <a 
+            href="/privacy" 
+            className="text-[#ff5a5f] hover:underline"
+            aria-label="查看隐私政策"
+          >
             隐私政策
           </a>
         </p>

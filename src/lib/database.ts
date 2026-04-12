@@ -1,11 +1,42 @@
 /**
- * 数据库客户端 - Supabase 集成
+ * 数据库客户端 - Supabase 集成 + 内存存储 Fallback
  * 懒加载初始化，避免构建时 Env 缺失报错
+ * 
+ * Fallback 策略：Supabase → 内存存储（开发/测试模式）
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 let _supabase: SupabaseClient | null = null;
+
+// 内存存储（用于开发/测试模式，当 Supabase 未配置时）
+interface InMemorySession {
+  id: string;
+  user_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface InMemoryMessage {
+  id: string;
+  session_id: string;
+  user_id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  tokens?: number;
+  created_at: string;
+}
+
+const inMemoryStore = {
+  sessions: new Map<string, InMemorySession>(),
+  messages: new Map<string, InMemoryMessage>(),
+  sessionMessages: new Map<string, string[]>(), // sessionId -> messageIds
+};
+
+function generateId(): string {
+  return `mem_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+}
 
 function getSupabase(): SupabaseClient | null {
   if (_supabase) return _supabase;
@@ -13,13 +44,26 @@ function getSupabase(): SupabaseClient | null {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   
-  if (!supabaseUrl || !supabaseKey) {
-    console.warn('[Supabase] Env vars not configured, DB features disabled');
+  // 检查是否是占位符配置
+  const isPlaceholder = !supabaseUrl || 
+                        !supabaseKey || 
+                        supabaseUrl.includes('your-project') || 
+                        supabaseKey.includes('your-anon-key');
+  
+  if (isPlaceholder) {
+    console.warn('[Supabase] 使用占位符配置，启用内存存储 Fallback 模式');
     return null;
   }
   
   _supabase = createClient(supabaseUrl, supabaseKey);
   return _supabase;
+}
+
+/**
+ * 检查是否使用内存存储
+ */
+function isInMemoryMode(): boolean {
+  return getSupabase() === null;
 }
 
 // Lazy supabase instance
@@ -478,7 +522,22 @@ export async function createChatSession(
   title: string = '新对话'
 ): Promise<string | null> {
   const client = getSupabase();
-  if (!client) return null;
+  
+  // 内存存储 Fallback
+  if (!client) {
+    console.log('[DB Fallback] 使用内存存储创建会话');
+    const sessionId = generateId();
+    const session: InMemorySession = {
+      id: sessionId,
+      user_id: userId,
+      title,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    inMemoryStore.sessions.set(sessionId, session);
+    inMemoryStore.sessionMessages.set(sessionId, []);
+    return sessionId;
+  }
 
   try {
     const { data, error } = await client
@@ -502,7 +561,29 @@ export async function createChatSession(
 
 export async function getChatSessions(userId: string): Promise<ChatSession[]> {
   const client = getSupabase();
-  if (!client) return [];
+  
+  // 内存存储 Fallback
+  if (!client) {
+    console.log('[DB Fallback] 使用内存存储获取会话列表');
+    const sessions: ChatSession[] = [];
+    
+    for (const session of inMemoryStore.sessions.values()) {
+      if (session.user_id === userId) {
+        sessions.push({
+          id: session.id,
+          user_id: session.user_id,
+          title: session.title,
+          created_at: session.created_at,
+          updated_at: session.updated_at,
+        });
+      }
+    }
+    
+    // 按更新时间排序
+    return sessions.sort((a, b) => 
+      new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+    );
+  }
 
   try {
     const { data, error } = await client
@@ -524,7 +605,19 @@ export async function updateChatSessionTitle(
   title: string
 ): Promise<boolean> {
   const client = getSupabase();
-  if (!client) return false;
+  
+  // 内存存储 Fallback
+  if (!client) {
+    console.log('[DB Fallback] 使用内存存储更新会话标题');
+    const session = inMemoryStore.sessions.get(sessionId);
+    if (session) {
+      session.title = title;
+      session.updated_at = new Date().toISOString();
+      inMemoryStore.sessions.set(sessionId, session);
+      return true;
+    }
+    return false;
+  }
 
   try {
     const { error } = await client
@@ -580,7 +673,36 @@ export async function saveMessage(
   tokens?: number
 ): Promise<string | null> {
   const client = getSupabase();
-  if (!client) return null;
+  
+  // 内存存储 Fallback
+  if (!client) {
+    console.log('[DB Fallback] 使用内存存储保存消息');
+    const messageId = generateId();
+    const message: InMemoryMessage = {
+      id: messageId,
+      session_id: sessionId,
+      user_id: userId,
+      role,
+      content,
+      tokens,
+      created_at: new Date().toISOString(),
+    };
+    inMemoryStore.messages.set(messageId, message);
+    
+    // 更新会话的消息列表
+    const messageIds = inMemoryStore.sessionMessages.get(sessionId) || [];
+    messageIds.push(messageId);
+    inMemoryStore.sessionMessages.set(sessionId, messageIds);
+    
+    // 更新会话的 updated_at
+    const session = inMemoryStore.sessions.get(sessionId);
+    if (session) {
+      session.updated_at = new Date().toISOString();
+      inMemoryStore.sessions.set(sessionId, session);
+    }
+    
+    return messageId;
+  }
 
   try {
     const { data, error } = await client
@@ -613,7 +735,33 @@ export async function saveMessage(
 
 export async function getMessages(sessionId: string, limit = 50): Promise<Message[]> {
   const client = getSupabase();
-  if (!client) return [];
+  
+  // 内存存储 Fallback
+  if (!client) {
+    console.log('[DB Fallback] 使用内存存储获取消息');
+    const messageIds = inMemoryStore.sessionMessages.get(sessionId) || [];
+    const messages: Message[] = [];
+    
+    for (const messageId of messageIds) {
+      const message = inMemoryStore.messages.get(messageId);
+      if (message) {
+        messages.push({
+          id: message.id,
+          session_id: message.session_id,
+          user_id: message.user_id,
+          role: message.role,
+          content: message.content,
+          tokens: message.tokens,
+          created_at: message.created_at,
+        });
+      }
+    }
+    
+    // 按创建时间排序并限制数量
+    return messages
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      .slice(0, limit);
+  }
 
   try {
     const { data, error } = await client

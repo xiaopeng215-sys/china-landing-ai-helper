@@ -1,0 +1,348 @@
+name: 🚀 Complete CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  # ============================================
+  # Stage 1: Code Quality
+  # ============================================
+  lint:
+    name: 🔍 Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: products/china-landing-ai-helper/pwa/package-lock.json
+
+      - name: Install dependencies
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm run lint
+
+      - name: Run TypeScript check
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npx tsc --noEmit
+
+  # ============================================
+  # Stage 2: Automated Testing
+  # ============================================
+  test:
+    name: 🧪 Automated Tests
+    runs-on: ubuntu-latest
+    needs: [lint]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: products/china-landing-ai-helper/pwa/package-lock.json
+
+      - name: Install dependencies
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm ci
+
+      - name: Run tests with coverage
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm run test:coverage
+        env:
+          CI: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: products/china-landing-ai-helper/pwa/coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: products/china-landing-ai-helper/pwa/coverage/
+          retention-days: 7
+
+      - name: Validate coverage threshold
+        working-directory: products/china-landing-ai-helper/pwa
+        run: node scripts/ci/validate-coverage.js
+
+  # ============================================
+  # Stage 3: Security Scan
+  # ============================================
+  security:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    needs: [lint]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: products/china-landing-ai-helper/pwa/package-lock.json
+
+      - name: Install dependencies
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm ci
+
+      - name: Run npm audit
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm audit --audit-level=high
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit
+          path: products/china-landing-ai-helper/pwa/audit-report.json
+          retention-days: 7
+
+  # ============================================
+  # Stage 4: Build
+  # ============================================
+  build:
+    name: 🏗️ Build Application
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: products/china-landing-ai-helper/pwa/package-lock.json
+
+      - name: Install dependencies
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm ci
+
+      - name: Build application
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm run build
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: products/china-landing-ai-helper/pwa/.next/
+          retention-days: 3
+
+  # ============================================
+  # Stage 5: Lighthouse Performance
+  # ============================================
+  lighthouse:
+    name: 💡 Lighthouse Audit
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: products/china-landing-ai-helper/pwa/package-lock.json
+
+      - name: Install dependencies
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm ci
+
+      - name: Build for production
+        working-directory: products/china-landing-ai-helper/pwa
+        run: npm run build
+
+      - name: Run Lighthouse audit
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            http://localhost:3000/
+            http://localhost:3000/chat
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: products/china-landing-ai-helper/pwa/.lighthouseci/
+          retention-days: 7
+
+  # ============================================
+  # Stage 6: Deploy Preview (PR)
+  # ============================================
+  deploy-preview:
+    name: 🚀 Deploy Preview
+    runs-on: ubuntu-latest
+    needs: [lint, test, build]
+    if: github.event_name == 'pull_request'
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: products/china-landing-ai-helper/pwa/package-lock.json
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment
+        working-directory: products/china-landing-ai-helper/pwa
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project
+        working-directory: products/china-landing-ai-helper/pwa
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel Preview
+        id: deploy
+        working-directory: products/china-landing-ai-helper/pwa
+        run: |
+          DEPLOY_OUTPUT=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$DEPLOY_OUTPUT" >> $GITHUB_OUTPUT
+          echo "✅ Deployed to: $DEPLOY_OUTPUT"
+
+  # ============================================
+  # Stage 7: Deploy Production (Main/Master)
+  # ============================================
+  deploy-production:
+    name: 🌐 Deploy Production
+    runs-on: ubuntu-latest
+    needs: [lint, test, build, security]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: products/china-landing-ai-helper/pwa/package-lock.json
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment
+        working-directory: products/china-landing-ai-helper/pwa
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project
+        working-directory: products/china-landing-ai-helper/pwa
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel Production
+        id: deploy
+        working-directory: products/china-landing-ai-helper/pwa
+        run: |
+          DEPLOY_OUTPUT=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$DEPLOY_OUTPUT" >> $GITHUB_OUTPUT
+          echo "✅ Production deployed to: $DEPLOY_OUTPUT"
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "🎉 Production deployment successful!"
+          echo "URL: ${{ steps.deploy.outputs.url }}"
+
+  # ============================================
+  # Stage 8: Quality Gate Summary
+  # ============================================
+  quality-gate:
+    name: ✅ Quality Gate Summary
+    runs-on: ubuntu-latest
+    needs: [lint, test, build, security, lighthouse]
+    if: always()
+    
+    steps:
+      - name: Check job statuses
+        run: |
+          echo "## 🎯 Quality Gate Results"
+          echo ""
+          echo "| Stage | Status |"
+          echo "|-------|--------|"
+          echo "| Code Quality | ${{ needs.lint.result }} |"
+          echo "| Automated Tests | ${{ needs.test.result }} |"
+          echo "| Security Scan | ${{ needs.security.result }} |"
+          echo "| Build | ${{ needs.build.result }} |"
+          echo "| Lighthouse | ${{ needs.lighthouse.result }} |"
+          echo ""
+          
+          FAILED_STAGES=()
+          
+          [ "${{ needs.lint.result }}" != "success" ] && FAILED_STAGES+=("Code Quality")
+          [ "${{ needs.test.result }}" != "success" ] && FAILED_STAGES+=("Automated Tests")
+          [ "${{ needs.security.result }}" != "success" ] && FAILED_STAGES+=("Security Scan")
+          [ "${{ needs.build.result }}" != "success" ] && FAILED_STAGES+=("Build")
+          
+          if [ ${#FAILED_STAGES[@]} -gt 0 ]; then
+            echo "❌ **Quality Gate FAILED**"
+            echo ""
+            echo "Failed stages: ${FAILED_STAGES.join(', ')}"
+            echo ""
+            echo "Please review the logs and fix the issues."
+            exit 1
+          fi
+          
+          echo "✅ **All Quality Gates PASSED**"
+          echo ""
+          echo "Ready for deployment! 🚀"

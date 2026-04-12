@@ -36,24 +36,41 @@ function AuthErrorContent() {
   const errorInfo = getErrorMessage(error);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 flex items-center justify-center px-4 py-12" role="main" aria-label="认证错误">
       <div className="max-w-md w-full text-center">
-        <div className="w-20 h-20 bg-gradient-to-br from-red-400 to-red-500 rounded-3xl flex items-center justify-center text-5xl shadow-lg mx-auto mb-6">
+        <div className="w-20 h-20 bg-gradient-to-br from-red-400 to-red-500 rounded-3xl flex items-center justify-center text-5xl shadow-lg mx-auto mb-6" aria-hidden="true">
           {errorInfo.icon}
         </div>
         <h1 className="text-2xl font-bold text-[#484848] mb-4">{errorInfo.title}</h1>
-        <p className="text-[#767676] mb-8 leading-relaxed">{errorInfo.message}</p>
+        <p className="text-[#767676] mb-8 leading-relaxed" id="error-description">{errorInfo.message}</p>
         <div className="space-y-4">
-          <Link href="/auth/signin" className="block w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <Link 
+            href="/auth/signin" 
+            className="block w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+            aria-label="重新登录"
+          >
             重新登录
           </Link>
-          <Link href="/" className="block w-full py-3 bg-white border border-gray-200 text-[#484848] rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200">
+          <Link 
+            href="/" 
+            className="block w-full py-3 bg-white border border-gray-200 text-[#484848] rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200"
+            aria-label="返回首页"
+          >
             返回首页
           </Link>
         </div>
         <div className="mt-8 text-sm text-[#767676]">
           <p>仍有问题？</p>
-          <p className="mt-1">联系支持：<a href="mailto:support@chinalanding.ai" className="text-[#ff5a5f] hover:underline">support@chinalanding.ai</a></p>
+          <p className="mt-1">
+            联系支持：
+            <a 
+              href="mailto:support@chinalanding.ai" 
+              className="text-[#ff5a5f] hover:underline"
+              aria-label="发送邮件至支持团队"
+            >
+              support@chinalanding.ai
+            </a>
+          </p>
         </div>
       </div>
     </div>
