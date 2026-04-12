@@ -16,7 +16,12 @@
     "NEXT_PUBLIC_APP_NAME": "China Landing AI Helper",
     "NEXT_PUBLIC_SENTRY_RELEASE": "1.0.0-beta",
     "DISABLE_SENTRY_SERVER_PLUGIN": "false",
-    "DISABLE_SENTRY_CLIENT_PLUGIN": "false"
+    "DISABLE_SENTRY_CLIENT_PLUGIN": "false",
+    "MINIMAX_API_KEY": "sk-cp-bdtFJYcr6FojRc7aQcnlFie9Tb_gvBdBUHHSbKntjIs1iB24FVaplO80DCmS9LXgl16OVMnslz5c2-VdwbuXlBLlHVkDx7bmcbVxsthvkTARsqqtAZQsopQ",
+    "MINIMAX_MODEL": "MiniMax-M2.7",
+    "MINIMAX_MAX_TOKENS": "1500",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://jsuqbaumrrrgexfdvras.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzdXFiYXVtcnJyZ2V4ZmR2cmFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5ODkzOTksImV4cCI6MjA5MTU2NTM5OX0.lCkCALfXnIlciMfXRj8bkK72bX4xn1miN-x5l5Gi7f4"
   },
   "build": {
     "env": {
