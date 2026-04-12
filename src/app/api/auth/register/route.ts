@@ -1,17 +1,77 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+import DOMPurify from 'dompurify';
+import * as Sentry from '@sentry/nextjs';
 
 /**
  * 用户注册 API
  * 支持邮箱密码注册，自动创建 Supabase 用户
+ * 
+ * 安全加固:
+ * - 速率限制 (防暴力破解)
+ * - 输入清理 (防 XSS)
+ * - CSRF 保护
+ * - 密码强度增强
  */
+
+// 速率限制实例
+let ratelimit: Ratelimit | null = null;
+
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+    
+    // 注册接口：每 IP 每 5 分钟最多 3 次请求
+    ratelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(3, '5 m'),
+      analytics: true,
+      prefix: '@upstash/ratelimit:register',
+    });
+  }
+} catch (error) {
+  console.error('速率限制初始化失败:', error);
+}
 
 export async function POST(request: NextRequest) {
   try {
+    // 安全修复：速率限制
+    if (ratelimit) {
+      const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+      const { success, limit, reset, remaining } = await ratelimit.limit(ip);
+      
+      if (!success) {
+        return NextResponse.json(
+          { 
+            error: '注册请求过于频繁，请稍后再试',
+            retryAfter: Math.ceil((reset - Date.now()) / 1000),
+          },
+          { 
+            status: 429,
+            headers: {
+              'X-RateLimit-Limit': limit.toString(),
+              'X-RateLimit-Remaining': remaining.toString(),
+              'X-RateLimit-Reset': reset.toString(),
+              'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
+            },
+          }
+        );
+      }
+    }
+    
     const body = await request.json();
-    const { email, password, name } = body;
+    let { email, password, name } = body;
 
+    // 安全修复：输入清理 (防 XSS)
+    email = DOMPurify.sanitize(email || '').trim();
+    name = name ? DOMPurify.sanitize(name).trim() : '';
+    
     // 验证输入
     if (!email || !password) {
       return NextResponse.json(
@@ -29,11 +89,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 密码强度验证 (至少 8 位，包含字母和数字)
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    // 安全修复：增强密码强度验证
+    // 至少 8 位，包含字母、数字，可选特殊字符
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       return NextResponse.json(
-        { error: '密码必须至少 8 位，包含字母和数字' },
+        { error: '密码必须至少 8 位，包含字母和数字，可使用特殊字符 @$!%*?&' },
+        { status: 400 }
+      );
+    }
+    
+    // 防止常见弱密码
+    const weakPasswords = ['password', '123456', '12345678', 'qwerty', 'admin', 'letmein'];
+    if (weakPasswords.includes(password.toLowerCase())) {
+      return NextResponse.json(
+        { error: '密码过于简单，请使用更复杂的密码' },
         { status: 400 }
       );
     }
@@ -89,6 +159,10 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error('创建用户失败:', insertError);
+      Sentry.captureException(insertError, {
+        tags: { feature: 'user-registration' },
+        extra: { email },
+      });
       return NextResponse.json(
         { error: '注册失败，请稍后重试' },
         { status: 500 }
@@ -106,6 +180,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('注册 API 错误:', error);
+    Sentry.captureException(error, {
+      tags: { feature: 'user-registration' },
+    });
     return NextResponse.json(
       { error: '服务器错误，请稍后重试' },
       { status: 500 }

@@ -10,6 +10,15 @@ import {
 } from '@/lib/database';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import * as Sentry from '@sentry/nextjs';
+import DOMPurify from 'dompurify';
+import { 
+  logApiStart, 
+  logApiEnd, 
+  logApiError,
+  error as logError 
+} from '@/lib/logger';
+import { monitorApiRequest } from '@/lib/monitoring';
 
 /**
  * 速率限制配置
@@ -45,13 +54,28 @@ try {
  */
 
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  
+  // 记录请求开始
+  logApiStart({
+    method: 'POST',
+    path: '/api/chat',
+  });
+
   try {
     // 安全修复：速率限制
     if (ratelimit) {
-      const identifier = request.ip || 'anonymous';
+      const identifier = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'anonymous';
       const { success, limit, reset, remaining } = await ratelimit.limit(identifier);
       
       if (!success) {
+        logApiEnd({
+          method: 'POST',
+          path: '/api/chat',
+          status: 429,
+          duration: Date.now() - startTime,
+        });
+        
         return NextResponse.json(
           { 
             error: '请求过于频繁，请稍后再试',
@@ -73,6 +97,13 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession();
     
     if (!session?.user?.id) {
+      logApiEnd({
+        method: 'POST',
+        path: '/api/chat',
+        status: 401,
+        duration: Date.now() - startTime,
+      });
+      
       return NextResponse.json(
         { error: '请先登录' },
         { status: 401 }
@@ -81,20 +112,45 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
     
+    // 设置 Sentry 用户上下文
+    Sentry.setUser({ id: userId });
+    
     // 安全修复：输入验证
     let body;
     try {
       body = await request.json();
     } catch (error) {
+      logApiEnd({
+        method: 'POST',
+        path: '/api/chat',
+        status: 400,
+        duration: Date.now() - startTime,
+        error: '无效的请求格式',
+      });
+      
       return NextResponse.json(
         { error: '无效的请求格式' },
         { status: 400 }
       );
     }
     
-    const { message, sessionId } = body;
+    let { message, sessionId } = body;
+    
+    // 保存 sessionId 用于错误处理
+    let currentSessionId = sessionId;
+
+    // 安全修复：输入清理 (防 XSS)
+    message = DOMPurify.sanitize(message || '').trim();
 
     if (!message || typeof message !== 'string' || !message.trim()) {
+      logApiEnd({
+        method: 'POST',
+        path: '/api/chat',
+        status: 400,
+        duration: Date.now() - startTime,
+        error: '消息不能为空',
+      });
+      
       return NextResponse.json(
         { error: '消息不能为空' },
         { status: 400 }
@@ -110,7 +166,6 @@ export async function POST(request: NextRequest) {
     }
 
     // 如果没有会话 ID，创建新会话
-    let currentSessionId = sessionId;
     let sessionTitle = null;
 
     if (!currentSessionId) {
@@ -171,7 +226,31 @@ export async function POST(request: NextRequest) {
       messageId: savedMessageId,
     });
   } catch (error) {
-    console.error('Chat API error:', error);
+    const duration = Date.now() - startTime;
+    
+    // 记录错误
+    if (error instanceof Error) {
+      logApiError({
+        method: 'POST',
+        path: '/api/chat',
+        error: error.message,
+        duration,
+      });
+      
+      // 重新获取 session 用于错误日志
+      const errorSession = await getServerSession();
+      logError('Chat API error', error, {
+        userId: errorSession?.user?.id,
+      });
+    }
+    
+    logApiEnd({
+      method: 'POST',
+      path: '/api/chat',
+      status: 500,
+      duration,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
     
     return NextResponse.json(
       { error: '处理消息失败，请稍后重试' },
@@ -185,13 +264,27 @@ export async function POST(request: NextRequest) {
  * 安全修复：添加速率限制
  */
 export async function GET(request: NextRequest) {
+  const startTime = Date.now();
+  
+  logApiStart({
+    method: 'GET',
+    path: '/api/chat',
+  });
+  
   try {
     // 速率限制
     if (ratelimit) {
-      const identifier = request.ip || 'anonymous';
+      const identifier = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'anonymous';
       const { success, limit, reset, remaining } = await ratelimit.limit(identifier);
       
       if (!success) {
+        logApiEnd({
+          method: 'GET',
+          path: '/api/chat',
+          status: 429,
+          duration: Date.now() - startTime,
+        });
+        
         return NextResponse.json(
           { 
             error: '请求过于频繁，请稍后再试',
@@ -212,6 +305,13 @@ export async function GET(request: NextRequest) {
     const session = await getServerSession();
     
     if (!session?.user?.id) {
+      logApiEnd({
+        method: 'GET',
+        path: '/api/chat',
+        status: 401,
+        duration: Date.now() - startTime,
+      });
+      
       return NextResponse.json(
         { error: '请先登录' },
         { status: 401 }
@@ -221,9 +321,38 @@ export async function GET(request: NextRequest) {
     const userId = session.user.id;
     const sessions = await getChatSessions(userId);
 
+    logApiEnd({
+      method: 'GET',
+      path: '/api/chat',
+      status: 200,
+      duration: Date.now() - startTime,
+    });
+
     return NextResponse.json({ sessions });
   } catch (error) {
-    console.error('获取会话列表失败:', error);
+    const duration = Date.now() - startTime;
+    
+    if (error instanceof Error) {
+      logApiError({
+        method: 'GET',
+        path: '/api/chat',
+        error,
+        duration,
+      });
+      
+      const errorSession = await getServerSession();
+      logError('获取会话列表失败', error, {
+        userId: errorSession?.user?.id,
+      });
+    }
+    
+    logApiEnd({
+      method: 'GET',
+      path: '/api/chat',
+      status: 500,
+      duration,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
     
     return NextResponse.json(
       { error: '获取会话失败' },

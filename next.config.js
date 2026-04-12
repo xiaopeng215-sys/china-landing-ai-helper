@@ -4,6 +4,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+// next-intl 配置
+const createNextIntlPlugin = require('next-intl/plugin');
+const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts');
+
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
@@ -85,78 +89,113 @@ const nextConfig = {
     if (!isServer && !dev) {
       config.optimization.minimize = true;
       
-      // 更细粒度的代码分割
+      // 更细粒度的代码分割 - P1 优化
       config.optimization.splitChunks = {
         chunks: 'all',
+        minSize: 20000, // 最小 chunk 大小 20KB
+        maxSize: 244000, // 最大 chunk 大小 244KB
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        enforceSizeThreshold: 50000,
         cacheGroups: {
-          // 分离 React 核心包
+          // 分离 React 核心包 - 最高优先级
           react: {
-            test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|react-is)[\\/]/,
             name: 'react',
             chunks: 'all',
-            priority: 30,
+            priority: 50,
             reuseExistingChunk: true,
+            enforce: true,
           },
-          // 分离 Next.js 和 next-auth
+          // 分离 Next.js 核心
           next: {
-            test: /[\\/]node_modules[\\/](next|next-auth)[\\/]/,
+            test: /[\\/]node_modules[\\/](next|next-intl)[\\/]/,
             name: 'next',
             chunks: 'all',
-            priority: 25,
+            priority: 45,
             reuseExistingChunk: true,
           },
-          // 分离 Supabase
-          supabase: {
-            test: /[\\/]node_modules[\\/](@supabase)[\\/]/,
-            name: 'supabase',
+          // 分离 next-auth 相关
+          auth: {
+            test: /[\\/]node_modules[\\/](next-auth|@auth|@supabase)[\\/]/,
+            name: 'auth',
             chunks: 'all',
-            priority: 20,
+            priority: 40,
             reuseExistingChunk: true,
           },
-          // 分离 UI 组件库
-          ui: {
-            test: /[\\/]node_modules[\\/](lucide-react|radix-ui)[\\/]/,
-            name: 'ui',
-            chunks: 'all',
-            priority: 15,
-            reuseExistingChunk: true,
-          },
-          // 分离 Sentry
+          // 分离 Sentry - 独立打包便于缓存
           sentry: {
             test: /[\\/]node_modules[\\/](@sentry)[\\/]/,
             name: 'sentry',
             chunks: 'all',
-            priority: 10,
+            priority: 35,
             reuseExistingChunk: true,
           },
-          // 通用代码
+          // 分离 lucide-react 图标库
+          icons: {
+            test: /[\\/]node_modules[\\/](lucide-react)[\\/]/,
+            name: 'icons',
+            chunks: 'all',
+            priority: 30,
+            reuseExistingChunk: true,
+          },
+          // 分离其他 UI 组件
+          ui: {
+            test: /[\\/]node_modules[\\/](radix-ui|@radix-ui)[\\/]/,
+            name: 'ui',
+            chunks: 'all',
+            priority: 25,
+            reuseExistingChunk: true,
+          },
+          // 分离 workbox 和 PWA 相关
+          pwa: {
+            test: /[\\/]node_modules[\\/](workbox|next-pwa|@upstash)[\\/]/,
+            name: 'pwa',
+            chunks: 'all',
+            priority: 20,
+            reuseExistingChunk: true,
+          },
+          // 通用代码 - 被 2 个以上模块引用
           common: {
             minChunks: 2,
             name: 'common',
             chunks: 'all',
-            priority: 5,
+            priority: 15,
             reuseExistingChunk: true,
           },
-          // 默认 vendor
+          // 默认 vendor - 兜底分组
           vendors: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             chunks: 'all',
-            priority: 1,
+            priority: 10,
+            reuseExistingChunk: true,
+          },
+          // 默认 fallback
+          default: {
+            minChunks: 2,
+            priority: 5,
             reuseExistingChunk: true,
           },
         },
       };
       
-      // 优化 chunk 大小
+      // 优化 chunk 大小 - 使用确定性 ID 便于长期缓存
       config.optimization.moduleIds = 'deterministic';
       config.optimization.chunkIds = 'deterministic';
+      config.optimization.nodeEnv = 'production';
       
-      // 移除未使用的代码
+      // 移除未使用的代码 - Tree Shaking
       config.optimization.usedExports = true;
       config.optimization.sideEffects = false;
+      config.optimization.concatenateModules = true;
       
-      // 压缩配置
+      // 移除空的 chunk
+      config.optimization.removeEmptyChunks = true;
+      config.optimization.mergeDuplicateChunks = true;
+      
+      // 压缩配置优化
       if (config.optimization.minimizer) {
         for (const minimizer of config.optimization.minimizer) {
           if (minimizer.constructor.name === 'TerserPlugin') {
@@ -166,11 +205,38 @@ const nextConfig = {
                 unused: true,
                 drop_console: true,
                 drop_debugger: true,
+                pure_funcs: ['console.log', 'console.debug', 'console.info'],
+                passes: 2, // 多遍压缩优化
+                pure_getters: true,
+                keep_fargs: false,
+              },
+              mangle: {
+                safari10: true,
+                reserved: ['exports', '_stream_readable'],
+              },
+              output: {
+                comments: false,
+                ascii_only: true,
               },
             };
+            minimizer.options.extractComments = false;
           }
         }
       }
+      
+      // 限制 chunk 数量，避免过多小文件
+      config.optimization.runtimeChunk = {
+        name: (entrypoint) => `runtime-${entrypoint.name}`,
+      };
+    }
+    
+    // 生产环境启用模块并化
+    if (!dev) {
+      config.performance = {
+        hints: 'warning',
+        maxAssetSize: 244000, // 244KB
+        maxEntrypointSize: 512000, // 512KB
+      };
     }
     
     return config;
@@ -198,7 +264,15 @@ const nextConfig = {
           },
           {
             key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
+            value: 'strict-origin',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.minimaxi.com https://*.supabase.co https://*.upstash.io https://*.ingest.us.sentry.io; frame-ancestors 'self'; base-uri 'self'; form-action 'self';",
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(self), payment=(), usb=()',
           },
         ],
       },
