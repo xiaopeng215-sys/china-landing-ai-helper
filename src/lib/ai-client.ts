@@ -2,7 +2,8 @@
  * AI 客户端 - MiniMax 集成
  */
 
-const MINIMAX_API_KEY = process.env.NEXT_PUBLIC_MINIMAX_API_KEY || '';
+// 安全修复：API Key 仅在服务端使用，移除 NEXT_PUBLIC_ 前缀
+const MINIMAX_API_KEY = process.env.MINIMAX_API_KEY || '';
 const MINIMAX_API_URL = 'https://api.minimaxi.com/v1';
 
 export interface Message {

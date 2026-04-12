@@ -1,0 +1,66 @@
+'use client';
+
+import React from 'react';
+import type { ItineraryRoute } from '@/lib/itineraries';
+
+interface FeaturedTripsGridProps {
+  trips: ItineraryRoute[];
+  onTripSelect: (trip: ItineraryRoute) => void;
+}
+
+const cityEmojis: Record<string, string> = {
+  Shanghai: '🗼',
+  Beijing: '🏯',
+  "Xi'an": '🏛️',
+  Chengdu: '🐼',
+  Guilin: '🏞️',
+  Hangzhou: '🌸',
+};
+
+export default function FeaturedTripsGrid({ trips, onTripSelect }: FeaturedTripsGridProps) {
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleTripClick = (trip: ItineraryRoute) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      onTripSelect(trip);
+      setIsLoading(false);
+    }, 150);
+  };
+
+  return (
+    <section>
+      <h2 className="text-lg font-bold text-gray-900 mb-3">🌟 Featured Routes</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {trips.map(trip => (
+          <button
+            key={trip.id}
+            onClick={() => handleTripClick(trip)}
+            className="bg-white rounded-2xl p-4 text-left shadow-md hover:shadow-lg transition-all active:scale-[0.98] border border-gray-100 touch-manipulation"
+          >
+            <div className="text-3xl mb-2">
+              {cityEmojis[trip.cityEn] ?? '📍'}
+            </div>
+            <h3 className="font-bold text-gray-900">{trip.city}</h3>
+            <p className="text-xs text-gray-500">{trip.days} days · {trip.budget}</p>
+            <div className="flex flex-wrap gap-1 mt-2">
+              {trip.theme.slice(0, 2).map(t => (
+                <span key={t} className="text-xs px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </button>
+        ))}
+      </div>
+      {isLoading && (
+        <div className="fixed inset-0 z-50 bg-white/80 backdrop-blur-sm flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}

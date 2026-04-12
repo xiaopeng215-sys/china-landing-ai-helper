@@ -154,10 +154,10 @@ export default function ProfilePage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#767676]">加载中...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="text-center animate-bounce-in">
+          <div className="w-16 h-16 border-4 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#767676] font-medium">加载中...</p>
         </div>
       </div>
     );
@@ -169,15 +169,22 @@ export default function ProfilePage() {
       <PWAInstallPrompt />
 
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white py-8">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-3xl">
+      <header className="bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white py-8 relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-4 left-10 w-20 h-20 bg-white rounded-full animate-float"></div>
+          <div className="absolute bottom-8 right-20 w-32 h-32 bg-white rounded-full animate-float" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
+        
+        <div className="max-w-3xl mx-auto px-4 relative z-10">
+          <div className="flex items-center gap-4 animate-slide-up">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-3xl shadow-lg hover:scale-110 transition-transform duration-300">
               👤
             </div>
             <div>
-              <h1 className="text-2xl font-bold">{session?.user?.name || '用户'}</h1>
-              <p className="text-white/80">{session?.user?.email}</p>
+              <h1 className="text-2xl font-bold animate-fade-in">{session?.user?.name || '用户'}</h1>
+              <p className="text-white/80 animate-fade-in" style={{ animationDelay: '0.1s' }}>{session?.user?.email}</p>
             </div>
           </div>
         </div>
@@ -237,49 +244,49 @@ export default function ProfilePage() {
           <div className="space-y-6">
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100">
-                <div className="text-2xl mb-2">📅</div>
+              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
+                <div className="text-2xl mb-2 animate-float">📅</div>
                 <div className="text-2xl font-bold text-[#484848]">0</div>
                 <div className="text-xs text-[#767676]">行程</div>
               </div>
-              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100">
-                <div className="text-2xl mb-2">❤️</div>
+              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
+                <div className="text-2xl mb-2 animate-float" style={{ animationDelay: '0.5s' }}>❤️</div>
                 <div className="text-2xl font-bold text-[#484848]">{favorites.length}</div>
                 <div className="text-xs text-[#767676]">收藏</div>
               </div>
-              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100">
-                <div className="text-2xl mb-2">📜</div>
+              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
+                <div className="text-2xl mb-2 animate-float" style={{ animationDelay: '1s' }}>📜</div>
                 <div className="text-2xl font-bold text-[#484848]">{history.length}</div>
                 <div className="text-xs text-[#767676]">历史</div>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
+            <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
               <h2 className="text-lg font-bold text-[#484848] mb-4">快捷操作</h2>
               
               <button
                 onClick={() => router.push('/install-guide')}
-                className="w-full flex items-center gap-4 p-4 bg-gradient-to-r from-[#ff5a5f]/10 to-[#ff3b3f]/10 rounded-xl hover:from-[#ff5a5f]/20 hover:to-[#ff3b3f]/20 transition-all"
+                className="w-full flex items-center gap-4 p-4 bg-gradient-to-r from-[#ff5a5f]/10 to-[#ff3b3f]/10 rounded-xl hover:from-[#ff5a5f]/20 hover:to-[#ff3b3f]/20 transition-all hover-lift tap-feedback group"
               >
-                <div className="text-2xl">📱</div>
+                <div className="text-2xl group-hover:scale-110 transition-transform">📱</div>
                 <div className="flex-1 text-left">
                   <p className="font-medium text-[#484848]">安装应用</p>
                   <p className="text-sm text-[#767676]">添加到主屏幕，快速访问</p>
                 </div>
-                <div className="text-[#ff5a5f]">→</div>
+                <div className="text-[#ff5a5f] group-hover:translate-x-1 transition-transform">→</div>
               </button>
 
               <button
                 onClick={handleExportData}
-                className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all"
+                className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all hover-lift tap-feedback group"
               >
-                <div className="text-2xl">💾</div>
+                <div className="text-2xl group-hover:scale-110 transition-transform">💾</div>
                 <div className="flex-1 text-left">
                   <p className="font-medium text-[#484848]">导出数据</p>
                   <p className="text-sm text-[#767676]">下载您的个人数据</p>
                 </div>
-                <div className="text-[#767676]">→</div>
+                <div className="text-[#767676] group-hover:translate-x-1 transition-transform">→</div>
               </button>
             </div>
           </div>
@@ -316,17 +323,17 @@ export default function ProfilePage() {
             </div>
 
             {/* Preferences */}
-            <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
+            <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 animate-slide-up" style={{ animationDelay: '0.15s' }}>
               <h2 className="text-lg font-bold text-[#484848] mb-4">偏好设置</h2>
               
-              <div>
+              <div className="stagger-item">
                 <label className="block text-sm font-medium text-[#767676] mb-2">
                   语言偏好
                 </label>
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] tap-feedback"
                 >
                   <option value="zh-CN">简体中文</option>
                   <option value="en">English</option>
@@ -335,14 +342,14 @@ export default function ProfilePage() {
                 </select>
               </div>
 
-              <div>
+              <div className="stagger-item">
                 <label className="block text-sm font-medium text-[#767676] mb-2">
                   预算范围
                 </label>
                 <select
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] tap-feedback"
                 >
                   <option value="budget">经济型 (¥200-500/天)</option>
                   <option value="medium">舒适型 (¥500-1000/天)</option>
@@ -350,14 +357,14 @@ export default function ProfilePage() {
                 </select>
               </div>
 
-              <div>
+              <div className="stagger-item">
                 <label className="block text-sm font-medium text-[#767676] mb-2">
                   主题
                 </label>
                 <select
                   value={theme}
                   onChange={(e) => setTheme(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] tap-feedback"
                 >
                   <option value="light">浅色</option>
                   <option value="dark">深色</option>
@@ -365,14 +372,14 @@ export default function ProfilePage() {
                 </select>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between stagger-item">
                 <div>
                   <p className="font-medium text-[#484848]">通知</p>
                   <p className="text-sm text-[#767676]">接收重要提醒</p>
                 </div>
                 <button
                   onClick={() => setNotifications(!notifications)}
-                  className={`w-12 h-6 rounded-full transition-colors ${
+                  className={`w-12 h-6 rounded-full transition-colors tap-feedback ${
                     notifications ? 'bg-[#ff5a5f]' : 'bg-gray-300'
                   }`}
                 >
@@ -384,7 +391,7 @@ export default function ProfilePage() {
 
               <button
                 onClick={handleSaveSettings}
-                className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+                className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover-lift tap-feedback animate-pulse"
               >
                 保存设置
               </button>

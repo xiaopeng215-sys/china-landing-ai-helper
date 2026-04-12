@@ -69,7 +69,7 @@ export default function ChatView() {
       const response = await fetch(`/api/chat/sessions/${sessionId}`);
       if (response.ok) {
         const data = await response.json();
-        const loadedMessages = data.messages.map((msg: any) => ({
+        const loadedMessages = data.messages.map((msg: { id: string; role: string; content: string; created_at: string; tokens?: number }) => ({
           id: msg.id,
           role: msg.role,
           content: msg.content,
@@ -148,7 +148,7 @@ export default function ChatView() {
         loadSessions(); // 刷新会话列表
       }
 
-    } catch (error: any) {
+    } catch (error) {
       console.error('发送消息失败:', error);
 
       const errorMessage: Message = {

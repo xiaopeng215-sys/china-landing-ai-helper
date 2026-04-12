@@ -9,6 +9,7 @@ const withPWA = require('next-pwa')({
   disable: process.env.NODE_ENV === 'development',
   register: true,
   skipWaiting: true,
+  maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10MB for service worker
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -62,43 +63,55 @@ const nextConfig = {
       },
     ],
     formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256],
-    minimumCacheTTL: 60, // 图片缓存优化
-    dangerouslyAllowSVG: false, // 安全：禁止 SVG
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2560],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: false,
+    unoptimized: false,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
+    reactRemoveProperties: process.env.NODE_ENV === 'production',
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'radix-ui'],
+    optimizePackageImports: ['lucide-react', 'radix-ui', '@supabase/supabase-js', 'next-auth'],
+    webpackBuildWorker: true,
+    optimizeCss: true,
   },
   // 启用 React Server Components 优化
   serverExternalPackages: ['bcryptjs'],
   // Webpack 优化
-  webpack: (config, { isServer, dev }) => {
-    // 生产环境优化
+  webpack: (config, { isServer, dev, isClient }) => {
     if (!isServer && !dev) {
-      // 移除 console.log
       config.optimization.minimize = true;
       
-      // 代码分割优化
+      // 更细粒度的代码分割
       config.optimization.splitChunks = {
         chunks: 'all',
         cacheGroups: {
-          // 分离供应商包
-          vendors: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-            priority: 10,
-          },
-          // 分离 React 相关包
+          // 分离 React 核心包
           react: {
             test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
             name: 'react',
             chunks: 'all',
+            priority: 30,
+            reuseExistingChunk: true,
+          },
+          // 分离 Next.js 和 next-auth
+          next: {
+            test: /[\\/]node_modules[\\/](next|next-auth)[\\/]/,
+            name: 'next',
+            chunks: 'all',
+            priority: 25,
+            reuseExistingChunk: true,
+          },
+          // 分离 Supabase
+          supabase: {
+            test: /[\\/]node_modules[\\/](@supabase)[\\/]/,
+            name: 'supabase',
+            chunks: 'all',
             priority: 20,
+            reuseExistingChunk: true,
           },
           // 分离 UI 组件库
           ui: {
@@ -106,6 +119,15 @@ const nextConfig = {
             name: 'ui',
             chunks: 'all',
             priority: 15,
+            reuseExistingChunk: true,
+          },
+          // 分离 Sentry
+          sentry: {
+            test: /[\\/]node_modules[\\/](@sentry)[\\/]/,
+            name: 'sentry',
+            chunks: 'all',
+            priority: 10,
+            reuseExistingChunk: true,
           },
           // 通用代码
           common: {
@@ -115,8 +137,40 @@ const nextConfig = {
             priority: 5,
             reuseExistingChunk: true,
           },
+          // 默认 vendor
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+            priority: 1,
+            reuseExistingChunk: true,
+          },
         },
       };
+      
+      // 优化 chunk 大小
+      config.optimization.moduleIds = 'deterministic';
+      config.optimization.chunkIds = 'deterministic';
+      
+      // 移除未使用的代码
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
+      
+      // 压缩配置
+      if (config.optimization.minimizer) {
+        for (const minimizer of config.optimization.minimizer) {
+          if (minimizer.constructor.name === 'TerserPlugin') {
+            minimizer.options.terserOptions = {
+              compress: {
+                dead_code: true,
+                unused: true,
+                drop_console: true,
+                drop_debugger: true,
+              },
+            };
+          }
+        }
+      }
     }
     
     return config;

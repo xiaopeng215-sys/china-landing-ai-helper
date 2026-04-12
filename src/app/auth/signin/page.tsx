@@ -33,8 +33,8 @@ export default function SignInPage() {
       // 登录成功，跳转到主页
       router.push('/');
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || '登录失败，请检查邮箱和密码');
+    } catch (err) {
+      setError((err as Error).message || '登录失败，请检查邮箱和密码');
     } finally {
       setLoading(false);
     }
@@ -52,8 +52,8 @@ export default function SignInPage() {
         redirect: false,
       });
       // 邮箱验证码登录会发送邮件，显示成功提示
-    } catch (err: any) {
-      setError(err.message || '发送失败，请重试');
+    } catch (err) {
+      setError((err as Error).message || '发送失败，请重试');
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ export default function SignInPage() {
     setLoading(true);
     try {
       await signIn('google', { callbackUrl: '/' });
-    } catch (err: any) {
+    } catch {
       setError('Google 登录失败，请重试');
       setLoading(false);
     }

@@ -42,4 +42,4 @@ export { default as DayCard } from './DayCard';
 export { default as Providers } from './Providers';
 export { default as NetworkStatus } from './NetworkStatus';
 export { default as PWAInstallPrompt } from './PWAInstallPrompt';
-export { default as LoadingSkeleton } from './LoadingSkeleton';
+export { default as Transition } from './Transition';

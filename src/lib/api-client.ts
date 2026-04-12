@@ -40,7 +40,7 @@ interface CacheEntry<T> {
   timestamp: number;
 }
 
-const cache = new Map<string, CacheEntry<any>>();
+const cache = new Map<string, CacheEntry<unknown>>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 分钟
 
 function getCache<T>(key: string): T | null {
@@ -403,6 +403,6 @@ export const apiConfig = {
 
 // 导出配置供调试使用
 if (typeof window !== 'undefined') {
-  (window as any).__API_CONFIG__ = apiConfig;
-  (window as any).__API_INTERCEPTORS__ = apiInterceptors;
+  (window as Record<string, unknown>).__API_CONFIG__ = apiConfig;
+  (window as Record<string, unknown>).__API_INTERCEPTORS__ = apiInterceptors;
 }

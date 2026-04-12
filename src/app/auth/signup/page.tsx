@@ -106,8 +106,8 @@ export default function SignUpPage() {
 
       // 跳转到主页
       router.push('/');
-    } catch (err: any) {
-      setError(err.message || '注册失败，请稍后重试');
+    } catch (err) {
+      setError((err as Error).message || '注册失败，请稍后重试');
     } finally {
       setLoading(false);
     }

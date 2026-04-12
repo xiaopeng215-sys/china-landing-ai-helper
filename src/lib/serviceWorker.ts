@@ -80,7 +80,7 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
 }
 
 // Send message to service worker
-export function sendMessageToSW(message: any): Promise<any> {
+export function sendMessageToSW(message: Record<string, unknown>): Promise<Record<string, unknown>> {
   return new Promise((resolve, reject) => {
     if (!navigator.serviceWorker.controller) {
       reject(new Error('No active service worker'));

@@ -24,11 +24,38 @@ export default withAuth(
     const token = req.nextauth.token;
     const pathname = nextUrl.pathname;
 
+    // 安全修复：添加 CSP 和其他安全头
+    const response = NextResponse.next();
+    
+    // Content Security Policy - 严格限制资源加载
+    response.headers.set(
+      'Content-Security-Policy',
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://browser.sentry-cdn.com",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "img-src 'self' data: https: blob:",
+        "connect-src 'self' https://api.minimaxi.com https://*.sentry.io https://*.vercel.app",
+        "frame-ancestors 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+      ].join('; ')
+    );
+    
+    // 额外的安全头
+    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    response.headers.set(
+      'Permissions-Policy',
+      'camera=(), microphone=(), geolocation=(self), payment=()'
+    );
+
     // API 路由的认证检查
     if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth/')) {
-      // 公开 API
+      // Chat API 需要认证
       if (pathname === '/api/chat') {
-        // Chat API 需要认证
         if (!token) {
           return NextResponse.json(
             { error: 'Unauthorized' },
@@ -53,7 +80,7 @@ export default withAuth(
       return NextResponse.redirect(new URL('/', nextUrl.origin));
     }
 
-    return NextResponse.next();
+    return response;
   },
   {
     callbacks: {

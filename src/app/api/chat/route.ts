@@ -8,13 +8,67 @@ import {
   getChatSessions,
   updateChatSessionTitle 
 } from '@/lib/database';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+
+/**
+ * 速率限制配置
+ * 每个用户每 60 秒最多 10 次请求
+ */
+let ratelimit: Ratelimit | null = null;
+
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+    ratelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(10, '60 s'), // 10 次/60 秒
+      analytics: true,
+      prefix: '@upstash/ratelimit',
+    });
+  } else {
+    console.warn('⚠️ 速率限制未配置：缺少 UPSTASH_REDIS_REST_URL 或 UPSTASH_REDIS_REST_TOKEN');
+  }
+} catch (error) {
+  console.error('❌ 速率限制初始化失败:', error);
+}
 
 /**
  * 聊天 API - 支持会话管理和消息历史
+ * 安全修复:
+ * - 添加速率限制
+ * - 增强认证检查
+ * - 输入验证
  */
 
 export async function POST(request: NextRequest) {
   try {
+    // 安全修复：速率限制
+    if (ratelimit) {
+      const identifier = request.ip || 'anonymous';
+      const { success, limit, reset, remaining } = await ratelimit.limit(identifier);
+      
+      if (!success) {
+        return NextResponse.json(
+          { 
+            error: '请求过于频繁，请稍后再试',
+            retryAfter: Math.ceil((reset - Date.now()) / 1000),
+          },
+          { 
+            status: 429,
+            headers: {
+              'X-RateLimit-Limit': limit.toString(),
+              'X-RateLimit-Remaining': remaining.toString(),
+              'X-RateLimit-Reset': reset.toString(),
+            },
+          }
+        );
+      }
+    }
+
     // 获取当前用户会话
     const session = await getServerSession();
     
@@ -26,12 +80,31 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    const body = await request.json();
+    
+    // 安全修复：输入验证
+    let body;
+    try {
+      body = await request.json();
+    } catch (error) {
+      return NextResponse.json(
+        { error: '无效的请求格式' },
+        { status: 400 }
+      );
+    }
+    
     const { message, sessionId } = body;
 
-    if (!message || !message.trim()) {
+    if (!message || typeof message !== 'string' || !message.trim()) {
       return NextResponse.json(
         { error: '消息不能为空' },
+        { status: 400 }
+      );
+    }
+
+    // 安全修复：限制消息长度，防止 DoS
+    if (message.length > 2000) {
+      return NextResponse.json(
+        { error: '消息过长，请限制在 2000 字以内' },
         { status: 400 }
       );
     }
@@ -109,9 +182,33 @@ export async function POST(request: NextRequest) {
 
 /**
  * 获取会话列表
+ * 安全修复：添加速率限制
  */
 export async function GET(request: NextRequest) {
   try {
+    // 速率限制
+    if (ratelimit) {
+      const identifier = request.ip || 'anonymous';
+      const { success, limit, reset, remaining } = await ratelimit.limit(identifier);
+      
+      if (!success) {
+        return NextResponse.json(
+          { 
+            error: '请求过于频繁，请稍后再试',
+            retryAfter: Math.ceil((reset - Date.now()) / 1000),
+          },
+          { 
+            status: 429,
+            headers: {
+              'X-RateLimit-Limit': limit.toString(),
+              'X-RateLimit-Remaining': remaining.toString(),
+              'X-RateLimit-Reset': reset.toString(),
+            },
+          }
+        );
+      }
+    }
+
     const session = await getServerSession();
     
     if (!session?.user?.id) {

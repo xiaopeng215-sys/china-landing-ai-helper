@@ -7,7 +7,7 @@ export interface UndoAction {
   type: string;
   description: string;
   timestamp: number;
-  data?: any;
+  data?: unknown;
 }
 
 interface UndoButtonProps {

@@ -61,7 +61,7 @@ jest.mock('@/lib/api-client', () => {
 
   const mockTripsApi = {
     getList: jest.fn(() => Promise.resolve(mockTripData)),
-    create: jest.fn((trip: any) => Promise.resolve({ ...trip, id: String(Date.now()) })),
+    create: jest.fn((trip: Record<string, unknown>) => Promise.resolve({ ...trip, id: String(Date.now()) })),
   };
 
   return {
