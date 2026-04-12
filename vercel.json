@@ -54,7 +54,7 @@
       "has": [
         {
           "type": "header",
-          "header": "x-forwarded-proto",
+          "key": "x-forwarded-proto",
           "value": "http"
         }
       ],
@@ -84,7 +84,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(js|css|webp|avif))",
+      "source": "/:path*.(js|css|webp|avif)",
       "headers": [
         {
           "key": "Cache-Control",
