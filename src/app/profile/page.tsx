@@ -3,7 +3,20 @@
 import React, { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { getBrowseHistory, clearBrowseHistory, getFavorites, removeFavorite, getUserItineraries } from '@/lib/database';
+import { 
+  getBrowseHistory, 
+  clearBrowseHistory, 
+  getFavorites, 
+  removeFavorite, 
+  getUserItineraries,
+  getMembershipTiers,
+  getUserMembership,
+  getUserMembershipPoints,
+  getCompleteUserProfile,
+  MembershipTier,
+  UserMembership,
+  MembershipPoints,
+} from '@/lib/database';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 
 interface HistoryItem {
@@ -19,13 +32,28 @@ interface FavoriteItem {
   item_id: string;
 }
 
+interface ItineraryItem {
+  id: string;
+  title: string;
+  destination: string;
+  days: number;
+  created_at: string;
+}
+
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'profile' | 'settings' | 'history' | 'favorites'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'membership' | 'itineraries' | 'history' | 'favorites' | 'settings'>('profile');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [itineraries, setItineraries] = useState<ItineraryItem[]>([]);
   const [loading, setLoading] = useState(false);
+  
+  // Membership state
+  const [membershipTiers, setMembershipTiers] = useState<MembershipTier[]>([]);
+  const [userMembership, setUserMembership] = useState<UserMembership | null>(null);
+  const [membershipPoints, setMembershipPoints] = useState<MembershipPoints | null>(null);
+  const [userStats, setUserStats] = useState({ itineraries: 0, favorites: 0, history: 0 });
   
   // Settings state
   const [language, setLanguage] = useState('zh-CN');
@@ -47,25 +75,71 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (session) {
-      loadHistory();
-      loadFavorites();
+      loadAllData();
     }
   }, [session]);
 
-  const loadHistory = async () => {
+  const loadAllData = async () => {
     if (!session?.user?.id) return;
     setLoading(true);
-    const data = await getBrowseHistory(session.user.id);
-    setHistory(data);
+    
+    try {
+      // Load basic data
+      await Promise.all([
+        loadHistory(),
+        loadFavorites(),
+        loadItineraries(),
+        loadMembershipData(),
+      ]);
+    } catch (error) {
+      console.error('加载数据失败:', error);
+    }
+    
     setLoading(false);
+  };
+
+  const loadHistory = async () => {
+    if (!session?.user?.id) return;
+    const data = await getBrowseHistory(session.user.id, 50);
+    setHistory(data);
   };
 
   const loadFavorites = async () => {
     if (!session?.user?.id) return;
-    setLoading(true);
     const data = await getFavorites(session.user.id);
     setFavorites(data);
-    setLoading(false);
+  };
+
+  const loadItineraries = async () => {
+    if (!session?.user?.id) return;
+    const data = await getUserItineraries(session.user.id);
+    setItineraries(data);
+    setUserStats(prev => ({ ...prev, itineraries: data.length }));
+  };
+
+  const loadMembershipData = async () => {
+    if (!session?.user?.id) return;
+    
+    try {
+      const [tiers, membership, points] = await Promise.all([
+        getMembershipTiers(),
+        getUserMembership(session.user.id),
+        getUserMembershipPoints(session.user.id),
+      ]);
+      
+      setMembershipTiers(tiers);
+      setUserMembership(membership);
+      setMembershipPoints(points);
+      
+      // Update stats
+      setUserStats({
+        itineraries: itineraries.length,
+        favorites: favorites.length,
+        history: history.length,
+      });
+    } catch (error) {
+      console.error('加载会员数据失败:', error);
+    }
   };
 
   const handleClearHistory = async () => {
@@ -74,12 +148,14 @@ export default function ProfilePage() {
     
     await clearBrowseHistory(session.user.id);
     setHistory([]);
+    setUserStats(prev => ({ ...prev, history: 0 }));
   };
 
   const handleRemoveFavorite = async (itemId: string) => {
     if (!session?.user?.id) return;
     await removeFavorite(session.user.id, itemId);
     setFavorites(favorites.filter(f => f.item_id !== itemId));
+    setUserStats(prev => ({ ...prev, favorites: prev.favorites - 1 }));
   };
 
   const handleChangePassword = async () => {
@@ -122,12 +198,13 @@ export default function ProfilePage() {
     if (!session?.user?.id) return;
     
     try {
-      // TODO: Implement data export API
       const data = {
         user: session.user,
+        membership: userMembership,
+        points: membershipPoints,
         history,
         favorites,
-        itineraries: await getUserItineraries(session.user.id),
+        itineraries,
       };
       
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -152,6 +229,11 @@ export default function ProfilePage() {
     alert('设置已保存');
   };
 
+  const getCurrentTier = (): MembershipTier | null => {
+    if (!userMembership || !userMembership.tier_id) return null;
+    return membershipTiers.find(t => t.id === userMembership.tier_id) || null;
+  };
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
@@ -162,6 +244,8 @@ export default function ProfilePage() {
       </div>
     );
   }
+
+  const currentTier = getCurrentTier();
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -185,6 +269,14 @@ export default function ProfilePage() {
             <div>
               <h1 className="text-2xl font-bold animate-fade-in">{session?.user?.name || '用户'}</h1>
               <p className="text-white/80 animate-fade-in" style={{ animationDelay: '0.1s' }}>{session?.user?.email}</p>
+              {currentTier && (
+                <div className="flex items-center gap-2 mt-1 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                  <span className="text-lg">{currentTier.icon}</span>
+                  <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
+                    {currentTier.name_zh}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -193,10 +285,10 @@ export default function ProfilePage() {
       {/* Tabs */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="flex gap-6 overflow-x-auto">
+          <div className="flex gap-4 overflow-x-auto py-2">
             <button
               onClick={() => setActiveTab('profile')}
-              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
+              className={`py-2 px-3 border-b-2 transition-colors whitespace-nowrap text-sm font-medium ${
                 activeTab === 'profile'
                   ? 'border-[#ff5a5f] text-[#ff5a5f]'
                   : 'border-transparent text-[#767676]'
@@ -205,18 +297,28 @@ export default function ProfilePage() {
               个人资料
             </button>
             <button
-              onClick={() => setActiveTab('settings')}
-              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
-                activeTab === 'settings'
+              onClick={() => setActiveTab('membership')}
+              className={`py-2 px-3 border-b-2 transition-colors whitespace-nowrap text-sm font-medium ${
+                activeTab === 'membership'
                   ? 'border-[#ff5a5f] text-[#ff5a5f]'
                   : 'border-transparent text-[#767676]'
               }`}
             >
-              设置
+              会员中心
+            </button>
+            <button
+              onClick={() => setActiveTab('itineraries')}
+              className={`py-2 px-3 border-b-2 transition-colors whitespace-nowrap text-sm font-medium ${
+                activeTab === 'itineraries'
+                  ? 'border-[#ff5a5f] text-[#ff5a5f]'
+                  : 'border-transparent text-[#767676]'
+              }`}
+            >
+              我的行程
             </button>
             <button
               onClick={() => setActiveTab('history')}
-              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
+              className={`py-2 px-3 border-b-2 transition-colors whitespace-nowrap text-sm font-medium ${
                 activeTab === 'history'
                   ? 'border-[#ff5a5f] text-[#ff5a5f]'
                   : 'border-transparent text-[#767676]'
@@ -226,13 +328,23 @@ export default function ProfilePage() {
             </button>
             <button
               onClick={() => setActiveTab('favorites')}
-              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
+              className={`py-2 px-3 border-b-2 transition-colors whitespace-nowrap text-sm font-medium ${
                 activeTab === 'favorites'
                   ? 'border-[#ff5a5f] text-[#ff5a5f]'
                   : 'border-transparent text-[#767676]'
               }`}
             >
               收藏夹
+            </button>
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`py-2 px-3 border-b-2 transition-colors whitespace-nowrap text-sm font-medium ${
+                activeTab === 'settings'
+                  ? 'border-[#ff5a5f] text-[#ff5a5f]'
+                  : 'border-transparent text-[#767676]'
+              }`}
+            >
+              设置
             </button>
           </div>
         </div>
@@ -243,23 +355,62 @@ export default function ProfilePage() {
         {activeTab === 'profile' && (
           <div className="space-y-6">
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-3">
               <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
                 <div className="text-2xl mb-2 animate-float">📅</div>
-                <div className="text-2xl font-bold text-[#484848]">0</div>
+                <div className="text-xl font-bold text-[#484848]">{userStats.itineraries}</div>
                 <div className="text-xs text-[#767676]">行程</div>
               </div>
               <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
                 <div className="text-2xl mb-2 animate-float" style={{ animationDelay: '0.5s' }}>❤️</div>
-                <div className="text-2xl font-bold text-[#484848]">{favorites.length}</div>
+                <div className="text-xl font-bold text-[#484848]">{userStats.favorites}</div>
                 <div className="text-xs text-[#767676]">收藏</div>
               </div>
               <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
                 <div className="text-2xl mb-2 animate-float" style={{ animationDelay: '1s' }}>📜</div>
-                <div className="text-2xl font-bold text-[#484848]">{history.length}</div>
+                <div className="text-xl font-bold text-[#484848]">{userStats.history}</div>
                 <div className="text-xs text-[#767676]">历史</div>
               </div>
+              <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
+                <div className="text-2xl mb-2 animate-float" style={{ animationDelay: '1.5s' }}>⭐</div>
+                <div className="text-xl font-bold text-[#484848]">{membershipPoints?.points || 0}</div>
+                <div className="text-xs text-[#767676]">积分</div>
+              </div>
             </div>
+
+            {/* Membership Card */}
+            {currentTier && (
+              <div className="bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] rounded-2xl shadow-lg p-6 text-white animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-4xl">{currentTier.icon}</span>
+                    <div>
+                      <h3 className="text-xl font-bold">{currentTier.name_zh}</h3>
+                      <p className="text-white/80 text-sm">会员等级 {currentTier.level}</p>
+                    </div>
+                  </div>
+                  {userMembership?.expires_at && (
+                    <div className="text-right">
+                      <p className="text-sm text-white/80">有效期至</p>
+                      <p className="font-medium">
+                        {new Date(userMembership.expires_at).toLocaleDateString('zh-CN')}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3 mt-4">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                    <p className="text-sm text-white/80">每日查询</p>
+                    <p className="text-lg font-bold">{currentTier.max_daily_queries} 次</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                    <p className="text-sm text-white/80">并发会话</p>
+                    <p className="text-lg font-bold">{currentTier.max_concurrent_sessions} 个</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
@@ -289,6 +440,269 @@ export default function ProfilePage() {
                 <div className="text-[#767676] group-hover:translate-x-1 transition-transform">→</div>
               </button>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'membership' && (
+          <div className="space-y-6">
+            {/* Current Membership */}
+            {currentTier ? (
+              <div className="bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] rounded-2xl shadow-lg p-6 text-white animate-slide-up">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-5xl">{currentTier.icon}</span>
+                  <div>
+                    <h2 className="text-2xl font-bold">{currentTier.name_zh}</h2>
+                    <p className="text-white/80">等级 {currentTier.level} · {userMembership?.status === 'active' ? ' active' : '已过期'}</p>
+                  </div>
+                </div>
+                
+                {userMembership?.expires_at && (
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-white/80">会员有效期</span>
+                      <span className="font-medium">
+                        {new Date(userMembership.expires_at).toLocaleDateString('zh-CN')}
+                      </span>
+                    </div>
+                    <div className="w-full bg-white/20 rounded-full h-2">
+                      <div 
+                        className="bg-white rounded-full h-2 transition-all"
+                        style={{ 
+                          width: `${Math.min(100, ((new Date().getTime() - new Date(userMembership.started_at).getTime()) / (new Date(userMembership.expires_at).getTime() - new Date(userMembership.started_at).getTime()) * 100))}%` 
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <h3 className="font-bold mb-2">当前权益</h3>
+                  <ul className="space-y-2">
+                    {currentTier.benefits.map((benefit, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <span className="text-green-300">✓</span>
+                        <span>{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {membershipPoints && (
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-sm text-white/80">当前积分</p>
+                        <p className="text-3xl font-bold">{membershipPoints.points}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-white/80">累计积分</p>
+                        <p className="text-xl font-medium">{membershipPoints.lifetime_points}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-md p-6 text-center animate-slide-up">
+                <div className="text-6xl mb-4">🆓</div>
+                <h2 className="text-2xl font-bold text-[#484848] mb-2">免费版</h2>
+                <p className="text-[#767676] mb-6">升级会员，解锁更多功能</p>
+              </div>
+            )}
+
+            {/* Membership Tiers */}
+            <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              <h2 className="text-xl font-bold text-[#484848] mb-4">会员等级</h2>
+              <div className="space-y-4">
+                {membershipTiers.map((tier, index) => (
+                  <div
+                    key={tier.id}
+                    className={`bg-white rounded-2xl shadow-md p-6 border-2 transition-all hover-lift stagger-item ${
+                      currentTier?.id === tier.id ? 'border-[#ff5a5f]' : 'border-transparent'
+                    }`}
+                    style={{ animationDelay: `${0.1 + index * 0.1}s` }}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <span className="text-3xl">{tier.icon}</span>
+                        <div>
+                          <h3 className="text-lg font-bold text-[#484848]">{tier.name_zh}</h3>
+                          <p className="text-sm text-[#767676]">等级 {tier.level}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        {tier.price_monthly > 0 ? (
+                          <>
+                            <p className="text-2xl font-bold text-[#ff5a5f]">¥{tier.price_monthly}</p>
+                            <p className="text-xs text-[#767676]">/月</p>
+                          </>
+                        ) : (
+                          <p className="text-lg font-bold text-[#767676]">免费</p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-[#767676]">每日查询</p>
+                        <p className="font-bold text-[#484848]">{tier.max_daily_queries} 次</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-[#767676]">并发会话</p>
+                        <p className="font-bold text-[#484848]">{tier.max_concurrent_sessions} 个</p>
+                      </div>
+                    </div>
+
+                    <ul className="space-y-2 mb-4">
+                      {tier.benefits.slice(0, 4).map((benefit, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-sm">
+                          <span className="text-[#ff5a5f]">✓</span>
+                          <span className="text-[#767676]">{benefit}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {currentTier?.id !== tier.id && tier.price_monthly > 0 && (
+                      <button className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover-lift">
+                        升级到{tier.name_zh}
+                      </button>
+                    )}
+                    
+                    {currentTier?.id === tier.id && (
+                      <button className="w-full py-3 bg-gray-100 text-[#767676] rounded-xl font-semibold">
+                        当前等级
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'itineraries' && (
+          <div className="space-y-4">
+            <h2 className="text-lg font-bold text-[#484848] mb-4">我的行程</h2>
+
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                <p className="text-[#767676]">加载中...</p>
+              </div>
+            ) : itineraries.length === 0 ? (
+              <div className="bg-white rounded-2xl shadow-md p-8 text-center">
+                <div className="text-4xl mb-4">📅</div>
+                <p className="text-[#767676] mb-4">暂无行程</p>
+                <button
+                  onClick={() => router.push('/')}
+                  className="px-6 py-2 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                >
+                  创建第一个行程
+                </button>
+              </div>
+            ) : (
+              itineraries.map((item) => (
+                <div key={item.id} className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-bold text-[#484848] mb-1">{item.title}</h3>
+                      <p className="text-sm text-[#767676] mb-2">
+                        📍 {item.destination} · {item.days} 天
+                      </p>
+                      <p className="text-xs text-[#767676]">
+                        创建于 {new Date(item.created_at).toLocaleDateString('zh-CN')}
+                      </p>
+                    </div>
+                    <button className="text-[#ff5a5f] text-sm font-medium hover:underline">
+                      查看
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {activeTab === 'history' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-[#484848]">浏览历史</h2>
+              <button
+                onClick={handleClearHistory}
+                className="text-sm text-red-600 hover:text-red-700"
+              >
+                清除历史
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                <p className="text-[#767676]">加载中...</p>
+              </div>
+            ) : history.length === 0 ? (
+              <div className="bg-white rounded-2xl shadow-md p-8 text-center">
+                <div className="text-4xl mb-4">📜</div>
+                <p className="text-[#767676]">暂无浏览历史</p>
+              </div>
+            ) : (
+              history.map((item) => (
+                <div key={item.id} className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-[#484848]">{item.page_title}</p>
+                    <p className="text-sm text-[#767676]">
+                      {new Date(item.viewed_at).toLocaleString('zh-CN')}
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 bg-gray-100 text-[#767676] text-xs rounded-full">
+                    {item.page_type}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {activeTab === 'favorites' && (
+          <div className="space-y-4">
+            <h2 className="text-lg font-bold text-[#484848] mb-4">收藏夹</h2>
+
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                <p className="text-[#767676]">加载中...</p>
+              </div>
+            ) : favorites.length === 0 ? (
+              <div className="bg-white rounded-2xl shadow-md p-8 text-center">
+                <div className="text-4xl mb-4">❤️</div>
+                <p className="text-[#767676] mb-4">暂无收藏</p>
+                <button
+                  onClick={() => router.push('/')}
+                  className="px-6 py-2 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                >
+                  去探索
+                </button>
+              </div>
+            ) : (
+              favorites.map((item) => (
+                <div key={item.id} className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-[#484848]">{item.item_id}</p>
+                    <p className="text-sm text-[#767676]">
+                      {item.type === 'itinerary' && '📅 行程'}
+                      {item.type === 'food' && '🍜 美食'}
+                      {item.type === 'attraction' && '🏛️ 景点'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleRemoveFavorite(item.item_id)}
+                    className="text-red-600 hover:text-red-700 text-sm font-medium"
+                  >
+                    移除
+                  </button>
+                </div>
+              ))
+            )}
           </div>
         )}
 
@@ -414,83 +828,6 @@ export default function ProfilePage() {
                 此操作不可恢复，请谨慎操作
               </p>
             </div>
-          </div>
-        )}
-
-        {activeTab === 'history' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-[#484848]">浏览历史</h2>
-              <button
-                onClick={handleClearHistory}
-                className="text-sm text-red-600 hover:text-red-700"
-              >
-                清除历史
-              </button>
-            </div>
-
-            {loading ? (
-              <div className="text-center py-8">
-                <div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                <p className="text-[#767676]">加载中...</p>
-              </div>
-            ) : history.length === 0 ? (
-              <div className="bg-white rounded-2xl shadow-md p-8 text-center">
-                <div className="text-4xl mb-4">📜</div>
-                <p className="text-[#767676]">暂无浏览历史</p>
-              </div>
-            ) : (
-              history.map((item) => (
-                <div key={item.id} className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-[#484848]">{item.page_title}</p>
-                    <p className="text-sm text-[#767676]">
-                      {new Date(item.viewed_at).toLocaleString('zh-CN')}
-                    </p>
-                  </div>
-                  <span className="px-3 py-1 bg-gray-100 text-[#767676] text-xs rounded-full">
-                    {item.page_type}
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-
-        {activeTab === 'favorites' && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-bold text-[#484848] mb-4">收藏夹</h2>
-
-            {loading ? (
-              <div className="text-center py-8">
-                <div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                <p className="text-[#767676]">加载中...</p>
-              </div>
-            ) : favorites.length === 0 ? (
-              <div className="bg-white rounded-2xl shadow-md p-8 text-center">
-                <div className="text-4xl mb-4">❤️</div>
-                <p className="text-[#767676]">暂无收藏</p>
-              </div>
-            ) : (
-              favorites.map((item) => (
-                <div key={item.id} className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-[#484848]">{item.item_id}</p>
-                    <p className="text-sm text-[#767676]">
-                      {item.type === 'itinerary' && '行程'}
-                      {item.type === 'food' && '美食'}
-                      {item.type === 'attraction' && '景点'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => handleRemoveFavorite(item.item_id)}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    移除
-                  </button>
-                </div>
-              ))
-            )}
           </div>
         )}
       </main>

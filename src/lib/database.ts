@@ -648,3 +648,213 @@ export async function getUserMessagesCount(userId: string): Promise<number> {
     return 0;
   }
 }
+
+/**
+ * 会员等级相关操作
+ */
+
+export async function getMembershipTiers(): Promise<MembershipTier[]> {
+  const client = getSupabase();
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from('membership_tiers')
+      .select('*')
+      .order('level', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('获取会员等级失败:', error);
+    return [];
+  }
+}
+
+export async function getUserMembership(userId: string): Promise<UserMembership | null> {
+  const client = getSupabase();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('user_memberships')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows
+    return data;
+  } catch (error) {
+    console.error('获取用户会员信息失败:', error);
+    return null;
+  }
+}
+
+export async function getUserMembershipPoints(userId: string): Promise<MembershipPoints | null> {
+  const client = getSupabase();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('membership_points')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return data;
+  } catch (error) {
+    console.error('获取用户积分失败:', error);
+    return null;
+  }
+}
+
+export async function initializeMembershipPoints(userId: string): Promise<boolean> {
+  const client = getSupabase();
+  if (!client) return false;
+
+  try {
+    const { error } = await client
+      .from('membership_points')
+      .insert({
+        user_id: userId,
+        points: 0,
+        lifetime_points: 0,
+        level: 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('初始化会员积分失败:', error);
+    return false;
+  }
+}
+
+export async function addPoints(
+  userId: string,
+  points: number,
+  reason: string,
+  referenceId?: string
+): Promise<boolean> {
+  const client = getSupabase();
+  if (!client) return false;
+
+  try {
+    // 获取当前积分
+    const currentPoints = await getUserMembershipPoints(userId);
+    const currentBalance = currentPoints?.points || 0;
+    const newBalance = currentBalance + points;
+
+    // 添加积分流水
+    const { error: txError } = await client
+      .from('points_transactions')
+      .insert({
+        user_id: userId,
+        points_change: points,
+        balance_after: newBalance,
+        transaction_type: points > 0 ? 'earn' : 'spend',
+        reason,
+        reference_id: referenceId,
+        created_at: new Date().toISOString(),
+      });
+
+    if (txError) throw txError;
+
+    // 更新积分
+    if (currentPoints) {
+      const { error: updateError } = await client
+        .from('membership_points')
+        .update({
+          points: newBalance,
+          lifetime_points: (currentPoints.lifetime_points || 0) + (points > 0 ? points : 0),
+          last_activity_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('user_id', userId);
+
+      if (updateError) throw updateError;
+    } else {
+      await initializeMembershipPoints(userId);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('添加积分失败:', error);
+    return false;
+  }
+}
+
+export async function getUserItineraryCount(userId: string): Promise<number> {
+  const client = getSupabase();
+  if (!client) return 0;
+
+  try {
+    const { count, error } = await client
+      .from('itineraries')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return count || 0;
+  } catch (error) {
+    console.error('获取行程数量失败:', error);
+    return 0;
+  }
+}
+
+export async function getCompleteUserProfile(userId: string) {
+  const client = getSupabase();
+  if (!client) return null;
+
+  try {
+    // 获取用户基本信息
+    const { data: user, error: userError } = await client
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (userError) throw userError;
+
+    // 获取会员信息
+    const { data: membership, error: membershipError } = await client
+      .from('user_memberships')
+      .select('*, membership_tiers(*)')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .single();
+
+    // 获取积分信息
+    const { data: points, error: pointsError } = await client
+      .from('membership_points')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    // 获取统计数据
+    const itineraryCount = await getUserItineraryCount(userId);
+    const favoriteCount = (await getFavorites(userId)).length;
+    const historyCount = (await getBrowseHistory(userId, 100)).length;
+
+    return {
+      user,
+      membership: membership ? {
+        ...membership,
+        tier: membership.membership_tiers,
+      } : null,
+      points: points || null,
+      stats: {
+        itineraries: itineraryCount,
+        favorites: favoriteCount,
+        history: historyCount,
+      },
+    };
+  } catch (error) {
+    console.error('获取完整用户资料失败:', error);
+    return null;
+  }
+}

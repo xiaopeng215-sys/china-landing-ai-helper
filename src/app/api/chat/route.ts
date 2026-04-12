@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { sendToAI } from '@/lib/ai-client';
+import { sendToAI, parseAIResponse, StructuredAIResponse } from '@/lib/ai-client';
 import { 
   createChatSession, 
   saveMessage, 
@@ -193,12 +193,16 @@ export async function POST(request: NextRequest) {
       console.warn('保存用户消息失败，但继续处理');
     }
 
-    // 调用 AI
-    const aiResponse = await sendToAI([
-      { role: 'user', content: message }
-    ]);
+    // 调用 AI - 请求结构化响应
+    const aiResponse = await sendToAI(
+      [{ role: 'user', content: message }],
+      { structured: true }
+    );
 
-    // 保存 AI 回复
+    // 解析结构化响应
+    const structuredResponse = parseAIResponse(aiResponse.content);
+    
+    // 保存 AI 回复（保存原始 JSON 或纯文本）
     const savedResponseId = await saveMessage(
       currentSessionId,
       userId,
@@ -219,8 +223,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // 返回结构化响应
     return NextResponse.json({
-      reply: aiResponse.content,
+      reply: structuredResponse.text,
+      recommendations: structuredResponse.recommendations || [],
+      actions: structuredResponse.actions || [],
       usage: aiResponse.usage,
       sessionId: currentSessionId,
       messageId: savedMessageId,

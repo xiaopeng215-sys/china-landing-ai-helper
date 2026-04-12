@@ -1,10 +1,19 @@
 /**
- * AI 客户端 - MiniMax 集成
+ * AI 客户端 - 多模型集成 (MiniMax + Qwen + Mock)
+ * Fallback 策略：MiniMax → Qwen → Mock
  */
 
-// 安全修复：API Key 仅在服务端使用，移除 NEXT_PUBLIC_ 前缀
+// MiniMax 配置
 const MINIMAX_API_KEY = process.env.MINIMAX_API_KEY || '';
 const MINIMAX_API_URL = 'https://api.minimaxi.com/v1';
+
+// Qwen 配置 (阿里云百炼)
+const QWEN_API_KEY = process.env.QWEN_API_KEY || '';
+const QWEN_API_URL = process.env.QWEN_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+
+// AI 模型优先级配置
+export type AIModel = 'minimax' | 'qwen' | 'mock';
+export const AI_MODEL_PRIORITY: AIModel[] = ['minimax', 'qwen', 'mock'];
 
 export interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -19,7 +28,7 @@ export interface AIResponse {
 }
 
 /**
- * 结构化 AI 响应 - 支持卡片和链接
+ * 结构化 AI 响应 - 支持卡片、链接和图片
  */
 export interface StructuredAIResponse {
   text: string;              // AI 文本回复
@@ -29,12 +38,19 @@ export interface StructuredAIResponse {
     name: string;            // 名称
     nameEn?: string;         // 英文名
     reason: string;          // 推荐理由
+    price?: string;          // 价格
+    location?: string;       // 位置
+    image?: string;          // 图片 URL
   }[];
   actions?: {
     type: 'book' | 'navigate' | 'info';
     provider: 'klook' | 'trip' | 'amap' | 'didi' | 'meituan';
     url: string;             // 链接
     text: string;            // 按钮文字
+  }[];
+  images?: {
+    url: string;             // 图片 URL
+    caption: string;         // 图片说明
   }[];
 }
 
@@ -184,10 +200,12 @@ export function parseAIResponse(content: string): StructuredAIResponse {
       return {
         text: parsed.text || content,
         recommendations: parsed.recommendations || [],
-        actions: parsed.actions || []
+        actions: parsed.actions || [],
+        images: parsed.images || []
       };
     } catch (e) {
       // JSON 解析失败，返回纯文本
+      console.warn('JSON 解析失败，返回纯文本:', e);
       return { text: content };
     }
   }
@@ -196,20 +214,21 @@ export function parseAIResponse(content: string): StructuredAIResponse {
 }
 
 /**
- * 发送消息到 MiniMax AI
+ * 发送消息到 Qwen AI (阿里云百炼)
  */
-export async function sendToAI(
+async function sendToQwen(
   messages: Message[],
   options?: {
     intent?: string;
     variables?: Record<string, string>;
     language?: string;
-    structured?: boolean;  // 是否要求结构化响应
+    structured?: boolean;
   }
 ): Promise<AIResponse> {
-  // 如果没有 API Key，返回 Mock 回复
-  if (!MINIMAX_API_KEY) {
-    return getMockResponse(messages);
+  // 如果没有 API Key，抛出错误触发 fallback
+  if (!QWEN_API_KEY || QWEN_API_KEY === 'sk-your-qwen-api-key') {
+    console.warn('⚠️ Qwen API Key 未配置');
+    throw new Error('Qwen API Key 未配置');
   }
 
   try {
@@ -226,22 +245,176 @@ export async function sendToAI(
       });
     }
 
-    // 构建 API 请求
+    // 构建 API 请求 - 强制要求结构化响应
+    const structuredPrompt = options?.structured 
+      ? systemPrompt + '\n\n【重要】请用 JSON 格式回复，必须包含以下字段：\n{\n  "text": "你的文字回复",\n  "recommendations": [{"type": "attraction|restaurant|hotel|transport", "id": "唯一 ID", "name": "名称", "nameEn": "英文名", "reason": "推荐理由", "price": "价格", "location": "位置"}],\n  "actions": [{"type": "book|navigate|info", "provider": "klook|trip|amap|didi|meituan", "url": "链接", "text": "按钮文字"}],\n  "images": [{"url": "图片 URL", "caption": "图片说明"}]\n}'
+      : systemPrompt;
+
     const systemMessage = {
       role: 'system' as const,
-      content: systemPrompt + (options?.structured ? '\n\n请用 JSON 格式回复，包含 text, recommendations, actions 字段。' : '')
+      content: structuredPrompt
     };
     
     const requestBody = {
-      model: 'MiniMax-M2.7',
+      model: process.env.QWEN_MODEL || 'qwen-plus',
       messages: [
         systemMessage,
         ...messages,
       ],
       temperature: 0.7,
-      max_tokens: 1500,
+      max_tokens: parseInt(process.env.QWEN_MAX_TOKENS || '1500'),
     };
 
+    console.log('🤖 发送请求到 Qwen API...');
+    
+    // 发送请求到阿里云百炼
+    const response = await fetch(`${QWEN_API_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${QWEN_API_KEY}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Qwen API 错误:', response.status, errorText);
+      throw new Error(`Qwen API 错误：${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    const rawContent = data.choices[0].message.content;
+    
+    console.log('✅ Qwen API 响应成功');
+    
+    // 尝试解析结构化响应
+    const structured = parseAIResponse(rawContent);
+    
+    // 如果有结构化数据，返回 JSON 格式
+    if (structured.recommendations?.length || structured.actions?.length) {
+      return {
+        content: JSON.stringify(structured),
+        usage: data.usage,
+      };
+    }
+    
+    // 否则返回纯文本
+    return {
+      content: rawContent,
+      usage: data.usage,
+    };
+  } catch (error) {
+    console.error('❌ Qwen 请求失败:', error);
+    throw error; // 抛出错误以触发 fallback
+  }
+}
+
+/**
+ * 发送消息到 AI (支持多模型 fallback)
+ * Fallback 策略：MiniMax → Qwen → Mock
+ */
+export async function sendToAI(
+  messages: Message[],
+  options?: {
+    intent?: string;
+    variables?: Record<string, string>;
+    language?: string;
+    structured?: boolean;  // 是否要求结构化响应
+  }
+): Promise<AIResponse> {
+  // Fallback 策略：MiniMax → Qwen → Mock
+  const providers = [
+    {
+      name: 'minimax' as AIModel,
+      send: async () => {
+        if (!MINIMAX_API_KEY || MINIMAX_API_KEY === 'your-minimax-api-key') {
+          throw new Error('MiniMax API Key 未配置');
+        }
+        return await sendToMiniMax(messages, options);
+      }
+    },
+    {
+      name: 'qwen' as AIModel,
+      send: async () => {
+        return await sendToQwen(messages, options);
+      }
+    },
+    {
+      name: 'mock' as AIModel,
+      send: async () => {
+        console.warn('⚠️ 所有 AI 服务不可用，使用 Mock 回复');
+        return getMockResponse(messages);
+      }
+    }
+  ];
+
+  // 按顺序尝试每个 provider
+  for (const provider of providers) {
+    try {
+      console.log(`🔄 尝试使用 ${provider.name.toUpperCase()} AI 服务...`);
+      const result = await provider.send();
+      console.log(`✅ ${provider.name.toUpperCase()} AI 服务成功`);
+      return result;
+    } catch (error) {
+      console.warn(`⚠️ ${provider.name.toUpperCase()} AI 服务失败，尝试下一个...`, error);
+      // 继续尝试下一个 provider
+    }
+  }
+
+  // 理论上不会到这里，因为 mock 永远不会失败
+  console.error('❌ 所有 AI 服务都失败了');
+  return getMockResponse(messages);
+}
+
+/**
+ * 发送消息到 MiniMax AI (独立函数，供 fallback 使用)
+ */
+async function sendToMiniMax(
+  messages: Message[],
+  options?: {
+    intent?: string;
+    variables?: Record<string, string>;
+    language?: string;
+    structured?: boolean;
+  }
+): Promise<AIResponse> {
+  try {
+    // 准备系统消息
+    const intent = options?.intent || detectIntent(messages[messages.length - 1].content);
+    const language = options?.language || '中文';
+    
+    let systemPrompt = selectPromptTemplate(intent);
+    
+    if (options?.variables) {
+      systemPrompt = replaceTemplate(systemPrompt, {
+        ...options.variables,
+        language,
+      });
+    }
+
+    // 构建 API 请求 - 强制要求结构化响应
+    const structuredPrompt = options?.structured 
+      ? systemPrompt + '\n\n【重要】请用 JSON 格式回复，必须包含以下字段：\n{\n  "text": "你的文字回复",\n  "recommendations": [{"type": "attraction|restaurant|hotel|transport", "id": "唯一 ID", "name": "名称", "nameEn": "英文名", "reason": "推荐理由", "price": "价格", "location": "位置"}],\n  "actions": [{"type": "book|navigate|info", "provider": "klook|trip|amap|didi|meituan", "url": "链接", "text": "按钮文字"}],\n  "images": [{"url": "图片 URL", "caption": "图片说明"}]\n}'
+      : systemPrompt;
+
+    const systemMessage = {
+      role: 'system' as const,
+      content: structuredPrompt
+    };
+    
+    const requestBody = {
+      model: process.env.MINIMAX_MODEL || 'MiniMax-M2.7',
+      messages: [
+        systemMessage,
+        ...messages,
+      ],
+      temperature: 0.7,
+      max_tokens: parseInt(process.env.MINIMAX_MAX_TOKENS || '1500'),
+    };
+
+    console.log('🤖 发送请求到 MiniMax API...');
+    
     // 发送请求
     const response = await fetch(`${MINIMAX_API_URL}/chat/completions`, {
       method: 'POST',
@@ -253,20 +426,35 @@ export async function sendToAI(
     });
 
     if (!response.ok) {
-      throw new Error(`AI API 错误：${response.status}`);
+      const errorText = await response.text();
+      console.error('❌ MiniMax API 错误:', response.status, errorText);
+      throw new Error(`MiniMax API 错误：${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    const rawContent = data.choices[0].message.content;
     
+    console.log('✅ MiniMax API 响应成功');
+    
+    // 尝试解析结构化响应
+    const structured = parseAIResponse(rawContent);
+    
+    // 如果有结构化数据，返回 JSON 格式
+    if (structured.recommendations?.length || structured.actions?.length) {
+      return {
+        content: JSON.stringify(structured),
+        usage: data.usage,
+      };
+    }
+    
+    // 否则返回纯文本
     return {
-      content: data.choices[0].message.content,
+      content: rawContent,
       usage: data.usage,
     };
   } catch (error) {
-    console.error('AI 请求失败:', error);
-    
-    // Fallback 到 Mock 回复
-    return getMockResponse(messages);
+    console.error('❌ sendToMiniMax 错误:', error);
+    throw error;
   }
 }
 
@@ -278,8 +466,8 @@ function getMockResponse(messages: Message[]): AIResponse {
   
   // 行程规划
   if (lastMessage.includes('行程') || lastMessage.includes('规划') || lastMessage.includes('itinerary')) {
-    return {
-      content: `🗽 **上海 4 天经典行程**
+    const structuredResponse: StructuredAIResponse = {
+      text: `🗽 **上海 4 天经典行程**
 
 📍 **Day 1**: 经典地标
 • 上午：外滩 (免费) - 经典 skyline 拍照
@@ -303,13 +491,59 @@ function getMockResponse(messages: Message[]): AIResponse {
 💰 **预算参考**: ¥2000-3000/人 (不含住宿)
 
 需要我详细规划某一天吗？或者你有其他偏好？`,
+      recommendations: [
+        {
+          type: 'attraction',
+          id: 'bund-shanghai',
+          name: '外滩',
+          nameEn: 'The Bund',
+          reason: '上海标志性景点，欣赏浦江两岸美景',
+          price: '免费',
+          location: '上海市黄浦区中山东一路',
+        },
+        {
+          type: 'attraction',
+          id: 'yu-garden',
+          name: '豫园',
+          nameEn: 'Yu Garden',
+          reason: '明代古典园林，体验传统江南园林艺术',
+          price: '¥40',
+          location: '上海市黄浦区安仁街 218 号',
+        },
+        {
+          type: 'attraction',
+          id: 'oriental-pearl',
+          name: '东方明珠',
+          nameEn: 'Oriental Pearl Tower',
+          reason: '上海地标建筑，俯瞰全城美景',
+          price: '¥180',
+          location: '上海市浦东新区陆家嘴世纪大道 1 号',
+        },
+      ],
+      actions: [
+        {
+          type: 'book',
+          provider: 'klook',
+          url: 'https://www.klook.com/zh-CN/activity/123-shanghai-tour/',
+          text: '预订上海一日游',
+        },
+        {
+          type: 'navigate',
+          provider: 'amap',
+          url: 'https://www.amap.com/',
+          text: '查看地图',
+        },
+      ],
+    };
+    return {
+      content: JSON.stringify(structuredResponse),
     };
   }
   
   // 美食推荐
   if (lastMessage.includes('美食') || lastMessage.includes('吃') || lastMessage.includes('food')) {
-    return {
-      content: `🍜 **上海必吃美食推荐**
+    const structuredResponse: StructuredAIResponse = {
+      text: `🍜 **上海必吃美食推荐**
 
 🥟 **本帮菜**
 • 南翔馒头店 - 小笼包 (人均¥60)
@@ -330,13 +564,59 @@ function getMockResponse(messages: Message[]): AIResponse {
 💰 **预算参考**: ¥100-200/天
 
 需要推荐具体某类美食吗？`,
+      recommendations: [
+        {
+          type: 'restaurant',
+          id: 'nanxiang-bun',
+          name: '南翔馒头店',
+          nameEn: 'Nanxiang Bun Shop',
+          reason: '上海最著名的小笼包店，皮薄馅大',
+          price: '人均¥60',
+          location: '上海市黄浦区豫园路 85 号',
+        },
+        {
+          type: 'restaurant',
+          id: 'dachuhu',
+          name: '大壶春',
+          nameEn: 'Da Hu Chun',
+          reason: '老字号生煎包，外酥里嫩',
+          price: '人均¥30',
+          location: '上海市黄浦区四川中路 136 号',
+        },
+        {
+          type: 'restaurant',
+          id: 'laozhengxing',
+          name: '老正兴菜馆',
+          nameEn: 'Lao Zheng Xing',
+          reason: '百年老店，正宗本帮菜',
+          price: '人均¥150',
+          location: '上海市黄浦区福州路 556 号',
+        },
+      ],
+      actions: [
+        {
+          type: 'book',
+          provider: 'meituan',
+          url: 'https://www.meituan.com/',
+          text: '预订餐厅',
+        },
+        {
+          type: 'navigate',
+          provider: 'amap',
+          url: 'https://www.amap.com/',
+          text: '导航到店',
+        },
+      ],
+    };
+    return {
+      content: JSON.stringify(structuredResponse),
     };
   }
   
   // 交通指南
   if (lastMessage.includes('交通') || lastMessage.includes('地铁') || lastMessage.includes('transport')) {
-    return {
-      content: `🚇 **上海交通指南**
+    const structuredResponse: StructuredAIResponse = {
+      text: `🚇 **上海交通指南**
 
 📱 **推荐 App**
 • Metro 大都会 - 地铁官方 App
@@ -364,13 +644,50 @@ function getMockResponse(messages: Message[]): AIResponse {
 • 支付宝绑定国际卡可刷公交
 
 需要具体路线规划吗？`,
+      recommendations: [
+        {
+          type: 'transport',
+          id: 'shanghai-metro',
+          name: '上海地铁',
+          nameEn: 'Shanghai Metro',
+          reason: '最便捷的出行方式，覆盖全市主要景点',
+          price: '¥3-8',
+          location: '全市',
+        },
+        {
+          type: 'transport',
+          id: 'didi-taxi',
+          name: '滴滴出行',
+          nameEn: 'DiDi Ride-hailing',
+          reason: '支持英文界面，可绑定国际信用卡',
+          price: '起步价¥14',
+          location: '全市',
+        },
+      ],
+      actions: [
+        {
+          type: 'navigate',
+          provider: 'amap',
+          url: 'https://www.amap.com/',
+          text: '查看路线',
+        },
+        {
+          type: 'book',
+          provider: 'didi',
+          url: 'https://www.xiaojukeji.com/',
+          text: '叫车',
+        },
+      ],
+    };
+    return {
+      content: JSON.stringify(structuredResponse),
     };
   }
   
   // 支付设置
   if (lastMessage.includes('支付') || lastMessage.includes('支付宝') || lastMessage.includes('payment')) {
-    return {
-      content: `💳 **中国支付设置指南**
+    const structuredResponse: StructuredAIResponse = {
+      text: `💳 **中国支付设置指南**
 
 📱 **支付宝 (推荐)**
 1. 下载支付宝 App
@@ -402,12 +719,29 @@ function getMockResponse(messages: Message[]): AIResponse {
 • 建议同时安装支付宝和微信
 
 需要详细的设置截图教程吗？`,
+      actions: [
+        {
+          type: 'info',
+          provider: 'klook',
+          url: 'https://www.klook.com/zh-CN/activity/alipay-setup/',
+          text: '查看支付宝设置教程',
+        },
+        {
+          type: 'info',
+          provider: 'trip',
+          url: 'https://www.trip.com/',
+          text: '预订酒店/机票',
+        },
+      ],
+    };
+    return {
+      content: JSON.stringify(structuredResponse),
     };
   }
   
   // 默认回复
-  return {
-    content: `👋 欢迎来到 China Landing AI Helper!
+  const structuredResponse: StructuredAIResponse = {
+    text: `👋 欢迎来到 China Landing AI Helper!
 
 我可以帮你：
 🗽 规划行程
@@ -422,6 +756,28 @@ function getMockResponse(messages: Message[]): AIResponse {
 • "如何设置支付宝？"
 
 我会为你提供详细、实用的建议！`,
+    recommendations: [
+      {
+        type: 'attraction',
+        id: 'popular-shanghai',
+        name: '热门景点',
+        nameEn: 'Popular Attractions',
+        reason: '探索上海最著名的地标',
+        price: '免费 - ¥200',
+        location: '上海市',
+      },
+    ],
+    actions: [
+      {
+        type: 'info',
+        provider: 'klook',
+        url: 'https://www.klook.com/zh-CN/destination/13-shanghai-activities/',
+        text: '查看上海活动',
+      },
+    ],
+  };
+  return {
+    content: JSON.stringify(structuredResponse),
   };
 }
 

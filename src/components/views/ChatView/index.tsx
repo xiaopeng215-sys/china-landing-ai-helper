@@ -111,9 +111,13 @@ export default function ChatView() {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.response || '抱歉，我暂时无法回答您的问题。',
+          content: data.reply || '抱歉，我暂时无法回答您的问题。',
           timestamp: new Date(),
-          tokens: data.tokens,
+          tokens: data.usage?.total_tokens,
+          // 结构化响应数据
+          recommendations: data.recommendations || [],
+          actions: data.actions || [],
+          images: data.images || [],
         };
         setMessages(prev => [...prev, assistantMessage]);
         
