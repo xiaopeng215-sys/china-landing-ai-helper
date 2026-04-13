@@ -20,7 +20,7 @@
     "DISABLE_SENTRY_SERVER_PLUGIN": "false",
     "DISABLE_SENTRY_CLIENT_PLUGIN": "false",
     "MINIMAX_MODEL": "MiniMax-M2.7",
-    "MINIMAX_MAX_TOKENS": "1500",
+    "MINIMAX_MAX_TOKENS": "8000",
     "NEXT_PUBLIC_SUPABASE_URL": "https://jsuqbaumrrrgexfdvras.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzdXFiYXVtcnJyZ2V4ZmR2cmFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5ODkzOTksImV4cCI6MjA5MTU2NTM5OX0.lCkCALfXnIlciMfXRj8bkK72bX4xn1miN-x5l5Gi7f4",
     "NEXTAUTH_SECRET": "travelerlocal-nextauth-secret-2026-prod-x9k2m",

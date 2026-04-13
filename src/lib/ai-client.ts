@@ -449,7 +449,7 @@ async function sendToMiniMax(
         'Authorization': `Bearer ${MINIMAX_API_KEY}`,
       },
       body: JSON.stringify(requestBody),
-      signal: AbortSignal.timeout(60000),
+      signal: AbortSignal.timeout(55000),
     });
 
     if (!response.ok) {
