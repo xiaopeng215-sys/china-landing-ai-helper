@@ -28,17 +28,30 @@ async function handler(
   context: { params: Promise<{ nextauth: string[] }> | { nextauth: string[] } }
 ) {
   // 手动 await params，确保 Next.js 15 兼容
-  // NextAuth 内部也会 await，但有时会失败，这里提前解析
   const resolvedParams = await Promise.resolve(context.params);
+  
+  console.log('[NextAuth Route] params:', JSON.stringify(resolvedParams));
+  console.log('[NextAuth Route] secret exists:', !!secret);
+  console.log('[NextAuth Route] method:', req.method);
+  console.log('[NextAuth Route] url:', req.url);
 
   // 重新包装 context，params 已经是解析好的对象（非 Promise）
-  // NextAuth 的 NextAuthRouteHandler 里 `await context.params` 对普通对象也有效
   const resolvedContext = {
     params: Promise.resolve(resolvedParams),
   };
 
-  // @ts-expect-error - NextAuth v4 内部类型与 Next.js 15 Request 类型有差异
-  return NextAuth(req, resolvedContext, nextAuthOptions);
+  try {
+    // @ts-expect-error - NextAuth v4 内部类型与 Next.js 15 Request 类型有差异
+    const response = await NextAuth(req, resolvedContext, nextAuthOptions);
+    console.log('[NextAuth Route] response status:', response?.status);
+    return response;
+  } catch (error) {
+    console.error('[NextAuth Route] error:', error);
+    return new Response(
+      JSON.stringify({ error: String(error), stack: (error as Error)?.stack }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 }
 
 export { handler as GET, handler as POST };
