@@ -810,7 +810,7 @@ I'll give you detailed, practical advice!`,
       {
         type: 'info',
         provider: 'klook',
-        url: 'https://www.klook.com/en-US/destination/13-shanghai-activities/',
+        url: 'https://www.klook.com/en-US/city/13-shanghai-activities/',
         text: 'View Shanghai Activities',
       },
     ],

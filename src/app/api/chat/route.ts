@@ -41,6 +41,71 @@ import {
 } from '../../../lib/database';
 
 /**
+ * 根据消息内容自动检测语言
+ */
+function detectLanguage(message: string): string {
+  if (/[\u4e00-\u9fff]/.test(message)) return 'zh-CN';
+  if (/[\u3040-\u309f\u30a0-\u30ff]/.test(message)) return 'ja-JP';
+  if (/[\uac00-\ud7af]/.test(message)) return 'ko-KR';
+  return 'en-US';
+}
+
+/**
+ * 根据语言返回对应的 system prompt
+ */
+const SYSTEM_PROMPTS: Record<string, string> = {
+  'zh-CN': '你是一个专业的中国旅行助手，帮助游客规划行程、推荐美食和提供交通指南。请用中文回复，友好、简洁、实用。不要提及 AI 模型名称或提供商。',
+  'ja-JP': 'あなたは中国旅行の専門アシスタントです。旅程計画、グルメ推薦、交通案内を日本語で提供してください。AIモデル名やプロバイダーには言及しないでください。',
+  'ko-KR': '당신은 중국 여행 전문 어시스턴트입니다. 여행 일정, 맛집 추천, 교통 안내를 한국어로 제공해주세요. AI 모델 이름이나 제공업체를 언급하지 마세요.',
+  'en-US': 'You are a helpful travel assistant for international visitors to China. Help users plan itineraries, recommend food, and provide transportation guides. Always respond in the same language the user writes in. Never mention the AI model name or provider.',
+};
+
+/**
+ * 根据语言返回错误消息
+ */
+function getErrorMessage(lang: string, type: 'empty' | 'too_long' | 'invalid_format' | 'rate_limit' | 'ai_error' | 'ai_timeout' | 'server_error'): string {
+  const messages: Record<string, Record<string, string>> = {
+    'zh-CN': {
+      empty: '消息不能为空',
+      too_long: '消息过长，请限制在 2000 字以内',
+      invalid_format: '无效的请求格式',
+      rate_limit: '请求过于频繁，请稍后再试',
+      ai_error: 'AI 服务暂时不可用，请稍后重试',
+      ai_timeout: 'AI 服务请求超时，请稍后重试',
+      server_error: '服务器内部错误',
+    },
+    'ja-JP': {
+      empty: 'メッセージを入力してください',
+      too_long: 'メッセージが長すぎます。2000文字以内にしてください',
+      invalid_format: 'リクエスト形式が無効です',
+      rate_limit: 'リクエストが多すぎます。しばらくしてからお試しください',
+      ai_error: 'AIサービスが一時的に利用できません。後でお試しください',
+      ai_timeout: 'AIサービスがタイムアウトしました。後でお試しください',
+      server_error: 'サーバー内部エラー',
+    },
+    'ko-KR': {
+      empty: '메시지를 입력해주세요',
+      too_long: '메시지가 너무 깁니다. 2000자 이내로 입력해주세요',
+      invalid_format: '잘못된 요청 형식입니다',
+      rate_limit: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요',
+      ai_error: 'AI 서비스를 일시적으로 사용할 수 없습니다. 나중에 다시 시도해주세요',
+      ai_timeout: 'AI 서비스 요청이 시간 초과되었습니다. 나중에 다시 시도해주세요',
+      server_error: '서버 내부 오류',
+    },
+    'en-US': {
+      empty: 'Message cannot be empty',
+      too_long: 'Message too long, please keep it under 2000 characters',
+      invalid_format: 'Invalid request format',
+      rate_limit: 'Too many requests, please try again later',
+      ai_error: 'AI service temporarily unavailable, please try again later',
+      ai_timeout: 'AI service request timed out, please try again later',
+      server_error: 'Internal server error',
+    },
+  };
+  return (messages[lang] || messages['en-US'])[type];
+}
+
+/**
  * POST /api/chat
  * 处理聊天请求
  */
@@ -67,7 +132,7 @@ export async function POST(request: NextRequest) {
         {
           error: {
             code: 'RATE_LIMIT_EXCEEDED',
-            message: '请求过于频繁，请稍后再试',
+            message: 'Too many requests, please try again later',
             retryAfter: Math.ceil(rateLimitResult.reset / 1000),
           },
         },
@@ -96,15 +161,18 @@ export async function POST(request: NextRequest) {
     try {
       body = await request.json();
     } catch (error) {
-      throw createValidationError('无效的请求格式');
+      throw createValidationError('Invalid request format');
     }
 
     const { message, model, sessionId: providedSessionId, language } = body;
     let sessionId = providedSessionId;
 
+    // 检测语言（基于消息内容，不依赖前端传参）
+    const detectedLanguage = detectLanguage(message?.trim() || '');
+
     // 验证消息
     if (!message || typeof message !== 'string' || !message.trim()) {
-      throw createValidationError('消息不能为空');
+      throw createValidationError(getErrorMessage(detectedLanguage, 'empty'));
     }
 
     // 修复 CHAT-01: 会话管理 - 创建或获取会话
@@ -119,15 +187,14 @@ export async function POST(request: NextRequest) {
 
     // 限制消息长度
     if (message.length > 2000) {
-      throw createValidationError('消息过长，请限制在 2000 字以内');
+      throw createValidationError(getErrorMessage(detectedLanguage, 'too_long'));
     }
 
     // 模型选择
     // 默认使用 minimax（已配置真实 API Key），避免 fallback 到 Mock
     const selectedModel = model === 'qwen' ? 'qwen' : 'minimax';
-    const selectedLanguage = language || 'en-US';
 
-    console.log(`🤖 [Chat API] 使用模型：${selectedModel}, 用户：${userId}, 会话：${sessionId}, 消息：${message.substring(0, 50)}...`);
+    console.log(`🤖 [Chat API] 使用模型：${selectedModel}, 语言：${detectedLanguage}, 用户：${userId}, 会话：${sessionId}, 消息：${message.substring(0, 50)}...`);
 
     // 修复 CHAT-02: 加载消息历史用于上下文
     let messageHistory: any[] = [];
@@ -138,18 +205,19 @@ export async function POST(request: NextRequest) {
       console.warn('[Chat API] 加载消息历史失败:', e);
     }
 
+    // 使用检测到的语言选择 system prompt
+    const systemPrompt = SYSTEM_PROMPTS[detectedLanguage] || SYSTEM_PROMPTS['en-US'];
+
     // 优化：使用 AI 响应缓存 (包含消息历史)
     const aiContext = {
       messages: [
-        { role: 'system' as const, content: selectedLanguage === 'zh' || selectedLanguage === 'zh-CN'
-            ? '你是一个专业的中国旅行助手，帮助游客规划行程、推荐美食和提供交通指南。请用中文回复，友好、简洁、实用。不要提及 AI 模型名称或提供商。'
-            : 'You are a helpful travel assistant for international visitors to China. Help users plan itineraries, recommend food, and provide transportation guides. Be friendly, concise, and practical. Never mention the AI model name or provider.' },
+        { role: 'system' as const, content: systemPrompt },
         ...messageHistory.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
         { role: 'user' as const, content: message }
       ],
       model: selectedModel,
       temperature: 0.7,
-      language: selectedLanguage,
+      language: detectedLanguage,
     };
 
     try {
@@ -262,7 +330,7 @@ export async function POST(request: NextRequest) {
         (aiError.name === 'TimeoutError' || aiError.name === 'AbortError');
       
       throw createAIServiceError(
-        isTimeout ? 'AI 服务请求超时，请稍后重试' : 'AI 服务暂时不可用，请稍后重试',
+        isTimeout ? getErrorMessage(detectedLanguage, 'ai_timeout') : getErrorMessage(detectedLanguage, 'ai_error'),
         {
           originalError: aiError instanceof Error ? aiError.message : String(aiError),
           isTimeout,
