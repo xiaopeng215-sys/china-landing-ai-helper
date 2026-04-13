@@ -161,6 +161,6 @@ export const config = {
   matcher: [
     '/',
     '/(en-US|ko-KR|th-TH|vi-VN)/:path*',
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    '/((?!_next/static|_next/image|favicon.ico|public/|api/).*)',
   ],
 };

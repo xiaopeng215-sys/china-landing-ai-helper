@@ -85,7 +85,7 @@ const nextConfig = {
     reactRemoveProperties: process.env.NODE_ENV === 'production',
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'radix-ui', '@supabase/supabase-js', 'next-auth'],
+    optimizePackageImports: ['lucide-react', 'radix-ui', '@supabase/supabase-js'],
     webpackBuildWorker: true,
     optimizeCss: true,
   },
