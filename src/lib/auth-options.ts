@@ -182,10 +182,36 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
   },
   
+  // JWT & Session 回调（必须在 callbacks 里，不能放 events）
+  callbacks: {
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.avatar = (user as any).avatar || user.image;
+      }
+      if (account) {
+        token.provider = account.provider;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as any).id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
+        (session.user as any).avatar = token.avatar as string;
+        (session.user as any).provider = token.provider as string;
+      }
+      return session;
+    },
+  },
+
   // 事件回调
   events: {
     async createUser({ user }) {
-      // 新用户注册时初始化会员积分
       const supabase = getSupabaseClient();
       if (supabase) {
         await supabase
@@ -198,66 +224,31 @@ export const authOptions: NextAuthOptions = {
           });
       }
     },
-    
+
     async linkAccount({ account, user }) {
-      // 当用户关联新的 OAuth provider 时
       const supabase = getSupabaseClient();
       if (supabase) {
-        // 检查用户是否已存在
         const { data: existingUser } = await supabase
           .from('users')
           .select('id, provider_accounts')
           .eq('id', user.id)
           .single();
-        
+
         if (existingUser) {
           const currentAccounts = existingUser.provider_accounts || [];
-          const accountInfo = {
-            provider: account.provider,
-            provider_account_id: account.providerAccountId,
-          };
-          
-          // 检查是否已存在
           const exists = currentAccounts.some(
             (acc: any) => acc.provider === account.provider
           );
-          
           if (!exists) {
             await supabase
               .from('users')
               .update({
-                provider_accounts: [...currentAccounts, accountInfo]
+                provider_accounts: [...currentAccounts, { provider: account.provider, provider_account_id: account.providerAccountId }]
               })
               .eq('id', existingUser.id);
           }
         }
       }
-      return true;
-    },
-    
-    async jwt({ token, user, account }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.name = user.name;
-        token.avatar = user.avatar || user.image;
-      }
-      // 保存 provider 信息
-      if (account) {
-        token.provider = account.provider;
-      }
-      return token;
-    },
-    
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.name = token.name as string;
-        session.user.avatar = token.avatar as string;
-        session.user.provider = token.provider as string;
-      }
-      return session;
     },
   },
   

@@ -14,6 +14,9 @@
   },
   "env": {
     "NEXT_PUBLIC_APP_NAME": "China Landing AI Helper",
+    "NEXTAUTH_URL": "https://www.travelerlocal.ai",
+    "NEXTAUTH_SECRET": "travelerlocal-nextauth-secret-2026-prod",
+    "USE_MOCK_AUTH": "true",
     "NEXT_PUBLIC_SENTRY_RELEASE": "1.0.0-beta",
     "DISABLE_SENTRY_SERVER_PLUGIN": "false",
     "DISABLE_SENTRY_CLIENT_PLUGIN": "false",
