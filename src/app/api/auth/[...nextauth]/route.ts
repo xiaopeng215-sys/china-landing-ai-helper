@@ -1,39 +1,44 @@
 /**
- * NextAuth API Route
- * 处理所有 NextAuth 相关的请求
- * 
+ * NextAuth API Route - Next.js 15 兼容版本
+ *
  * 修复说明：
- * - secret 改为在运行时读取，避免构建时环境变量问题
- * - NextAuth v4 与 Next.js 15 兼容性问题通过直接传递 secret 解决
+ * Next.js 15 中 context.params 是 Promise，NextAuth v4 的 NextAuthRouteHandler
+ * 在某些情况下无法正确 await params，导致 nextauth 为 undefined，
+ * 触发 assertConfig 里的 MissingAPIRoute 错误（500）。
+ *
+ * 解决方案：手动 await params，重新包装 context，确保 NextAuth 能正确读取。
  */
 
 import NextAuth from 'next-auth';
 import { authOptions } from '@/lib/auth-options';
 
-// 修复: 在运行时直接读取 secret，确保生产环境可用
-const secret = process.env.NEXTAUTH_SECRET;
+const secret =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.AUTH_SECRET ||
+  authOptions.secret;
 
-if (!secret) {
-  console.error('[NextAuth] FATAL: NEXTAUTH_SECRET is not defined!');
-}
-
-const handler = NextAuth({
+const nextAuthOptions = {
   ...authOptions,
-  // 强制覆盖 secret，确保运行时读取
-  secret: secret || authOptions.secret,
-  // 生产环境开启 debug 以便排查
+  secret,
   debug: process.env.NODE_ENV === 'development',
-  logger: {
-    error(code, ...message) {
-      console.error('[NextAuth Error]', code, ...message);
-    },
-    warn(code, ...message) {
-      console.warn('[NextAuth Warn]', code, ...message);
-    },
-    debug(code, ...message) {
-      console.log('[NextAuth Debug]', code, ...message);
-    },
-  },
-});
+};
+
+async function handler(
+  req: Request,
+  context: { params: Promise<{ nextauth: string[] }> | { nextauth: string[] } }
+) {
+  // 手动 await params，确保 Next.js 15 兼容
+  // NextAuth 内部也会 await，但有时会失败，这里提前解析
+  const resolvedParams = await Promise.resolve(context.params);
+
+  // 重新包装 context，params 已经是解析好的对象（非 Promise）
+  // NextAuth 的 NextAuthRouteHandler 里 `await context.params` 对普通对象也有效
+  const resolvedContext = {
+    params: Promise.resolve(resolvedParams),
+  };
+
+  // @ts-expect-error - NextAuth v4 内部类型与 Next.js 15 Request 类型有差异
+  return NextAuth(req, resolvedContext, nextAuthOptions);
+}
 
 export { handler as GET, handler as POST };
