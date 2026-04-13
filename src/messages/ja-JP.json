@@ -1,0 +1,29 @@
+{
+  "HomePage": {
+    "title": "中国到着後は、ここからスタート",
+    "subtitle": "空港から市内へ。通信・交通・決済・グルメまで、すべてをガイドします。",
+    "cta": "今すぐ始める",
+    "tagline": "あなたの中国旅行アシスタント"
+  },
+  "NavBar": {
+    "home": "ホーム",
+    "chat": "チャット",
+    "trips": "旅程",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "food": "グルメ",
+    "transport": "交通"
+  },
+  "ChatPage": {
+    "title": "AI旅行アシスタント",
+    "placeholder": "旅行について何でも質問してください...",
+    "send": "送信",
+    "welcome": "こんにちは！中国旅行アシスタントです。何をお手伝いしましょうか？"
+  },
+  "Footer": {
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "contact": "お問い合わせ",
+    "copyright": "© 2026 China Landing AI Helper. All rights reserved."
+  }
+}

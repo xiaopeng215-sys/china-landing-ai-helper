@@ -13,8 +13,8 @@ Sentry.init({
     Sentry.httpIntegration(),
   ],
 
-  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 0.2, // 生产环境降低采样率
+  // MO-02: 生产环境 tracesSampleRate 降至 0.1
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
@@ -28,17 +28,26 @@ Sentry.init({
   // 性能监控配置
   enableTracing: true,
 
-  // 自定义 traces sampler
+  // 自定义 traces sampler（仅生产环境生效）
   tracesSampler: (samplingContext) => {
-    // 对某些事务进行不同的采样
+    if (process.env.NODE_ENV !== 'production') {
+      return 1.0; // 非生产环境全采样
+    }
+    // 生产环境：按事务类型差异化采样
     if (samplingContext.transactionContext.name?.includes('healthcheck')) {
       return 0; // 不采样健康检查
     }
     if (samplingContext.transactionContext.name?.includes('OPTIONS')) {
       return 0.01; // 低频采样 OPTIONS 请求
     }
-    // 默认采样率
-    return 0.2;
+    if (samplingContext.transactionContext.name?.includes('static')) {
+      return 0.05; // 静态资源超低采样
+    }
+    if (samplingContext.transactionContext.name?.includes('api/chat')) {
+      return 0.15; // AI 对话稍微多采样（有价值）
+    }
+    // 默认生产采样率 0.1
+    return 0.1;
   },
 
   // 忽略某些错误

@@ -114,7 +114,7 @@ export default function ChatView() {
 
       // 处理错误响应
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ());
+        const errorData = await response.json().catch(() => ({}));
         const err = errorData.error;
         const errorMessage = typeof err === 'string'
           ? err

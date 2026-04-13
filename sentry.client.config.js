@@ -9,16 +9,28 @@ Sentry.init({
 
   // Add optional integrations for additional features
   integrations: [
-    Sentry.replayIntegration(),
+    Sentry.replayIntegration({
+      // P1-15: Replay 隐私保护
+      maskAllText: true,         // 掩码所有文本内容（用户名、标题等）
+      blockAllMedia: true,        // 屏蔽所有媒体（图片、视频）
+      maskSensitiveAttributes: [
+        'password',
+        'passwordConfirm',
+        'secret',
+        'token',
+        'apiKey',
+        'authorization',
+        'cookie',
+        'x-api-key',
+      ],
+    }),
   ],
 
-  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  // MO-02: 生产环境采样率降至 20%（开发环境 100%）
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 1.0,
 
   // Define how likely Replay events are sampled.
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
+  replaysSessionSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
 
   // Define how likely Replay events are sampled when an error occurs.
   replaysOnErrorSampleRate: 1.0,
@@ -31,4 +43,16 @@ Sentry.init({
 
   // Set the release
   release: process.env.NEXT_PUBLIC_SENTRY_RELEASE || 'unversioned',
+
+  // 忽略无意义的客户端错误
+  ignoreErrors: [
+    'NetworkError',
+    'Network request failed',
+    'AbortError',
+    'The operation was aborted',
+    'Non-Error promise rejection captured',
+    'ResizeObserver loop limit exceeded',
+    'chrome-extension://',
+    'moz-extension://',
+  ],
 });

@@ -4,7 +4,7 @@
  * 功能:
  * - 基于 Upstash Redis 的滑动窗口限流
  * - 支持用户级和 IP 级限流
- * - 自动降级 (Redis 不可用时跳过)
+ * - Redis 不可用时自动降级到内存限流
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -26,6 +26,40 @@ const DEFAULT_RATE_LIMIT_CONFIG: RateLimitConfig = {
   windowSize: '60 s' as const,
 };
 
+// 内存限流 fallback (Redis 不可用时)
+const memoryStore = new Map<string, { count: number; resetAt: number }>();
+const MEMORY_FALLBACK_LIMIT = 60; // 60 次/分钟
+const MEMORY_FALLBACK_WINDOW_MS = 60 * 1000;
+
+function checkMemoryRateLimit(identifier: string): {
+  success: boolean;
+  remaining: number;
+  reset: number;
+  limit: number;
+} {
+  const now = Date.now();
+  const entry = memoryStore.get(identifier);
+
+  if (!entry || now > entry.resetAt) {
+    memoryStore.set(identifier, { count: 1, resetAt: now + MEMORY_FALLBACK_WINDOW_MS });
+    return {
+      success: true,
+      remaining: MEMORY_FALLBACK_LIMIT - 1,
+      reset: now + MEMORY_FALLBACK_WINDOW_MS,
+      limit: MEMORY_FALLBACK_LIMIT,
+    };
+  }
+
+  entry.count++;
+  const remaining = Math.max(0, MEMORY_FALLBACK_LIMIT - entry.count);
+  return {
+    success: entry.count <= MEMORY_FALLBACK_LIMIT,
+    remaining,
+    reset: entry.resetAt,
+    limit: MEMORY_FALLBACK_LIMIT,
+  };
+}
+
 /**
  * 全局限流器实例
  */
@@ -44,7 +78,7 @@ function initializeRatelimit(): Ratelimit | null {
   if (!redisUrl || !redisToken ||
       redisUrl.includes('your-redis') ||
       redisToken.includes('your-token')) {
-    console.warn('[RateLimit] Redis 未配置，跳过限流');
+    console.warn('[RateLimit] Redis 未配置，使用内存限流 fallback');
     return null;
   }
   
@@ -69,7 +103,7 @@ function initializeRatelimit(): Ratelimit | null {
     console.log('[RateLimit] 初始化成功');
     return ratelimit;
   } catch (error) {
-    console.warn('[RateLimit] 初始化失败:', error);
+    console.warn('[RateLimit] 初始化失败，使用内存限流 fallback:', error);
     return null;
   }
 }
@@ -97,42 +131,39 @@ export async function withRateLimit(
   reset: number;
   limit: number;
 }> {
-  const rl = getRatelimit();
-  
-  // Redis 未配置时跳过限流
-  if (!rl) {
-    return {
-      success: true,
-      remaining: Infinity,
-      reset: 0,
-      limit: 0,
-    };
-  }
-  
   // 确定标识符
   let identifier = options?.identifier;
   
   if (!identifier) {
-    // 优先使用用户 ID
     const userId = request.headers.get('x-user-id');
     if (userId) {
       identifier = `user:${userId}`;
     } else {
-      // 降级到 IP
       const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
       identifier = `ip:${ip}`;
     }
   }
+
+  const rl = getRatelimit();
   
-  // 执行限流
-  const result = await rl.limit(identifier);
+  // Redis 不可用时使用内存限流
+  if (!rl) {
+    return checkMemoryRateLimit(identifier);
+  }
   
-  return {
-    success: result.success,
-    remaining: result.remaining,
-    reset: result.reset,
-    limit: result.limit,
-  };
+  try {
+    const result = await rl.limit(identifier);
+    return {
+      success: result.success,
+      remaining: result.remaining,
+      reset: result.reset,
+      limit: result.limit,
+    };
+  } catch (error) {
+    // Redis 请求失败时降级到内存限流
+    console.warn('[RateLimit] Redis 请求失败，降级到内存限流:', error);
+    return checkMemoryRateLimit(identifier);
+  }
 }
 
 /**

@@ -283,6 +283,16 @@ const nextConfig = {
           },
         ],
       },
+      // LCP 优化：首页预加载关键资源
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Link',
+            value: '</_next/static/css/app/layout.css>; rel=preload; as=style',
+          },
+        ],
+      },
     ];
   },
 };

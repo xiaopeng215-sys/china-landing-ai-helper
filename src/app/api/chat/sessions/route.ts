@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createChatSession } from '@/lib/chat/session-manager';
-import { handleError } from '../../middleware/error-handler';
+import { handleApiError as handleError } from '@/app/api/middleware/error-handler';
 
 /**
  * POST /api/chat/sessions

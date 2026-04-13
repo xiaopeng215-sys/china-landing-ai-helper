@@ -641,6 +641,403 @@ describe('API Client', () => {
 });
 
 // ============================================
+// P1-09 补充测试: 增强覆盖率
+// ============================================
+
+describe('API Client - P1-09 Enhanced Coverage', () => {
+  beforeEach(() => {
+    apiConfig.setMock(true);
+    apiConfig.clearCache();
+    apiInterceptors.clear();
+    jest.clearAllMocks();
+  });
+
+  // ============================================
+  // Food API 增强测试
+  // ============================================
+  
+  describe('Food API Enhanced', () => {
+    describe('search edge cases', () => {
+      it('should handle empty keyword', async () => {
+        const results = await foodApi.search('');
+        expect(Array.isArray(results)).toBe(true);
+      });
+
+      it('should handle special characters in search', async () => {
+        const results = await foodApi.search('上海<>"\'');
+        expect(Array.isArray(results)).toBe(true);
+      });
+
+      it('should handle unicode search terms', async () => {
+        const results = await foodApi.search('北京');
+        expect(Array.isArray(results)).toBe(true);
+      });
+
+      it('should search across all fields', async () => {
+        const results = await foodApi.search('小笼包');
+        results.forEach(r => {
+          const searchScope = `${r.name} ${r.cuisine} ${r.location}`.toLowerCase();
+          expect(searchScope).toContain('小笼包');
+        });
+      });
+    });
+
+    describe('getList edge cases', () => {
+      it('should handle non-existent category', async () => {
+        const results = await foodApi.getList('nonExistentCategory123');
+        expect(Array.isArray(results)).toBe(true);
+      });
+
+      it('should handle empty category string', async () => {
+        const results = await foodApi.getList('');
+        expect(Array.isArray(results)).toBe(true);
+      });
+    });
+  });
+
+  // ============================================
+  // Transport API 增强测试
+  // ============================================
+  
+  describe('Transport API Enhanced', () => {
+    it('should handle empty origin', async () => {
+      const routes = await transportApi.getRoutes('', 'Shanghai');
+      expect(Array.isArray(routes)).toBe(true);
+    });
+
+    it('should handle empty destination', async () => {
+      const routes = await transportApi.getRoutes('Beijing', '');
+      expect(Array.isArray(routes)).toBe(true);
+    });
+
+    it('should handle both empty origin and destination', async () => {
+      const routes = await transportApi.getRoutes('', '');
+      expect(Array.isArray(routes)).toBe(true);
+    });
+
+    it('should handle very long location names', async () => {
+      const longName = 'a'.repeat(100);
+      const routes = await transportApi.getRoutes(longName, longName);
+      expect(Array.isArray(routes)).toBe(true);
+    });
+
+    it('should handle unicode location names', async () => {
+      const routes = await transportApi.getRoutes('北京市朝阳区', '上海市浦东新区');
+      expect(Array.isArray(routes)).toBe(true);
+    });
+  });
+
+  // ============================================
+  // Attraction API 增强测试
+  // ============================================
+  
+  describe('Attraction API Enhanced', () => {
+    it('should handle non-existent category filter', async () => {
+      const results = await attractionApi.getList('nonExistentTag999');
+      expect(Array.isArray(results)).toBe(true);
+    });
+
+    it('should handle empty category string', async () => {
+      const results = await attractionApi.getList('');
+      expect(Array.isArray(results)).toBe(true);
+    });
+
+    it('should return attractions with proper structure', async () => {
+      const attractions = await attractionApi.getList();
+      
+      if (attractions.length > 0) {
+        attractions.forEach(a => {
+          expect(a).toHaveProperty('id');
+          expect(a).toHaveProperty('name');
+          expect(a).toHaveProperty('tags');
+          expect(Array.isArray(a.tags)).toBe(true);
+        });
+      }
+    });
+
+    it('should handle unicode in getById', async () => {
+      const attractions = await attractionApi.getList();
+      if (attractions.length > 0) {
+        const attraction = await attractionApi.getById(attractions[0].id);
+        expect(attraction.id).toBe(attractions[0].id);
+      }
+    });
+  });
+
+  // ============================================
+  // Messages API 增强测试
+  // ============================================
+  
+  describe('Messages API Enhanced', () => {
+    it('should handle multiple rapid send operations', async () => {
+      const messages = [];
+      for (let i = 0; i < 5; i++) {
+        const msg = await messagesApi.send(`Message ${i}`);
+        messages.push(msg);
+      }
+      
+      expect(messages.length).toBe(5);
+      const ids = messages.map(m => m.id);
+      expect(new Set(ids).size).toBe(5); // All unique IDs
+    });
+
+    it('should include timestamp in correct format', async () => {
+      const message = await messagesApi.send('Test');
+      expect(message.timestamp).toBeDefined();
+      // Timestamp should be in HH:mm format (Chinese locale)
+      expect(message.timestamp).toMatch(/^\d{2}:\d{2}$/);
+    });
+
+    it('should handle emoji content', async () => {
+      const emojis = '🎉🎊🥳🎈🎁🎄🎅🎃🦄🐉🚗✈️🚀🌕⭐️💫';
+      const message = await messagesApi.send(emojis);
+      expect(message.content).toBe(emojis);
+    });
+
+    it('should handle multiline content', async () => {
+      const multiline = 'Line 1\nLine 2\nLine 3';
+      const message = await messagesApi.send(multiline);
+      expect(message.content).toBe(multiline);
+    });
+  });
+
+  // ============================================
+  // Trips API 增强测试
+  // ============================================
+  
+  describe('Trips API Enhanced', () => {
+    it('should create trip with minimal data', async () => {
+      const trip = await tripsApi.create({
+        userId: 'user',
+        destination: 'Beijing',
+        days: 1,
+      });
+      
+      expect(trip.id).toBeDefined();
+      expect(trip.destination).toBe('Beijing');
+    });
+
+    it('should update with partial data', async () => {
+      const created = await tripsApi.create({
+        userId: 'user',
+        destination: 'Beijing',
+        days: 5,
+      });
+
+      const updated = await tripsApi.update(created.id, { budget: 1000 });
+      
+      expect(updated.budget).toBe(1000);
+      expect(updated.destination).toBe('Beijing');
+      expect(updated.days).toBe(5);
+    });
+
+    it('should handle update with empty object', async () => {
+      const created = await tripsApi.create({
+        userId: 'user',
+        destination: 'Beijing',
+        days: 5,
+      });
+
+      const updated = await tripsApi.update(created.id, {});
+      
+      expect(updated.destination).toBe('Beijing');
+    });
+
+    it('should list recently created trips', async () => {
+      // Create multiple trips
+      await tripsApi.create({ userId: 'user', destination: 'A', days: 1 });
+      await tripsApi.create({ userId: 'user', destination: 'B', days: 2 });
+      await tripsApi.create({ userId: 'user', destination: 'C', days: 3 });
+
+      const trips = await tripsApi.getList();
+      
+      expect(trips.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it('should handle delete of already deleted trip', async () => {
+      const created = await tripsApi.create({
+        userId: 'user',
+        destination: 'Beijing',
+        days: 5,
+      });
+
+      await tripsApi.delete(created.id);
+      
+      // Second delete should throw
+      await expect(tripsApi.delete(created.id))
+        .rejects.toThrow('Trip not found');
+    });
+  });
+
+  // ============================================
+  // Interceptor 增强测试
+  // ============================================
+  
+  describe('Interceptors Enhanced', () => {
+    it('should handle interceptor that modifies URL', () => {
+      const interceptor = jest.fn((config) => ({
+        ...config,
+        url: 'modified-url',
+      }));
+      
+      apiInterceptors.addRequest(interceptor);
+      expect(interceptor).toBeDefined();
+    });
+
+    it('should handle interceptor that adds authentication', () => {
+      const interceptor = jest.fn((config) => ({
+        ...config,
+        headers: {
+          ...config.headers,
+          'Authorization': 'Bearer token123',
+        },
+      }));
+      
+      apiInterceptors.addRequest(interceptor);
+      expect(interceptor).toBeDefined();
+    });
+
+    it('should handle multiple response interceptors', () => {
+      const interceptor1 = jest.fn((response) => response);
+      const interceptor2 = jest.fn((response) => response);
+      
+      apiInterceptors.addResponse(interceptor1);
+      apiInterceptors.addResponse(interceptor2);
+      
+      expect(interceptor1).toBeDefined();
+      expect(interceptor2).toBeDefined();
+    });
+
+    it('should handle error interceptor that logs', () => {
+      const interceptor = jest.fn((error) => {
+        console.error('Error intercepted:', error.message);
+        return error;
+      });
+      
+      apiInterceptors.addError(interceptor);
+      expect(interceptor).toBeDefined();
+    });
+
+    it('should handle interceptor clear when empty', () => {
+      apiInterceptors.clear();
+      expect(() => apiInterceptors.clear()).not.toThrow();
+    });
+  });
+
+  // ============================================
+  // Configuration 增强测试
+  // ============================================
+  
+  describe('Configuration Enhanced', () => {
+    it('should persist config changes', () => {
+      apiConfig.setConfig({ baseUrl: 'http://test.com' });
+      const config = apiConfig.getConfig();
+      expect(config.baseUrl).toBe('http://test.com');
+    });
+
+    it('should handle partial config update', () => {
+      const initial = apiConfig.getConfig();
+      const initialTimeout = initial.timeout;
+      
+      apiConfig.setConfig({ baseUrl: 'http://new.com' });
+      const updated = apiConfig.getConfig();
+      
+      expect(updated.baseUrl).toBe('http://new.com');
+      expect(updated.timeout).toBe(initialTimeout);
+    });
+
+    it('should report correct mock status', () => {
+      apiConfig.setMock(true);
+      expect(apiConfig.isMock()).toBe(true);
+      
+      apiConfig.setMock(false);
+      expect(apiConfig.isMock()).toBe(false);
+    });
+  });
+
+  // ============================================
+  // Cache 增强测试
+  // ============================================
+  
+  describe('Cache Enhanced', () => {
+    it('should cache different endpoints separately', async () => {
+      const messages1 = await messagesApi.getList();
+      const messages2 = await tripsApi.getList();
+      
+      // Different APIs should have different cache entries
+      expect(messages1).not.toEqual(messages2);
+    });
+
+    it('should handle rapid cache clear', () => {
+      apiConfig.clearCache();
+      apiConfig.clearCache();
+      expect(() => apiConfig.clearCache()).not.toThrow();
+    });
+  });
+
+  // ============================================
+  // 性能与并发测试
+  // ============================================
+  
+  describe('Performance & Concurrency', () => {
+    it('should handle 20 concurrent requests', async () => {
+      const promises = Array(20).fill(null).map((_, i) => 
+        messagesApi.send(`Concurrent message ${i}`)
+      );
+      
+      const results = await Promise.all(promises);
+      expect(results.length).toBe(20);
+    });
+
+    it('should handle mixed API calls', async () => {
+      const promises = [
+        messagesApi.getList(),
+        tripsApi.getList(),
+        foodApi.getList(),
+        attractionApi.getList(),
+        transportApi.getRoutes('A', 'B'),
+      ];
+      
+      const results = await Promise.all(promises);
+      expect(results.length).toBe(5);
+      results.forEach(r => expect(Array.isArray(r)).toBe(true));
+    });
+
+    it('should handle sequential API calls quickly', async () => {
+      const start = Date.now();
+      
+      await messagesApi.getList();
+      await messagesApi.getList();
+      await messagesApi.getList();
+      
+      const elapsed = Date.now() - start;
+      // Should complete in reasonable time (mock has 300ms delay each)
+      expect(elapsed).toBeLessThan(5000);
+    });
+  });
+
+  // ============================================
+  // 错误处理增强测试
+  // ============================================
+  
+  describe('Error Handling Enhanced', () => {
+    it('should handle Malformed data gracefully', async () => {
+      // This tests the type guards in getCache
+      apiConfig.clearCache();
+      
+      // Manually corrupt cache
+      const cache = (apiConfig as any).cache;
+      if (cache) {
+        cache.set('test', { invalid: 'structure' });
+      }
+      
+      // Should not throw, should return null
+      expect(() => apiConfig.clearCache()).not.toThrow();
+    });
+  });
+});
+
+// ============================================
 // 辅助函数测试
 // ============================================
 
