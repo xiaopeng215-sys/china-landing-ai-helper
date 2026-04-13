@@ -234,7 +234,7 @@ async function sendToQwen(
   try {
     // 准备系统消息
     const intent = options?.intent || detectIntent(messages[messages.length - 1].content);
-    const language = options?.language || '中文';
+    const language = options?.language || 'English';
     
     let systemPrompt = selectPromptTemplate(intent);
     
@@ -408,7 +408,7 @@ async function sendToMiniMax(
   try {
     // 准备系统消息
     const intent = options?.intent || detectIntent(messages[messages.length - 1].content);
-    const language = options?.language || '中文';
+    const language = options?.language || 'English';
     
     let systemPrompt = selectPromptTemplate(intent);
     
@@ -767,40 +767,40 @@ function getMockResponse(messages: Message[]): AIResponse {
     };
   }
   
-  // 默认回复
+  // Default reply
   const structuredResponse: StructuredAIResponse = {
-    text: `👋 欢迎来到 China Landing AI Helper!
+    text: `👋 Welcome to China Landing AI Helper!
 
-我可以帮你：
-🗽 规划行程
-🍜 推荐美食
-🚇 交通指南
-💳 支付设置
+I can help you with:
+🗺️ Trip planning
+🍜 Food recommendations
+🚇 Transportation guides
+💳 Payment setup
 
-请告诉我你的需求，比如：
-• "帮我规划上海 4 天行程"
-• "推荐北京美食"
-• "怎么坐地铁去外滩？"
-• "如何设置支付宝？"
+Try asking me:
+• "Plan a 4-day Shanghai itinerary"
+• "Recommend food in Beijing"
+• "How to take the metro to the Bund?"
+• "How to set up Alipay?"
 
-我会为你提供详细、实用的建议！`,
+I'll give you detailed, practical advice!`,
     recommendations: [
       {
         type: 'attraction',
         id: 'popular-shanghai',
-        name: '热门景点',
+        name: 'Popular Attractions',
         nameEn: 'Popular Attractions',
-        reason: '探索上海最著名的地标',
-        price: '免费 - ¥200',
-        location: '上海市',
+        reason: 'Explore the most famous landmarks in Shanghai',
+        price: 'Free - ¥200',
+        location: 'Shanghai',
       },
     ],
     actions: [
       {
         type: 'info',
         provider: 'klook',
-        url: 'https://www.klook.com/zh-CN/destination/13-shanghai-activities/',
-        text: '查看上海活动',
+        url: 'https://www.klook.com/en-US/destination/13-shanghai-activities/',
+        text: 'View Shanghai Activities',
       },
     ],
   };
