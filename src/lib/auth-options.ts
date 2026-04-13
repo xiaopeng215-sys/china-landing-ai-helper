@@ -143,10 +143,10 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     
-    // Google 登录
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    // Google 登录（仅在配置了有效凭证时启用）
+    ...(isValidConfig(process.env.GOOGLE_CLIENT_ID) && isValidConfig(process.env.GOOGLE_CLIENT_SECRET) ? [GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
           prompt: 'consent',
@@ -154,16 +154,16 @@ export const authOptions: NextAuthOptions = {
           response_type: 'code'
         }
       }
-    }),
+    })] : []),
     
-    // Facebook 登录
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID || '',
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || '',
-    }),
+    // Facebook 登录（仅在配置了有效凭证时启用）
+    ...(isValidConfig(process.env.FACEBOOK_CLIENT_ID) && isValidConfig(process.env.FACEBOOK_CLIENT_SECRET) ? [FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID!,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+    })] : []),
     
-    // OpenAI 登录
-    OpenAIProvider,
+    // OpenAI 登录（仅在配置了有效凭证时启用）
+    ...(isValidConfig(process.env.OPENAI_CLIENT_ID) && isValidConfig(process.env.OPENAI_CLIENT_SECRET) ? [OpenAIProvider] : []),
   ],
   
   // 使用 JWT 模式（无数据库 session）
