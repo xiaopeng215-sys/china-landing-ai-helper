@@ -65,8 +65,8 @@ export const authOptions: NextAuthOptions = {
   adapter: undefined,
   
   providers: [
-    // 邮箱登录（仅在 EMAIL_SERVER 配置时启用）
-    ...(process.env.EMAIL_SERVER ? [EmailProvider({
+    // 邮箱登录（仅在 EMAIL_SERVER 配置了真实值时启用）
+    ...(isValidConfig(process.env.EMAIL_SERVER) && !process.env.EMAIL_SERVER?.includes('your-sendgrid') ? [EmailProvider({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM || 'no-reply@travelerlocal.ai',
       maxAge: 24 * 60 * 60,

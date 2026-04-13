@@ -170,7 +170,15 @@ export default function ProfilePage() {
     }
 
     try {
-      // TODO: Implement password change API
+      const response = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || '密码修改失败');
+      }
       alert('密码修改成功');
       setShowPasswordModal(false);
       setCurrentPassword('');
@@ -178,7 +186,7 @@ export default function ProfilePage() {
       setConfirmPassword('');
       setPasswordError('');
     } catch (error) {
-      setPasswordError('密码修改失败，请重试');
+      setPasswordError((error as Error).message || '密码修改失败，请重试');
     }
   };
 
@@ -186,11 +194,17 @@ export default function ProfilePage() {
     if (!confirm('确定要删除账号吗？此操作不可恢复！')) return;
     
     try {
-      // TODO: Implement account deletion API
-      alert('账号已删除');
+      const response = await fetch('/api/auth/delete-account', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || '删除失败');
+      }
       signOut({ callbackUrl: '/' });
     } catch (error) {
-      alert('删除失败，请重试');
+      alert((error as Error).message || '删除失败，请重试');
     }
   };
 
@@ -452,7 +466,7 @@ export default function ProfilePage() {
                   <span className="text-5xl">{currentTier.icon}</span>
                   <div>
                     <h2 className="text-2xl font-bold">{currentTier.name_zh}</h2>
-                    <p className="text-white/80">等级 {currentTier.level} · {userMembership?.status === 'active' ? ' active' : '已过期'}</p>
+                    <p className="text-white/80">等级 {currentTier.level} · {userMembership?.status === 'active' ? '有效' : '已过期'}</p>
                   </div>
                 </div>
                 

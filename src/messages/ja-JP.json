@@ -18,12 +18,202 @@
     "title": "AI旅行アシスタント",
     "placeholder": "旅行について何でも質問してください...",
     "send": "送信",
-    "welcome": "こんにちは！中国旅行アシスタントです。何をお手伝いしましょうか？"
+    "welcome": "こんにちは！中国旅行アシスタントです。何をお手伝いしましょうか？",
+    "suggestions": [
+      "空港からホテルへの行き方は？",
+      "近くのおすすめグルメ",
+      "アリペイの使い方",
+      "万里の長城への地下鉄ルート"
+    ],
+    "typing": "入力中...",
+    "error": "メッセージの送信に失敗しました。再試行してください",
+    "clearHistory": "会話をクリア",
+    "newChat": "新しい会話"
+  },
+  "ProfilePage": {
+    "title": "プロフィール",
+    "personalInfo": "個人情報",
+    "settings": "設定",
+    "history": "閲覧履歴",
+    "favorites": "お気に入り",
+    "editProfile": "プロフィール編集",
+    "nickname": "ニックネーム",
+    "email": "メール",
+    "language": "言語",
+    "budget": "予算",
+    "theme": "テーマ",
+    "notifications": "通知",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "logout": "ログアウト",
+    "deleteAccount": "アカウント削除",
+    "exportData": "データエクスポート",
+    "version": "バージョン",
+    "about": "アプリについて",
+    "helpCenter": "ヘルプセンター",
+    "feedback": "フィードバック",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約"
+  },
+  "AuthPage": {
+    "signIn": "ログイン",
+    "signUp": "新規登録",
+    "email": "メール",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "forgotPassword": "パスワードを忘れた方",
+    "noAccount": "アカウントをお持ちでない方",
+    "haveAccount": "すでにアカウントをお持ちの方",
+    "signInWithGoogle": "Googleでログイン",
+    "signInWithEmail": "メールでログイン",
+    "sendMagicLink": "マジックリンクを送信",
+    "checkEmail": "メールをご確認ください",
+    "magicLinkSent": "ログインリンクをメールに送信しました",
+    "backToLogin": "ログインに戻る",
+    "agreeTerms": "ログインすることで同意します",
+    "and": "および",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約",
+    "continueWithEmail": "メールで続ける",
+    "or": "または"
+  },
+  "TripsPage": {
+    "title": "マイトリップ",
+    "noTrips": "旅程がありません",
+    "createTrip": "旅程を作成",
+    "editTrip": "旅程を編集",
+    "deleteTrip": "旅程を削除",
+    "destinations": {
+      "shanghai": "上海",
+      "beijing": "北京",
+      "xian": "西安",
+      "chengdu": "成都",
+      "guilin": "桂林",
+      "hangzhou": "杭州",
+      "guangzhou": "広州",
+      "shenzhen": "深圳",
+      "chongqing": "重慶",
+      "nanjing": "南京"
+    },
+    "duration": "旅行期間",
+    "days": "{count}日間",
+    "viewDetails": "詳細を見る",
+    "delete": "削除",
+    "share": "シェア",
+    "export": "エクスポート",
+    "startDate": "出発日",
+    "endDate": "帰国日",
+    "travelers": "旅行人数",
+    "budget": "予算",
+    "preferences": "好み設定",
+    "notes": "メモ"
+  },
+  "Common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "retry": "再試行",
+    "close": "閉じる",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "search": "検索",
+    "filter": "フィルター",
+    "sort": "並び替え",
+    "ascending": "昇順",
+    "descending": "降順",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "create": "作成",
+    "update": "更新",
+    "submit": "送信",
+    "reset": "リセット",
+    "refresh": "更新",
+    "done": "完了",
+    "yes": "はい",
+    "no": "いいえ",
+    "ok": "OK",
+    "apply": "適用",
+    "clear": "クリア",
+    "more": "もっと見る",
+    "less": "閉じる",
+    "seeAll": "すべて見る",
+    "showMore": "もっと表示",
+    "showLess": "閉じる"
+  },
+  "Errors": {
+    "required": "この項目は必須です",
+    "invalidEmail": "有効なメールアドレスを入力してください",
+    "passwordTooShort": "パスワードは8文字以上必要です",
+    "passwordsDontMatch": "パスワードが一致しません",
+    "networkError": "ネットワークエラーです。再試行してください。",
+    "serverError": "サーバーエラーです。後でもう一度お試しください。",
+    "unauthorized": "続けるにはログインしてください",
+    "notFound": "ページが見つかりません",
+    "timeout": "リクエストがタイムアウトしました。再試行してください",
+    "forbidden": "この操作を行う権限がありません",
+    "sessionExpired": "セッションが期限切れです。再ログインしてください",
+    "generic": "不明なエラーが発生しました。後でもう一度お試しください"
   },
   "Footer": {
     "privacy": "プライバシーポリシー",
     "terms": "利用規約",
     "contact": "お問い合わせ",
     "copyright": "© 2026 China Landing AI Helper. All rights reserved."
+  },
+  "Loading": {
+    "initial": "準備中...",
+    "fetching": "データを取得中...",
+    "processing": "処理中...",
+    "saving": "保存中...",
+    "generating": "生成中...",
+    "searching": "検索中...",
+    "loading": "読み込み中..."
+  },
+  "EmptyStates": {
+    "noData": {
+      "title": "データがありません",
+      "description": "データを読み込み中です。しばらくお待ちください"
+    },
+    "noHistory": {
+      "title": "閲覧履歴がありません",
+      "description": "中国の旅を探索してみましょう"
+    },
+    "noFavorites": {
+      "title": "お気に入りがありません",
+      "description": "気に入ったコンテンツをお気に入りに追加しましょう"
+    },
+    "noResults": {
+      "title": "結果が見つかりません",
+      "description": "別のキーワードで検索するか、おすすめを参照してください"
+    },
+    "offline": {
+      "title": "オフラインです",
+      "description": "ネットワーク設定を確認してください"
+    },
+    "firstTime": {
+      "title": "中国の旅へようこそ",
+      "description": "完璧な旅程を計画しましょう"
+    }
+  },
+  "Actions": {
+    "explore": "探索する",
+    "retry": "再試行",
+    "startPlanning": "計画を始める",
+    "refresh": "更新",
+    "goBack": "ホームに戻る",
+    "viewDetails": "詳細を見る",
+    "share": "シェア"
+  },
+  "Notifications": {
+    "success": "操作が成功しました",
+    "error": "操作に失敗しました",
+    "warning": "注意",
+    "info": "お知らせ",
+    "confirmDelete": "削除してもよろしいですか？この操作は元に戻せません",
+    "confirmLogout": "ログアウトしてもよろしいですか？",
+    "copiedToClipboard": "クリップボードにコピーしました"
   }
 }

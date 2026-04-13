@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -20,14 +20,10 @@ export default function SignInPage() {
     setLoading(true);
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
+      const result = await signIn(email, password);
 
-      if (result?.error) {
-        throw new Error(result.error);
+      if (!result.ok) {
+        throw new Error(result.error || '登录失败');
       }
 
       // 登录成功，跳转到主页
@@ -46,12 +42,8 @@ export default function SignInPage() {
     setLoading(true);
 
     try {
-      await signIn('email', { 
-        email, 
-        callbackUrl: '/',
-        redirect: false,
-      });
-      // 邮箱验证码登录会发送邮件，显示成功提示
+      // 邮箱登录暂时显示提示
+      setError('邮箱登录功能正在开发中，请使用密码登录');
     } catch (err) {
       setError((err as Error).message || '发送失败，请重试');
     } finally {
@@ -60,33 +52,15 @@ export default function SignInPage() {
   };
 
   const handleGoogleSignIn = async () => {
-    setLoading(true);
-    try {
-      await signIn('google', { callbackUrl: '/' });
-    } catch {
-      setError('Google 登录失败，请重试');
-      setLoading(false);
-    }
+    setError('Google 登录正在配置中');
   };
 
   const handleFacebookSignIn = async () => {
-    setLoading(true);
-    try {
-      await signIn('facebook', { callbackUrl: '/' });
-    } catch {
-      setError('Facebook 登录失败，请重试');
-      setLoading(false);
-    }
+    setError('Facebook 登录正在配置中');
   };
 
   const handleOpenAISignIn = async () => {
-    setLoading(true);
-    try {
-      await signIn('openai', { callbackUrl: '/' });
-    } catch {
-      setError('OpenAI 登录失败，请重试');
-      setLoading(false);
-    }
+    setError('OpenAI 登录正在配置中');
   };
 
   return (
@@ -347,4 +321,3 @@ export default function SignInPage() {
     </div>
   );
 }
-// Force redeploy

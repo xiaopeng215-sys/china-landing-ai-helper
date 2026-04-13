@@ -1,10 +1,6 @@
+"use client";
 import React from "react";
-
-interface NavItem {
-  id: string;
-  label: string;
-  icon: string;
-}
+import { useClientI18n } from "@/lib/i18n/client";
 
 type Tab = "chat" | "trips" | "food" | "transport" | "profile";
 
@@ -18,12 +14,13 @@ interface BottomNavProps {
  * 移动优先设计，5 个核心 Tab
  */
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
+  const { t } = useClientI18n();
   const navItems: { id: Tab; label: string; icon: string }[] = [
-    { id: "chat", label: "Chat", icon: "💬" },
-    { id: "trips", label: "Trips", icon: "📅" },
-    { id: "food", label: "Food", icon: "🍜" },
-    { id: "transport", label: "Transport", icon: "🚇" },
-    { id: "profile", label: "Profile", icon: "👤" },
+    { id: "chat", label: t("NavBar.chat", "Chat"), icon: "💬" },
+    { id: "trips", label: t("NavBar.trips", "Trips"), icon: "📅" },
+    { id: "food", label: t("NavBar.food", "Food"), icon: "🍜" },
+    { id: "transport", label: t("NavBar.transport", "Transport"), icon: "🚇" },
+    { id: "profile", label: t("NavBar.profile", "Profile"), icon: "👤" },
   ];
 
   return (

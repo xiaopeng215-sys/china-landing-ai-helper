@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import HeroSection from "@/components/ui/HeroSection";
+import { useClientI18n } from "@/lib/i18n/client";
 
 // 动态导入 - 按需加载，减少初始包体积
 const ChatView = dynamic(() => import("@/components/views/ChatView/index"), {
@@ -44,6 +45,7 @@ type Tab = typeof TAB_VALUES[number];
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("chat");
   const [showHero, setShowHero] = useState(true);
+  const { t } = useClientI18n();
 
   // 使用 useMemo 缓存渲染结果，避免不必要的重新渲染
   const renderView = React.useMemo(() => {
