@@ -436,12 +436,12 @@ async function sendToMiniMax(
         ...messages,
       ],
       temperature: 0.7,
-      max_tokens: parseInt(process.env.MINIMAX_MAX_TOKENS || '1500'),
+      max_tokens: parseInt(process.env.MINIMAX_MAX_TOKENS || '8000'),
     };
 
     console.log('🤖 发送请求到 MiniMax API...');
     
-    // 发送请求 (30s 超时)
+    // 发送请求 (60s 超时，M2.7 推理模型需要更长时间)
     const response = await fetch(`${MINIMAX_API_URL}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -449,9 +449,8 @@ async function sendToMiniMax(
         'Authorization': `Bearer ${MINIMAX_API_KEY}`,
       },
       body: JSON.stringify(requestBody),
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(60000),
     });
-
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -462,10 +461,18 @@ async function sendToMiniMax(
     const data = await response.json();
     const rawContent = data.choices[0].message.content;
     
+    // 检测推理模型空回复：content 只含 <think> 标签时视为失败
+    const contentWithoutThink = rawContent.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+    if (!contentWithoutThink) {
+      console.error('❌ MiniMax 返回空回复（推理 token 耗尽），finish_reason:', data.choices[0].finish_reason);
+      throw new Error('MiniMax 返回空回复，可能 max_tokens 不足');
+    }
+    
     console.log('✅ MiniMax API 响应成功');
+    const rawContent_clean = contentWithoutThink;
     
     // 尝试解析结构化响应
-    const structured = parseAIResponse(rawContent);
+    const structured = parseAIResponse(rawContent_clean);
     
     // 如果有结构化数据，返回 JSON 格式
     if (structured.recommendations?.length || structured.actions?.length) {
@@ -477,7 +484,7 @@ async function sendToMiniMax(
     
     // 否则返回纯文本
     return {
-      content: rawContent,
+      content: rawContent_clean,
       usage: data.usage,
     };
   } catch (error) {
