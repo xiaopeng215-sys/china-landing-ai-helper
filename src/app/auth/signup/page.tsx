@@ -90,7 +90,7 @@ export default function SignUpPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || '注册失败');
+        throw new Error(data.error || 'Registration failed. Please try again.');
       }
 
       // 注册成功，自动登录

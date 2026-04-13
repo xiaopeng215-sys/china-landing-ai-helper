@@ -12,7 +12,8 @@
     "profile": "プロフィール",
     "settings": "設定",
     "food": "グルメ",
-    "transport": "交通"
+    "transport": "交通",
+    "navigation": "ナビゲーション"
   },
   "ChatPage": {
     "title": "AI旅行アシスタント",
@@ -75,7 +76,37 @@
     "privacyPolicy": "プライバシーポリシー",
     "termsOfService": "利用規約",
     "continueWithEmail": "メールで続ける",
-    "or": "または"
+    "or": "または",
+    "welcomeBack": "おかえりなさい",
+    "signInSubtitle": "中国の旅を続けるにはサインインしてください",
+    "passwordSignIn": "パスワード",
+    "emailCode": "マジックリンク",
+    "rememberMe": "ログイン状態を保持（7日間）",
+    "sendFailed": "送信に失敗しました。もう一度お試しください。",
+    "emailSent": "メール送信済み",
+    "emailSentDesc": "登録済みのメールアドレスであれば、パスワードリセットリンクが送信されます。受信トレイ（迷惑メールフォルダを含む）をご確認ください。",
+    "backToSignIn": "サインインに戻る",
+    "tryAnotherEmail": "別のメールアドレスを入力",
+    "forgotPasswordTitle": "パスワードをお忘れですか",
+    "forgotPasswordDesc": "メールアドレスを入力するとリセットリンクをお送りします",
+    "emailHelp": "登録時に使用したメールアドレスを入力してください",
+    "sendResetLink": "リセットリンクを送信",
+    "needHelp": "お困りですか？",
+    "contactSupport": "サポートに連絡",
+    "verifyDesc": "メールにサインインリンクを送信しました。リンクをクリックしてサインインしてください。",
+    "tips": "ヒント",
+    "tipSpam": "迷惑メールフォルダを確認してください",
+    "tipExpiry": "リンクの有効期限は24時間です",
+    "tipOneTime": "各リンクは一度しか使用できません",
+    "tipResend": "メールが届きませんでしたか？",
+    "resend": "再送信",
+    "googleComingSoon": "Googleサインインを設定中です。",
+    "facebookComingSoon": "Facebookサインインを設定中です。",
+    "openaiComingSoon": "OpenAIサインインを設定中です。",
+    "emailSignInComingSoon": "メールサインインは近日公開予定です。パスワードサインインをご利用ください。",
+    "magicLinkDesc": "メールにサインインリンクをお送りします",
+    "signInWithFacebook": "Facebookでサインイン",
+    "signInWithOpenAI": "OpenAIでサインイン"
   },
   "TripsPage": {
     "title": "マイトリップ",
@@ -173,7 +204,8 @@
     "less": "閉じる",
     "seeAll": "すべて見る",
     "showMore": "もっと表示",
-    "showLess": "閉じる"
+    "showLess": "閉じる",
+    "auto": "自動"
   },
   "Errors": {
     "required": "この項目は必須です",

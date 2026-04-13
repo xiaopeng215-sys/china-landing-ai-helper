@@ -10,7 +10,8 @@
     "chat": "对话",
     "trips": "行程",
     "profile": "我的",
-    "settings": "设置"
+    "settings": "设置",
+    "navigation": "主导航"
   },
   "ChatPage": {
     "title": "AI 旅行助手",
@@ -73,7 +74,37 @@
     "privacyPolicy": "隐私政策",
     "termsOfService": "服务条款",
     "continueWithEmail": "继续使用邮箱",
-    "or": "或者"
+    "or": "或者",
+    "welcomeBack": "欢迎回来",
+    "signInSubtitle": "登录继续您的中国之旅",
+    "passwordSignIn": "密码登录",
+    "emailCode": "邮件链接",
+    "rememberMe": "记住我（7天）",
+    "sendFailed": "发送失败，请重试",
+    "emailSent": "邮件已发送",
+    "emailSentDesc": "如果该邮箱已注册，您将收到一封包含密码重置链接的邮件。请检查您的邮箱（包括垃圾邮件文件夹）。",
+    "backToSignIn": "返回登录",
+    "tryAnotherEmail": "重新输入邮箱",
+    "forgotPasswordTitle": "忘记密码",
+    "forgotPasswordDesc": "输入您的邮箱，我们将发送重置链接",
+    "emailHelp": "请输入您注册时使用的邮箱",
+    "sendResetLink": "发送重置链接",
+    "needHelp": "遇到问题？",
+    "contactSupport": "联系支持",
+    "verifyDesc": "我们已发送一封包含登录链接的邮件到您的邮箱。点击邮件中的链接即可登录。",
+    "tips": "温馨提示",
+    "tipSpam": "检查垃圾邮件文件夹",
+    "tipExpiry": "链接有效期为 24 小时",
+    "tipOneTime": "每个链接只能使用一次",
+    "tipResend": "未收到邮件？",
+    "resend": "重新发送",
+    "googleComingSoon": "Google 登录正在配置中。",
+    "facebookComingSoon": "Facebook 登录正在配置中。",
+    "openaiComingSoon": "OpenAI 登录正在配置中。",
+    "emailSignInComingSoon": "邮件登录即将上线，请使用密码登录。",
+    "magicLinkDesc": "我们将向您的邮箱发送登录链接",
+    "signInWithFacebook": "使用 Facebook 登录",
+    "signInWithOpenAI": "使用 OpenAI 登录"
   },
   "Common": {
     "loading": "加载中...",
@@ -110,7 +141,8 @@
     "less": "收起",
     "seeAll": "查看全部",
     "showMore": "显示更多",
-    "showLess": "收起"
+    "showLess": "收起",
+    "auto": "跟随系统"
   },
   "Errors": {
     "required": "此项为必填项",

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Calendar, DollarSign, Star } from 'lucide-react';
+import { useClientI18n } from '@/lib/i18n/client';
 import type { ItineraryRoute } from '@/lib/itineraries';
 import ActivityItem from './ActivityItem';
 import { useClientI18n } from '@/lib/i18n/client';
@@ -33,7 +34,7 @@ export default function TripDetailModal({ trip, onClose }: TripDetailModalProps)
             <button 
               onClick={onClose}
               className="p-2 -m-2 text-gray-400 hover:text-gray-600 active:bg-gray-100 rounded-full transition-colors"
-              aria-label="关闭"
+              aria-label={t('Common.close', 'Close')}
             >
               ✕
             </button>
