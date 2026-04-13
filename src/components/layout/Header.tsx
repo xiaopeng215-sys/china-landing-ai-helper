@@ -37,7 +37,7 @@ export default function Header({
             <button
               onClick={onBack}
               className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-              aria-label="返回上一页"
+              aria-label="Go back"
             >
               <span className="text-xl" aria-hidden="true">←</span>
             </button>
@@ -57,7 +57,7 @@ export default function Header({
               <button
                 onClick={() => setShowMenu(!showMenu)}
                 className="w-9 h-9 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-full flex items-center justify-center text-white font-semibold shadow-md hover:shadow-lg transition-all"
-                aria-label="打开用户菜单"
+                aria-label="Open user menu"
                 aria-expanded={showMenu}
                 aria-haspopup="true"
               >
@@ -73,7 +73,7 @@ export default function Header({
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
                     <div className="px-4 py-3 border-b border-gray-100">
                       <p className="text-sm font-semibold text-[#484848] truncate">
-                        {session.user?.name || '用户'}
+                        {session.user?.name || 'User'}
                       </p>
                       <p className="text-xs text-[#767676] truncate">
                         {session.user?.email}
@@ -85,7 +85,7 @@ export default function Header({
                       onClick={() => setShowMenu(false)}
                       className="block px-4 py-2.5 text-sm text-[#484848] hover:bg-gray-50 transition-colors"
                     >
-                      👤 个人资料
+                      👤 Profile
                     </Link>
                     
                     <Link
@@ -93,15 +93,15 @@ export default function Header({
                       onClick={() => setShowMenu(false)}
                       className="block px-4 py-2.5 text-sm text-[#484848] hover:bg-gray-50 transition-colors"
                     >
-                      💬 AI 对话
+                      💬 AI Chat
                     </Link>
                     
                     <button
                       onClick={handleSignOut}
                       className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                      aria-label="退出登录"
+                      aria-label="Sign out"
                     >
-                      🚪 退出登录
+                      🚪 Sign Out
                     </button>
                   </div>
                 </>
@@ -111,7 +111,7 @@ export default function Header({
             <Link
               href="/profile"
               className="w-9 h-9 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-full flex items-center justify-center text-white font-semibold shadow-md hover:shadow-lg transition-all"
-              aria-label="查看个人资料"
+              aria-label="View profile"
             >
               {session.user?.name?.charAt(0).toUpperCase() || 'U'}
             </Link>
@@ -119,9 +119,9 @@ export default function Header({
             <Link
               href="/auth/signin"
               className="px-4 py-2 text-sm font-medium text-[#ff5a5f] bg-[#ff5a5f]/10 rounded-full hover:bg-[#ff5a5f]/20 transition-colors"
-              aria-label="登录账号"
+              aria-label="Sign in"
             >
-              登录
+              Sign In
             </Link>
           )}
         </div>

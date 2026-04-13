@@ -30,7 +30,7 @@ export const chengdu3Days: ItineraryRoute = {
       title: '熊猫卖萌日',
       theme: '大熊猫 · 宽窄巷子',
       activities: [
-        { time: '07:30', name: '成都大熊猫繁育研究基地', nameEn: 'Chengdu Panda Base', type: 'attraction', duration: '4 小时', description: '全球最大熊猫繁育研究基地，近距离观赏大熊猫卖萌。', price: '¥55', location: '成华区外北熊猫大道', locationLat: 30.7385, locationLng: 104.1465, highlights: ['成年熊猫别墅', '亚成年熊猫', '小熊猫区', '熊猫幼儿园'], tips: '必须早上去！熊猫上午活跃，下午大多在睡觉，8-10 点是最佳观赏时间' },
+        { time: '07:30', name: '成都大熊猫繁育研究基地', nameEn: 'Chengdu Panda Base', type: 'attraction', duration: '4 小时', description: '全球最大熊猫繁育研究基地，近距离观赏大熊猫卖萌。', price: '¥58', location: '成华区外北熊猫大道', locationLat: 30.7385, locationLng: 104.1465, highlights: ['成年熊猫别墅', '亚成年熊猫', '小熊猫区', '熊猫幼儿园'], tips: '必须早上去！熊猫上午活跃，下午大多在睡觉，8-10 点是最佳观赏时间' },
         { time: '12:30', name: '玉林路美食', nameEn: 'Yulin Road Food', type: 'food', duration: '2 小时', description: '成都本地人最爱的美食街，串串香、火锅、冒菜汇聚。', price: '¥60-100/人', location: '武侯区玉林路', locationLat: 30.6415, locationLng: 104.0535, highlights: ['玉林串串香', '飘香火锅', '王妈手撕兔'], tips: '玉林路是成都本地人吃东西的地方，比网红店更正宗' },
         { time: '15:30', name: '宽窄巷子', nameEn: 'Wide and Narrow Alleys', type: 'attraction', duration: '2.5 小时', description: '清朝古街道，保留了老成都建筑风貌，文艺小店和地道小吃并存。', price: '免费', location: '青羊区长顺街', locationLat: 30.6635, locationLng: 104.0565, highlights: ['宽巷子', '窄巷子', '井巷子', '采耳体验'], tips: '下午去可以喝喝茶看川剧变脸，晚上灯光更美' },
         { time: '18:30', name: '小龙坎老火锅', nameEn: 'Xiaolongkan Hotpot', type: 'food', duration: '2 小时', description: '成都最火爆的火锅店之一，牛油红锅配鸭肠毛肚。', price: '¥120-180/人', location: '春熙路/太古里附近', locationLat: 30.6585, locationLng: 104.0855, highlights: ['鲜毛肚', '鸭肠', '嫩牛肉', '冰粉'], tips: '必须提前在大众点评取号，否则等 2 小时以上' }

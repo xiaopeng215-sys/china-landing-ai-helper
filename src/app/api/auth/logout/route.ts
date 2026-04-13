@@ -20,7 +20,7 @@ export async function GET() {
   } catch (error) {
     console.error('[Auth Logout] Error:', error);
     return NextResponse.json(
-      { error: '登出失败' },
+      { error: 'Sign out failed. Please try again.' },
       { status: 500 }
     );
   }

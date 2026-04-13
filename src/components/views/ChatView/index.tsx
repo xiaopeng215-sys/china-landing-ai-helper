@@ -207,19 +207,21 @@ export default function ChatView() {
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b px-4 py-3 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <MessagesSquare className="w-6 h-6 text-[#ff5a5f]" />
-          <div>
-            <h1 className="font-bold text-lg">{t('ChatViewPage.title')}</h1>
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <MessagesSquare className="w-6 h-6 text-[#ff5a5f]" />
+            <div>
+              <h1 className="font-bold text-lg text-[#484848]">{t('ChatViewPage.title')}</h1>
+            </div>
           </div>
+          <button
+            onClick={() => setShowSessionList(true)}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <History className="w-5 h-5 text-[#767676]" />
+          </button>
         </div>
-        <button
-          onClick={() => setShowSessionList(true)}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-        >
-          <History className="w-5 h-5 text-[#767676]" />
-        </button>
       </header>
 
       {/* Model Selector hidden - internal use only */}

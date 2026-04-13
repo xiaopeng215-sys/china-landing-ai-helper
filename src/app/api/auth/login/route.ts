@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: '邮箱和密码不能为空' },
+        { error: 'Email and password are required.' },
         { status: 400 }
       );
     }
@@ -63,20 +63,20 @@ export async function POST(request: NextRequest) {
         });
       }
       return NextResponse.json(
-        { error: '密码长度至少 6 位' },
+        { error: 'Password must be at least 6 characters.' },
         { status: 401 }
       );
     }
 
     // 生产模式需要连接数据库验证
     return NextResponse.json(
-      { error: '认证服务未配置' },
+      { error: 'Authentication service is not configured.' },
       { status: 503 }
     );
   } catch (error) {
     console.error('[Auth Login] Error:', error);
     return NextResponse.json(
-      { error: '登录失败，请稍后重试' },
+      { error: 'Sign in failed. Please try again later.' },
       { status: 500 }
     );
   }

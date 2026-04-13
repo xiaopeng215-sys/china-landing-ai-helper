@@ -13,27 +13,26 @@ const inter = Inter({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://china-ai-helper.com';
 
 export const metadata: Metadata = {
-  // 基础 SEO
+  // SEO
   title: {
-    default: 'China Landing AI Helper - 你的中国旅行 AI 助手',
+    default: 'China Landing AI Helper - Your AI Travel Assistant for China',
     template: '%s | China AI Helper',
   },
-  description: 'AI 驱动的中国旅行规划助手 - 智能行程定制、地道美食推荐、交通出行指南。支持北京、上海、西安、成都、桂林、杭州等热门目的地。',
+  description: 'AI-powered travel assistant for visiting China — smart itinerary planning, authentic food recommendations, and transportation guides for Beijing, Shanghai, Xi\'an, Chengdu, Guilin, and Hangzhou.',
   keywords: [
-    '中国旅行',
-    'AI 旅行助手',
-    '行程规划',
-    '美食推荐',
-    '交通指南',
     'China travel',
-    'AI assistant',
-    'travel planning',
+    'AI travel assistant',
+    'itinerary planning',
+    'food recommendations',
+    'transportation guide',
     'Beijing travel',
     'Shanghai travel',
     'Xian travel',
     'Chengdu travel',
     'Guilin travel',
     'Hangzhou travel',
+    'China tourism',
+    'travel planning',
   ],
   authors: [
     { name: 'China Landing AI Helper', url: SITE_URL },
@@ -79,12 +78,12 @@ export const metadata: Metadata = {
   // Open Graph - 社交媒体分享优化
   openGraph: {
     type: 'website',
-    locale: 'zh_CN',
-    alternateLocale: ['en_US', 'ko_KR'],
+    locale: 'en_US',
+    alternateLocale: ['zh_CN', 'ko_KR', 'ja_JP'],
     url: SITE_URL,
     siteName: 'China AI Helper',
-    title: 'China Landing AI Helper - 你的中国旅行 AI 助手',
-    description: 'AI 驱动的中国旅行规划助手 - 智能行程定制、地道美食推荐、交通出行指南',
+    title: 'China Landing AI Helper - Your AI Travel Assistant for China',
+    description: 'AI-powered travel assistant for visiting China — smart itinerary planning, authentic food recommendations, and transportation guides.',
     images: [
       {
         url: '/og-image.png',
@@ -108,8 +107,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@ChinaAIHelper',
     creator: '@ChinaAIHelper',
-    title: 'China Landing AI Helper - 你的中国旅行 AI 助手',
-    description: 'AI 驱动的中国旅行规划助手 - 智能行程定制、地道美食推荐、交通出行指南',
+    title: 'China Landing AI Helper - Your AI Travel Assistant for China',
+    description: 'AI-powered travel assistant for visiting China — smart itinerary planning, authentic food recommendations, and transportation guides.',
     images: ['/og-image.png'],
   },
   
@@ -137,7 +136,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-CN" className={inter.variable}>
+    <html lang="en" className={inter.variable}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

@@ -229,7 +229,7 @@ export const shanghai4Days: ItineraryRoute = {
           type: 'attraction',
           duration: '1.5 小时',
           description: '中国最高楼，118 层观光厅可以俯瞰整个上海。',
-          price: '¥180',
+          price: '¥210',
           location: '浦东新区陆家嘴环路 501 号',
           locationLat: 31.2355,
           locationLng: 121.5015,

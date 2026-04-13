@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useClientI18n } from '@/lib/i18n/client';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { 
@@ -43,6 +44,7 @@ interface ItineraryItem {
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { t } = useClientI18n();
   const [activeTab, setActiveTab] = useState<'profile' | 'membership' | 'itineraries' | 'history' | 'favorites' | 'settings'>('profile');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
@@ -144,7 +146,7 @@ export default function ProfilePage() {
 
   const handleClearHistory = async () => {
     if (!session?.user?.id) return;
-    if (!confirm('确定要清除所有浏览历史吗？')) return;
+    if (!confirm(t('ProfileRoutePage.historyClearConfirm'))) return;
     
     await clearBrowseHistory(session.user.id);
     setHistory([]);
@@ -160,12 +162,12 @@ export default function ProfilePage() {
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
-      setPasswordError('两次输入的密码不一致');
+      setPasswordError(t('ProfileRoutePage.passwordMismatch'));
       return;
     }
     
     if (newPassword.length < 6) {
-      setPasswordError('密码至少需要 6 个字符');
+      setPasswordError(t('ProfileRoutePage.passwordTooShort'));
       return;
     }
 
@@ -177,21 +179,21 @@ export default function ProfilePage() {
       });
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || '密码修改失败');
+        throw new Error(data.error || t('ProfileRoutePage.passwordFail'));
       }
-      alert('密码修改成功');
+      alert(t('ProfileRoutePage.passwordSuccess'));
       setShowPasswordModal(false);
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
       setPasswordError('');
     } catch (error) {
-      setPasswordError((error as Error).message || '密码修改失败，请重试');
+      setPasswordError(t('ProfileRoutePage.passwordFail'));
     }
   };
 
   const handleDeleteAccount = async () => {
-    if (!confirm('确定要删除账号吗？此操作不可恢复！')) return;
+    if (!confirm(t('ProfileRoutePage.settingsDeleteConfirm'))) return;
     
     try {
       const response = await fetch('/api/auth/delete-account', {
@@ -200,11 +202,11 @@ export default function ProfilePage() {
       });
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || '删除失败');
+         throw new Error(data.error || t('ProfileRoutePage.settingsDeleteAccount'));
       }
       signOut({ callbackUrl: '/' });
     } catch (error) {
-      alert((error as Error).message || '删除失败，请重试');
+      alert((error as Error).message || t('ProfileRoutePage.settingsDeleteAccountDesc'));
     }
   };
 
@@ -229,9 +231,9 @@ export default function ProfilePage() {
       a.click();
       URL.revokeObjectURL(url);
       
-      alert('数据导出成功');
+      alert(t('ProfileRoutePage.exportSuccess'));
     } catch (error) {
-      alert('数据导出失败，请重试');
+      alert(t('ProfileRoutePage.exportFail'));
     }
   };
 
@@ -240,7 +242,7 @@ export default function ProfilePage() {
     localStorage.setItem('china-ai-budget', budget);
     localStorage.setItem('china-ai-theme', theme);
     localStorage.setItem('china-ai-notifications', notifications.toString());
-    alert('设置已保存');
+    alert(t('ProfileRoutePage.settingsSaved'));
   };
 
   const getCurrentTier = (): MembershipTier | null => {
@@ -253,7 +255,7 @@ export default function ProfilePage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center animate-bounce-in">
           <div className="w-16 h-16 border-4 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#767676] font-medium">加载中...</p>
+          <p className="text-[#767676] font-medium">{t('ProfileRoutePage.loading')}</p>
         </div>
       </div>
     );
@@ -281,7 +283,7 @@ export default function ProfilePage() {
               👤
             </div>
             <div>
-              <h1 className="text-2xl font-bold animate-fade-in">{session?.user?.name || '用户'}</h1>
+              <h1 className="text-2xl font-bold animate-fade-in">{session?.user?.name || t('ProfileRoutePage.tabProfile')}</h1>
               <p className="text-white/80 animate-fade-in" style={{ animationDelay: '0.1s' }}>{session?.user?.email}</p>
               {currentTier && (
                 <div className="flex items-center gap-2 mt-1 animate-fade-in" style={{ animationDelay: '0.2s' }}>
@@ -308,7 +310,7 @@ export default function ProfilePage() {
                   : 'border-transparent text-[#767676]'
               }`}
             >
-              个人资料
+              {t('ProfileRoutePage.tabProfile')}
             </button>
             <button
               onClick={() => setActiveTab('membership')}
@@ -318,7 +320,7 @@ export default function ProfilePage() {
                   : 'border-transparent text-[#767676]'
               }`}
             >
-              会员中心
+              {t('ProfileRoutePage.tabMembership')}
             </button>
             <button
               onClick={() => setActiveTab('itineraries')}
@@ -328,7 +330,7 @@ export default function ProfilePage() {
                   : 'border-transparent text-[#767676]'
               }`}
             >
-              我的行程
+              {t('ProfileRoutePage.tabItineraries')}
             </button>
             <button
               onClick={() => setActiveTab('history')}
@@ -338,7 +340,7 @@ export default function ProfilePage() {
                   : 'border-transparent text-[#767676]'
               }`}
             >
-              浏览历史
+              {t('ProfileRoutePage.tabHistory')}
             </button>
             <button
               onClick={() => setActiveTab('favorites')}
@@ -348,7 +350,7 @@ export default function ProfilePage() {
                   : 'border-transparent text-[#767676]'
               }`}
             >
-              收藏夹
+              {t('ProfileRoutePage.tabFavorites')}
             </button>
             <button
               onClick={() => setActiveTab('settings')}
@@ -358,7 +360,7 @@ export default function ProfilePage() {
                   : 'border-transparent text-[#767676]'
               }`}
             >
-              设置
+              {t('ProfileRoutePage.tabSettings')}
             </button>
           </div>
         </div>
@@ -373,22 +375,22 @@ export default function ProfilePage() {
               <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
                 <div className="text-2xl mb-2 animate-float">📅</div>
                 <div className="text-xl font-bold text-[#484848]">{userStats.itineraries}</div>
-                <div className="text-xs text-[#767676]">行程</div>
+                <div className="text-xs text-[#767676]">{t('ProfileRoutePage.statItineraries')}</div>
               </div>
               <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
                 <div className="text-2xl mb-2 animate-float" style={{ animationDelay: '0.5s' }}>❤️</div>
                 <div className="text-xl font-bold text-[#484848]">{userStats.favorites}</div>
-                <div className="text-xs text-[#767676]">收藏</div>
+                <div className="text-xs text-[#767676]">{t('ProfileRoutePage.statFavorites')}</div>
               </div>
               <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
                 <div className="text-2xl mb-2 animate-float" style={{ animationDelay: '1s' }}>📜</div>
                 <div className="text-xl font-bold text-[#484848]">{userStats.history}</div>
-                <div className="text-xs text-[#767676]">历史</div>
+                <div className="text-xs text-[#767676]">{t('ProfileRoutePage.statHistory')}</div>
               </div>
               <div className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100 hover-lift stagger-item">
                 <div className="text-2xl mb-2 animate-float" style={{ animationDelay: '1.5s' }}>⭐</div>
                 <div className="text-xl font-bold text-[#484848]">{membershipPoints?.points || 0}</div>
-                <div className="text-xs text-[#767676]">积分</div>
+                <div className="text-xs text-[#767676]">{t('ProfileRoutePage.statPoints')}</div>
               </div>
             </div>
 
@@ -400,12 +402,12 @@ export default function ProfilePage() {
                     <span className="text-4xl">{currentTier.icon}</span>
                     <div>
                       <h3 className="text-xl font-bold">{currentTier.name_zh}</h3>
-                      <p className="text-white/80 text-sm">会员等级 {currentTier.level}</p>
+                      <p className="text-white/80 text-sm">{t('ProfileRoutePage.membershipLevel')} {currentTier.level}</p>
                     </div>
                   </div>
                   {userMembership?.expires_at && (
                     <div className="text-right">
-                      <p className="text-sm text-white/80">有效期至</p>
+                      <p className="text-sm text-white/80">{t('ProfileRoutePage.membershipValidUntil')}</p>
                       <p className="font-medium">
                         {new Date(userMembership.expires_at).toLocaleDateString('zh-CN')}
                       </p>
@@ -415,12 +417,12 @@ export default function ProfilePage() {
                 
                 <div className="grid grid-cols-2 gap-3 mt-4">
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                    <p className="text-sm text-white/80">每日查询</p>
-                    <p className="text-lg font-bold">{currentTier.max_daily_queries} 次</p>
+                    <p className="text-sm text-white/80">{t('ProfileRoutePage.membershipDailyQueries')}</p>
+                     <p className="text-lg font-bold">{currentTier.max_daily_queries}</p>
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                    <p className="text-sm text-white/80">并发会话</p>
-                    <p className="text-lg font-bold">{currentTier.max_concurrent_sessions} 个</p>
+                    <p className="text-sm text-white/80">{t('ProfileRoutePage.membershipConcurrent')}</p>
+                     <p className="text-lg font-bold">{currentTier.max_concurrent_sessions}</p>
                   </div>
                 </div>
               </div>
@@ -428,7 +430,7 @@ export default function ProfilePage() {
 
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              <h2 className="text-lg font-bold text-[#484848] mb-4">快捷操作</h2>
+              <h2 className="text-lg font-bold text-[#484848] mb-4">{t('ProfileRoutePage.quickActions')}</h2>
               
               <button
                 onClick={() => router.push('/install-guide')}
@@ -436,8 +438,8 @@ export default function ProfilePage() {
               >
                 <div className="text-2xl group-hover:scale-110 transition-transform">📱</div>
                 <div className="flex-1 text-left">
-                  <p className="font-medium text-[#484848]">安装应用</p>
-                  <p className="text-sm text-[#767676]">添加到主屏幕，快速访问</p>
+                  <p className="font-medium text-[#484848]">{t('ProfileRoutePage.installApp')}</p>
+                  <p className="text-sm text-[#767676]">{t('ProfileRoutePage.installAppDesc')}</p>
                 </div>
                 <div className="text-[#ff5a5f] group-hover:translate-x-1 transition-transform">→</div>
               </button>
@@ -448,8 +450,8 @@ export default function ProfilePage() {
               >
                 <div className="text-2xl group-hover:scale-110 transition-transform">💾</div>
                 <div className="flex-1 text-left">
-                  <p className="font-medium text-[#484848]">导出数据</p>
-                  <p className="text-sm text-[#767676]">下载您的个人数据</p>
+                  <p className="font-medium text-[#484848]">{t('ProfileRoutePage.exportData')}</p>
+                  <p className="text-sm text-[#767676]">{t('ProfileRoutePage.exportDataDesc')}</p>
                 </div>
                 <div className="text-[#767676] group-hover:translate-x-1 transition-transform">→</div>
               </button>
@@ -466,14 +468,14 @@ export default function ProfilePage() {
                   <span className="text-5xl">{currentTier.icon}</span>
                   <div>
                     <h2 className="text-2xl font-bold">{currentTier.name_zh}</h2>
-                    <p className="text-white/80">等级 {currentTier.level} · {userMembership?.status === 'active' ? '有效' : '已过期'}</p>
+                    <p className="text-white/80">等级 {currentTier.level} · {userMembership?.status === 'active' ? t('ProfileRoutePage.membershipActive') : t('ProfileRoutePage.membershipExpired')}</p>
                   </div>
                 </div>
                 
                 {userMembership?.expires_at && (
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-white/80">会员有效期</span>
+                       <span className="text-sm text-white/80">{t('ProfileRoutePage.membershipValidUntil')}</span>
                       <span className="font-medium">
                         {new Date(userMembership.expires_at).toLocaleDateString('zh-CN')}
                       </span>
@@ -490,7 +492,7 @@ export default function ProfilePage() {
                 )}
 
                 <div className="mb-4">
-                  <h3 className="font-bold mb-2">当前权益</h3>
+                  <h3 className="font-bold mb-2">{t('ProfileRoutePage.membershipBenefits')}</h3>
                   <ul className="space-y-2">
                     {currentTier.benefits.map((benefit, index) => (
                       <li key={index} className="flex items-center gap-2">
@@ -505,11 +507,11 @@ export default function ProfilePage() {
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="text-sm text-white/80">当前积分</p>
+                        <p className="text-sm text-white/80">{t('ProfileRoutePage.membershipPoints')}</p>
                         <p className="text-3xl font-bold">{membershipPoints.points}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-white/80">累计积分</p>
+                        <p className="text-sm text-white/80">{t('ProfileRoutePage.membershipLifetime')}</p>
                         <p className="text-xl font-medium">{membershipPoints.lifetime_points}</p>
                       </div>
                     </div>
@@ -519,14 +521,14 @@ export default function ProfilePage() {
             ) : (
               <div className="bg-white rounded-2xl shadow-md p-6 text-center animate-slide-up">
                 <div className="text-6xl mb-4">🆓</div>
-                <h2 className="text-2xl font-bold text-[#484848] mb-2">免费版</h2>
-                <p className="text-[#767676] mb-6">升级会员，解锁更多功能</p>
+                <h2 className="text-2xl font-bold text-[#484848] mb-2">{t('ProfileRoutePage.membershipFree')}</h2>
+                <p className="text-[#767676] mb-6">{t('ProfileRoutePage.membershipUpgradeDesc', 'Upgrade to unlock more features')}</p>
               </div>
             )}
 
             {/* Membership Tiers */}
             <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              <h2 className="text-xl font-bold text-[#484848] mb-4">会员等级</h2>
+              <h2 className="text-xl font-bold text-[#484848] mb-4">{t('ProfileRoutePage.membershipTiers')}</h2>
               <div className="space-y-4">
                 {membershipTiers.map((tier, index) => (
                   <div
@@ -541,29 +543,29 @@ export default function ProfilePage() {
                         <span className="text-3xl">{tier.icon}</span>
                         <div>
                           <h3 className="text-lg font-bold text-[#484848]">{tier.name_zh}</h3>
-                          <p className="text-sm text-[#767676]">等级 {tier.level}</p>
+                          <p className="text-sm text-[#767676]">{t('ProfileRoutePage.membershipLevel')} {tier.level}</p>
                         </div>
                       </div>
                       <div className="text-right">
                         {tier.price_monthly > 0 ? (
                           <>
                             <p className="text-2xl font-bold text-[#ff5a5f]">¥{tier.price_monthly}</p>
-                            <p className="text-xs text-[#767676]">/月</p>
+                            <p className="text-xs text-[#767676]">{t('ProfileRoutePage.membershipPerMonth')}</p>
                           </>
                         ) : (
-                          <p className="text-lg font-bold text-[#767676]">免费</p>
+                         <p className="text-lg font-bold text-[#767676]">{t('ProfileRoutePage.membershipFree')}</p>
                         )}
                       </div>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="bg-gray-50 rounded-lg p-3">
-                        <p className="text-xs text-[#767676]">每日查询</p>
-                        <p className="font-bold text-[#484848]">{tier.max_daily_queries} 次</p>
+                        <p className="text-xs text-[#767676]">{t('ProfileRoutePage.membershipDailyQueries')}</p>
+                         <p className="font-bold text-[#484848]">{tier.max_daily_queries}</p>
                       </div>
                       <div className="bg-gray-50 rounded-lg p-3">
-                        <p className="text-xs text-[#767676]">并发会话</p>
-                        <p className="font-bold text-[#484848]">{tier.max_concurrent_sessions} 个</p>
+                        <p className="text-xs text-[#767676]">{t('ProfileRoutePage.membershipConcurrent')}</p>
+                         <p className="font-bold text-[#484848]">{tier.max_concurrent_sessions}</p>
                       </div>
                     </div>
 
@@ -578,13 +580,13 @@ export default function ProfilePage() {
 
                     {currentTier?.id !== tier.id && tier.price_monthly > 0 && (
                       <button className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover-lift">
-                        升级到{tier.name_zh}
+                        {t('ProfileRoutePage.membershipUpgrade').replace('{name}', tier.name_zh)}
                       </button>
                     )}
                     
                     {currentTier?.id === tier.id && (
                       <button className="w-full py-3 bg-gray-100 text-[#767676] rounded-xl font-semibold">
-                        当前等级
+                         {t('ProfileRoutePage.membershipCurrent')}
                       </button>
                     )}
                   </div>
@@ -596,22 +598,22 @@ export default function ProfilePage() {
 
         {activeTab === 'itineraries' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-[#484848] mb-4">我的行程</h2>
+            <h2 className="text-lg font-bold text-[#484848] mb-4">{t('ProfileRoutePage.itinerariesTitle')}</h2>
 
             {loading ? (
               <div className="text-center py-8">
                 <div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                <p className="text-[#767676]">加载中...</p>
+                <p className="text-[#767676]">{t('ProfileRoutePage.loading')}</p>
               </div>
             ) : itineraries.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-md p-8 text-center">
                 <div className="text-4xl mb-4">📅</div>
-                <p className="text-[#767676] mb-4">暂无行程</p>
+                <p className="text-[#767676] mb-4">{t('ProfileRoutePage.itinerariesEmpty', 'No trips yet')}</p>
                 <button
                   onClick={() => router.push('/')}
                   className="px-6 py-2 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
                 >
-                  创建第一个行程
+                  {t('ProfileRoutePage.itinerariesCreate', 'Create First Trip')}
                 </button>
               </div>
             ) : (
@@ -621,14 +623,14 @@ export default function ProfilePage() {
                     <div className="flex-1">
                       <h3 className="font-bold text-[#484848] mb-1">{item.title}</h3>
                       <p className="text-sm text-[#767676] mb-2">
-                        📍 {item.destination} · {item.days} 天
+                         📍 {item.destination} · {item.days} {t('TripsPage.days')}
                       </p>
                       <p className="text-xs text-[#767676]">
-                        创建于 {new Date(item.created_at).toLocaleDateString('zh-CN')}
+                         {t('ProfileRoutePage.createdAt', 'Created')} {new Date(item.created_at).toLocaleDateString()}
                       </p>
                     </div>
                     <button className="text-[#ff5a5f] text-sm font-medium hover:underline">
-                      查看
+                       {t('Actions.viewDetails')}
                     </button>
                   </div>
                 </div>
@@ -640,24 +642,24 @@ export default function ProfilePage() {
         {activeTab === 'history' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-[#484848]">浏览历史</h2>
+              <h2 className="text-lg font-bold text-[#484848]">{t('ProfileRoutePage.historyTitle')}</h2>
               <button
                 onClick={handleClearHistory}
                 className="text-sm text-red-600 hover:text-red-700"
               >
-                清除历史
+                {t('ProfileRoutePage.historyClear')}
               </button>
             </div>
 
             {loading ? (
               <div className="text-center py-8">
                 <div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                <p className="text-[#767676]">加载中...</p>
+                <p className="text-[#767676]">{t('ProfileRoutePage.loading')}</p>
               </div>
             ) : history.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-md p-8 text-center">
                 <div className="text-4xl mb-4">📜</div>
-                <p className="text-[#767676]">暂无浏览历史</p>
+                <p className="text-[#767676]">{t('ProfileRoutePage.historyEmpty')}</p>
               </div>
             ) : (
               history.map((item) => (
@@ -679,22 +681,22 @@ export default function ProfilePage() {
 
         {activeTab === 'favorites' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-[#484848] mb-4">收藏夹</h2>
+            <h2 className="text-lg font-bold text-[#484848] mb-4">{t('ProfileRoutePage.favoritesTitle')}</h2>
 
             {loading ? (
               <div className="text-center py-8">
                 <div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                <p className="text-[#767676]">加载中...</p>
+                <p className="text-[#767676]">{t('ProfileRoutePage.loading')}</p>
               </div>
             ) : favorites.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-md p-8 text-center">
                 <div className="text-4xl mb-4">❤️</div>
-                <p className="text-[#767676] mb-4">暂无收藏</p>
+                <p className="text-[#767676] mb-4">{t('ProfileRoutePage.favoritesEmpty', 'No favorites yet')}</p>
                 <button
                   onClick={() => router.push('/')}
                   className="px-6 py-2 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
                 >
-                  去探索
+                  {t('Actions.explore')}
                 </button>
               </div>
             ) : (
@@ -703,16 +705,16 @@ export default function ProfilePage() {
                   <div>
                     <p className="font-medium text-[#484848]">{item.item_id}</p>
                     <p className="text-sm text-[#767676]">
-                      {item.type === 'itinerary' && '📅 行程'}
-                      {item.type === 'food' && '🍜 美食'}
-                      {item.type === 'attraction' && '🏛️ 景点'}
+                      {item.type === 'itinerary' && `📅 ${t('ProfileRoutePage.tabItineraries')}`}
+                      {item.type === 'food' && `🍜 ${t('NavBar.food')}`}
+                      {item.type === 'attraction' && `🏛️ ${t('Actions.explore')}`}
                     </p>
                   </div>
                   <button
                     onClick={() => handleRemoveFavorite(item.item_id)}
                     className="text-red-600 hover:text-red-700 text-sm font-medium"
                   >
-                    移除
+                    {t('ProfileRoutePage.removeFavorite', 'Remove')}
                   </button>
                 </div>
               ))
@@ -724,11 +726,11 @@ export default function ProfilePage() {
           <div className="space-y-6">
             {/* Account Settings */}
             <div className="bg-white rounded-2xl shadow-md p-6 space-y-4">
-              <h2 className="text-lg font-bold text-[#484848] mb-4">账号设置</h2>
+              <h2 className="text-lg font-bold text-[#484848] mb-4">{t('ProfileRoutePage.settingsAccount')}</h2>
               
               <div>
                 <label className="block text-sm font-medium text-[#767676] mb-2">
-                  邮箱
+                  {t('AuthPage.email')}
                 </label>
                 <input
                   type="email"
@@ -744,7 +746,7 @@ export default function ProfilePage() {
               >
                 <div className="text-2xl">🔐</div>
                 <div className="flex-1 text-left">
-                  <p className="font-medium text-[#484848]">修改密码</p>
+                  <p className="font-medium text-[#484848]">{t('ProfileRoutePage.settingsChangePassword')}</p>
                 </div>
                 <div className="text-[#767676]">→</div>
               </button>
@@ -752,58 +754,58 @@ export default function ProfilePage() {
 
             {/* Preferences */}
             <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 animate-slide-up" style={{ animationDelay: '0.15s' }}>
-              <h2 className="text-lg font-bold text-[#484848] mb-4">偏好设置</h2>
+              <h2 className="text-lg font-bold text-[#484848] mb-4">{t('ProfileRoutePage.settingsPreferences')}</h2>
               
               <div className="stagger-item">
                 <label className="block text-sm font-medium text-[#767676] mb-2">
-                  语言偏好
+                  {t('ProfileRoutePage.settingsLanguage')}
                 </label>
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] tap-feedback"
                 >
-                  <option value="zh-CN">简体中文</option>
+                  <option value="zh-CN">{t('ProfileRoutePage.langZhCN', '简体中文')}</option>
                   <option value="en">English</option>
-                  <option value="ja">日本語</option>
+                  <option value="ja">{t('ProfileRoutePage.langJa', '日本語')}</option>
                   <option value="ko">한국어</option>
                 </select>
               </div>
 
               <div className="stagger-item">
                 <label className="block text-sm font-medium text-[#767676] mb-2">
-                  预算范围
+                  {t('ProfileRoutePage.settingsBudget')}
                 </label>
                 <select
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] tap-feedback"
                 >
-                  <option value="budget">经济型 (¥200-500/天)</option>
-                  <option value="medium">舒适型 (¥500-1000/天)</option>
-                  <option value="luxury">豪华型 (¥1000+/天)</option>
+                  <option value="budget">{t('ProfileRoutePage.budgetLow')} (¥200-500)</option>
+                  <option value="medium">{t('ProfileRoutePage.budgetMedium')} (¥500-1000)</option>
+                  <option value="luxury">{t('ProfileRoutePage.budgetHigh')} (¥1000+)</option>
                 </select>
               </div>
 
               <div className="stagger-item">
                 <label className="block text-sm font-medium text-[#767676] mb-2">
-                  主题
+                  {t('ProfileRoutePage.settingsTheme')}
                 </label>
                 <select
                   value={theme}
                   onChange={(e) => setTheme(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] tap-feedback"
                 >
-                  <option value="light">浅色</option>
-                  <option value="dark">深色</option>
-                  <option value="auto">跟随系统</option>
+                  <option value="light">{t('ProfileRoutePage.themeLight')}</option>
+                  <option value="dark">{t('ProfileRoutePage.themeDark')}</option>
+                  <option value="auto">{t('Common.auto', 'Auto')}</option>
                 </select>
               </div>
 
               <div className="flex items-center justify-between stagger-item">
                 <div>
-                  <p className="font-medium text-[#484848]">通知</p>
-                  <p className="text-sm text-[#767676]">接收重要提醒</p>
+                  <p className="font-medium text-[#484848]">{t('ProfileRoutePage.settingsNotifications')}</p>
+                  <p className="text-sm text-[#767676]">{t('ProfileRoutePage.notificationsDesc', 'Receive important alerts')}</p>
                 </div>
                 <button
                   onClick={() => setNotifications(!notifications)}
@@ -821,7 +823,7 @@ export default function ProfilePage() {
                 onClick={handleSaveSettings}
                 className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover-lift tap-feedback animate-pulse"
               >
-                保存设置
+                {t('ProfileRoutePage.settingsSave')}
               </button>
             </div>
 
@@ -829,17 +831,17 @@ export default function ProfilePage() {
             <div className="bg-white rounded-2xl shadow-md p-6 border-2 border-red-200 animate-slide-up" style={{ animationDelay: '0.25s' }}>
               <h2 className="text-lg font-bold text-red-600 mb-4 flex items-center gap-2">
                 <span className="animate-pulse">⚠️</span>
-                危险区域
+                {t('ProfileRoutePage.settingsDangerZone')}
               </h2>
               
               <button
                 onClick={() => setShowDeleteModal(true)}
                 className="w-full py-3 bg-red-100 text-red-600 rounded-xl font-semibold hover:bg-red-200 transition-all hover-lift tap-feedback"
               >
-                删除账号
+                {t('ProfileRoutePage.settingsDeleteAccount')}
               </button>
               <p className="text-xs text-[#767676] mt-2 text-center">
-                此操作不可恢复，请谨慎操作
+                {t('ProfileRoutePage.settingsDeleteAccountDesc')}
               </p>
             </div>
           </div>
@@ -850,45 +852,45 @@ export default function ProfilePage() {
       {showPasswordModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-bounce-in">
-            <h2 className="text-xl font-bold text-[#484848] mb-4">修改密码</h2>
+            <h2 className="text-xl font-bold text-[#484848] mb-4">{t('ProfileRoutePage.passwordModal')}</h2>
             
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#767676] mb-2">
-                  当前密码
+                  {t('ProfileRoutePage.passwordCurrent')}
                 </label>
                 <input
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
-                  placeholder="输入当前密码"
+                  placeholder={t('ProfileRoutePage.passwordCurrentPlaceholder')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#767676] mb-2">
-                  新密码
+                  {t('ProfileRoutePage.passwordNew')}
                 </label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
-                  placeholder="输入新密码"
+                  placeholder={t('ProfileRoutePage.passwordNewPlaceholder')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#767676] mb-2">
-                  确认新密码
+                  {t('ProfileRoutePage.passwordConfirm')}
                 </label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
-                  placeholder="确认新密码"
+                  placeholder={t('ProfileRoutePage.passwordConfirmPlaceholder')}
                 />
               </div>
 
@@ -905,13 +907,13 @@ export default function ProfilePage() {
                 }}
                 className="flex-1 py-3 bg-gray-100 text-[#767676] rounded-xl font-semibold hover:bg-gray-200 transition-all"
               >
-                取消
+                {t('ProfileRoutePage.btnCancel')}
               </button>
               <button
                 onClick={handleChangePassword}
                 className="flex-1 py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
               >
-                确认
+                {t('ProfileRoutePage.btnConfirm')}
               </button>
             </div>
           </div>
@@ -923,10 +925,10 @@ export default function ProfilePage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-bounce-in">
             <div className="text-4xl mb-4 text-center animate-wiggle">⚠️</div>
-            <h2 className="text-xl font-bold text-red-600 mb-4 text-center">删除账号</h2>
+            <h2 className="text-xl font-bold text-red-600 mb-4 text-center">{t('ProfileRoutePage.deleteModal')}</h2>
             
             <p className="text-[#767676] mb-6 text-center">
-              此操作将永久删除您的账号和所有数据，且无法恢复。确定要继续吗？
+              {t('ProfileRoutePage.deleteModalDesc')}
             </p>
 
             <div className="flex gap-3">
@@ -934,13 +936,13 @@ export default function ProfilePage() {
                 onClick={() => setShowDeleteModal(false)}
                 className="flex-1 py-3 bg-gray-100 text-[#767676] rounded-xl font-semibold hover:bg-gray-200 transition-all"
               >
-                取消
+                {t('ProfileRoutePage.btnCancel')}
               </button>
               <button
                 onClick={handleDeleteAccount}
                 className="flex-1 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-all"
               >
-                确认删除
+                {t('ProfileRoutePage.btnConfirmDelete')}
               </button>
             </div>
           </div>

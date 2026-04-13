@@ -41,33 +41,33 @@ export default function SignUpPage() {
 
     // 验证
     if (!formData.name.trim()) {
-      setError('请输入昵称');
+      setError('Please enter your name.');
       return;
     }
 
     if (!formData.email.trim()) {
-      setError('请输入邮箱');
+      setError('Please enter your email address.');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('请输入有效的邮箱地址');
+      setError('Please enter a valid email address.');
       return;
     }
 
     if (formData.password.length < 8) {
-      setError('密码必须至少 8 位');
+      setError('Password must be at least 8 characters.');
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('两次输入的密码不一致');
+      setError('Passwords do not match.');
       return;
     }
 
     if (!formData.agreeTerms) {
-      setError('请同意服务条款和隐私政策');
+      setError('Please agree to the Terms of Service and Privacy Policy.');
       return;
     }
 
@@ -101,13 +101,13 @@ export default function SignUpPage() {
       });
 
       if (signInResult?.error) {
-        throw new Error('注册成功但登录失败，请手动登录');
+        throw new Error('Registration successful but sign-in failed. Please sign in manually.');
       }
 
       // 跳转到主页
       router.push('/');
     } catch (err) {
-      setError((err as Error).message || '注册失败，请稍后重试');
+      setError((err as Error).message || 'Registration failed. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -120,9 +120,9 @@ export default function SignUpPage() {
   };
 
   const getPasswordStrengthText = () => {
-    if (passwordStrength <= 2) return '弱';
-    if (passwordStrength <= 3) return '中';
-    return '强';
+    if (passwordStrength <= 2) return 'Weak';
+    if (passwordStrength <= 3) return 'Fair';
+    return 'Strong';
   };
 
   return (
@@ -134,10 +134,10 @@ export default function SignUpPage() {
             🇨🇳
           </div>
           <h1 className="text-2xl font-bold text-[#484848] mb-2">
-            创建账号
+            Create Account
           </h1>
           <p className="text-[#767676]">
-            注册以保存您的行程和偏好
+            Sign up to save your trips and preferences
           </p>
         </div>
 
@@ -147,7 +147,7 @@ export default function SignUpPage() {
             {/* 昵称 */}
             <div>
               <label className="block text-sm font-medium text-[#484848] mb-2">
-                昵称
+                Name
               </label>
               <input
                 type="text"
@@ -155,14 +155,14 @@ export default function SignUpPage() {
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 required
                 className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
-                placeholder="您的昵称"
+                placeholder="Your name"
               />
             </div>
 
             {/* 邮箱 */}
             <div>
               <label className="block text-sm font-medium text-[#484848] mb-2">
-                邮箱地址
+                Email Address
               </label>
               <input
                 type="email"
@@ -177,7 +177,7 @@ export default function SignUpPage() {
             {/* 密码 */}
             <div>
               <label className="block text-sm font-medium text-[#484848] mb-2">
-                密码
+                Password
               </label>
               <input
                 type="password"
@@ -185,7 +185,7 @@ export default function SignUpPage() {
                 onChange={handlePasswordChange}
                 required
                 className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
-                placeholder="至少 8 位，包含字母和数字"
+                placeholder="At least 8 characters with letters and numbers"
               />
               {formData.password && (
                 <div className="mt-2">
@@ -205,7 +205,7 @@ export default function SignUpPage() {
             {/* 确认密码 */}
             <div>
               <label className="block text-sm font-medium text-[#484848] mb-2">
-                确认密码
+                Confirm Password
               </label>
               <input
                 type="password"
@@ -213,7 +213,7 @@ export default function SignUpPage() {
                 onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                 required
                 className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
-                placeholder="再次输入密码"
+                placeholder="Re-enter your password"
               />
             </div>
 
@@ -227,13 +227,13 @@ export default function SignUpPage() {
                 className="mt-1 w-4 h-4 text-[#ff5a5f] border-gray-300 rounded focus:ring-[#ff5a5f]"
               />
               <label htmlFor="agreeTerms" className="text-sm text-[#767676]">
-                我同意{' '}
-                <a href="/terms" className="text-[#ff5a5f] hover:underline" target="_blank">
-                  服务条款
+                I agree to the{' '}
+                <a href="/legal/terms" className="text-[#ff5a5f] hover:underline" target="_blank">
+                  Terms of Service
                 </a>{' '}
-                和{' '}
-                <a href="/privacy" className="text-[#ff5a5f] hover:underline" target="_blank">
-                  隐私政策
+                and{' '}
+                <a href="/legal/privacy" className="text-[#ff5a5f] hover:underline" target="_blank">
+                  Privacy Policy
                 </a>
               </label>
             </div>
@@ -251,7 +251,7 @@ export default function SignUpPage() {
               disabled={loading}
               className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? '创建中...' : '创建账号'}
+              {loading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
 
@@ -261,7 +261,7 @@ export default function SignUpPage() {
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-[#767676]">或</span>
+              <span className="px-4 bg-white text-[#767676]">or</span>
             </div>
           </div>
 
@@ -288,21 +288,21 @@ export default function SignUpPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            使用 Google 账号注册
+            Sign up with Google
           </button>
 
           {/* 登录链接 */}
           <p className="text-center text-sm text-[#767676] mt-6">
-            已有账号？{' '}
+            Already have an account?{' '}
             <Link href="/auth/signin" className="text-[#ff5a5f] hover:underline font-medium">
-              立即登录
+              Sign In
             </Link>
           </p>
         </div>
 
         {/* 底部提示 */}
         <p className="text-center text-xs text-[#767676] mt-6">
-          注册即表示您同意我们的服务条款和隐私政策
+          By signing up, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
     </div>

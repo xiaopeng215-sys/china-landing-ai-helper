@@ -16,10 +16,10 @@ interface TripsViewHeaderProps {
 export default function TripsViewHeader({ selectedCity, onCitySelect }: TripsViewHeaderProps) {
   const { t } = useClientI18n();
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm safe-area-top">
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm safe-area-top">
       <div className="max-w-3xl mx-auto px-4 pt-4 pb-3">
-        <h1 className="text-2xl font-bold text-gray-900">{t('TripsPage.title')}</h1>
-        <p className="text-sm text-gray-500">{t('TripsPage.subtitle')}</p>
+        <h1 className="text-2xl font-bold text-[#484848]">{t('TripsPage.title')}</h1>
+        <p className="text-sm text-[#767676]">{t('TripsPage.subtitle')}</p>
       </div>
 
       {/* City Filter */}

@@ -1,7 +1,7 @@
 {
   "name": "China Landing AI Helper",
   "short_name": "China AI",
-  "description": "你的中国旅行助手 - AI 行程规划、美食推荐、交通指南",
+  "description": "Your AI travel assistant for China — itinerary planning, food recommendations, and transportation guides.",
   "start_url": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
@@ -9,7 +9,7 @@
   "theme_color": "#10B981",
   "orientation": "portrait-primary",
   "scope": "/",
-  "lang": "zh-CN",
+  "lang": "en",
   "dir": "ltr",
   "handle_links": "preferred",
   "categories": [
@@ -19,9 +19,9 @@
   ],
   "shortcuts": [
     {
-      "name": "规划行程",
-      "short_name": "行程",
-      "description": "用 AI 规划你的中国之旅",
+      "name": "Plan a Trip",
+      "short_name": "Trips",
+      "description": "Plan your China trip with AI",
       "url": "/?tab=trips",
       "icons": [
         {
@@ -31,9 +31,9 @@
       ]
     },
     {
-      "name": "美食推荐",
-      "short_name": "美食",
-      "description": "发现地道中国美食",
+      "name": "Food Guide",
+      "short_name": "Food",
+      "description": "Discover authentic Chinese cuisine",
       "url": "/?tab=food",
       "icons": [
         {
@@ -43,9 +43,9 @@
       ]
     },
     {
-      "name": "交通指南",
-      "short_name": "交通",
-      "description": "获取交通出行帮助",
+      "name": "Transport Guide",
+      "short_name": "Transport",
+      "description": "Get help with transportation in China",
       "url": "/?tab=transport",
       "icons": [
         {
@@ -55,9 +55,9 @@
       ]
     },
     {
-      "name": "安装指南",
-      "short_name": "安装",
-      "description": "查看如何安装此应用",
+      "name": "Install Guide",
+      "short_name": "Install",
+      "description": "Learn how to install this app",
       "url": "/install-guide",
       "icons": [
         {

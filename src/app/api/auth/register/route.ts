@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     try {
       body = await request.json();
     } catch {
-      return NextResponse.json({ error: '请求格式错误' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid request format.' }, { status: 400 });
     }
 
     // 速率限制
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       if (!success) {
         return NextResponse.json(
           {
-            error: '注册请求过于频繁，请稍后再试',
+            error: 'Too many registration attempts. Please try again later.',
             retryAfter: Math.ceil((reset - Date.now()) / 1000),
           },
           {
@@ -80,20 +80,20 @@ export async function POST(request: NextRequest) {
 
     // 验证输入
     if (!email || !password) {
-      return NextResponse.json({ error: '邮箱和密码不能为空' }, { status: 400 });
+      return NextResponse.json({ error: 'Email and password are required.' }, { status: 400 });
     }
 
     // 邮箱格式验证
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: '请输入有效的邮箱地址' }, { status: 400 });
+      return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
     }
 
     // 密码强度验证：至少 8 位，包含字母和数字
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       return NextResponse.json(
-        { error: '密码必须至少 8 位，包含字母和数字，可使用特殊字符 @$!%*?&' },
+        { error: 'Password must be at least 8 characters and contain both letters and numbers.' },
         { status: 400 }
       );
     }
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     // 防止常见弱密码
     const weakPasswords = ['password', '123456', '12345678', 'qwerty', 'admin', 'letmein'];
     if (weakPasswords.includes(password.toLowerCase())) {
-      return NextResponse.json({ error: '密码过于简单，请使用更复杂的密码' }, { status: 400 });
+      return NextResponse.json({ error: 'Password is too common. Please choose a stronger password.' }, { status: 400 });
     }
 
     // 检查 Supabase 配置
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
           },
         });
       }
-      return NextResponse.json({ error: '数据库未配置' }, { status: 500 });
+      return NextResponse.json({ error: 'Database is not configured.' }, { status: 500 });
     }
 
     // 创建 Supabase 客户端
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (existingUser) {
-      return NextResponse.json({ error: '该邮箱已被注册' }, { status: 409 });
+      return NextResponse.json({ error: 'This email is already registered. Try signing in instead.' }, { status: 409 });
     }
 
     // 密码加密
@@ -166,7 +166,7 @@ export async function POST(request: NextRequest) {
         tags: { feature: 'user-registration' },
         extra: { email },
       });
-      return NextResponse.json({ error: '注册失败，请稍后重试' }, { status: 500 });
+      return NextResponse.json({ error: 'Registration failed. Please try again later.' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -180,6 +180,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('注册 API 错误:', error);
     Sentry.captureException(error, { tags: { feature: 'user-registration' } });
-    return NextResponse.json({ error: '服务器错误，请稍后重试' }, { status: 500 });
+    return NextResponse.json({ error: 'Server error. Please try again later.' }, { status: 500 });
   }
 }
