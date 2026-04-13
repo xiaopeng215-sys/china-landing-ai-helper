@@ -114,8 +114,11 @@ export default function ChatView() {
 
       // 处理错误响应
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage = errorData.error || `请求失败 (${response.status})`;
+        const errorData = await response.json().catch(() => ());
+        const err = errorData.error;
+        const errorMessage = typeof err === 'string'
+          ? err
+          : (err?.message || `Request failed (${response.status})`);
         
         const errorMessageObj: Message = {
           id: (Date.now() + 1).toString(),
@@ -141,7 +144,9 @@ export default function ChatView() {
       let recommendations = data.recommendations || [];
       let actions = data.actions || [];
       let images = data.images || [];
-      let content = data.reply || '抱歉，我暂时无法回答您的问题。';
+      let content = typeof data.reply === 'string'
+        ? data.reply
+        : (data.reply?.text || data.reply?.content || "Sorry, I couldn't process your request. Please try again.");
       
       // 如果后端返回的是 JSON 字符串，尝试解析
       if (typeof content === 'string' && content.trim().startsWith('{')) {
