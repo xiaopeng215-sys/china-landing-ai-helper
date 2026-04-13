@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
       throw createValidationError('无效的请求格式');
     }
 
-    const { message, model, sessionId: providedSessionId } = body;
+    const { message, model, sessionId: providedSessionId, language } = body;
     let sessionId = providedSessionId;
 
     // 验证消息
@@ -123,7 +123,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 模型选择
-    const selectedModel = model === 'minimax' ? 'minimax' : 'qwen';
+    // 默认使用 minimax（已配置真实 API Key），避免 fallback 到 Mock
+    const selectedModel = model === 'qwen' ? 'qwen' : 'minimax';
+    const selectedLanguage = language || 'en-US';
 
     console.log(`🤖 [Chat API] 使用模型：${selectedModel}, 用户：${userId}, 会话：${sessionId}, 消息：${message.substring(0, 50)}...`);
 
@@ -139,13 +141,15 @@ export async function POST(request: NextRequest) {
     // 优化：使用 AI 响应缓存 (包含消息历史)
     const aiContext = {
       messages: [
-        { role: 'system' as const, content: 'You are a helpful travel assistant for international visitors to China. Always respond in English only. Help users plan itineraries, recommend food, and provide transportation guides. Be friendly, concise, and practical. Never mention the AI model name or provider.' },
+        { role: 'system' as const, content: selectedLanguage === 'zh' || selectedLanguage === 'zh-CN'
+            ? '你是一个专业的中国旅行助手，帮助游客规划行程、推荐美食和提供交通指南。请用中文回复，友好、简洁、实用。不要提及 AI 模型名称或提供商。'
+            : 'You are a helpful travel assistant for international visitors to China. Help users plan itineraries, recommend food, and provide transportation guides. Be friendly, concise, and practical. Never mention the AI model name or provider.' },
         ...messageHistory.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
         { role: 'user' as const, content: message }
       ],
       model: selectedModel,
       temperature: 0.7,
-      language: 'en-US',
+      language: selectedLanguage,
     };
 
     try {
@@ -153,7 +157,7 @@ export async function POST(request: NextRequest) {
       const aiResponse = await sendToAIWithCache(aiContext.messages, {
         model: selectedModel as any,
         structured: true,
-        language: 'en-US',
+        language: selectedLanguage,
       });
 
       // 检查是否命中缓存
