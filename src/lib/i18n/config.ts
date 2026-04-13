@@ -46,7 +46,7 @@ const requestConfig = getRequestConfig(async ({locale}) => {
   }
 
   // 加载翻译文件
-  const messages = await import(`../messages/${locale}.json`).then(
+  const messages = await import(`../../messages/${locale}.json`).then(
     (module) => module.default
   );
 

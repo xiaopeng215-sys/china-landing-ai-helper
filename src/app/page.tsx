@@ -76,9 +76,9 @@ export default function Home() {
       {/* Hero Section - 仅在 Chat tab 显示 */}
       {showHero && activeTab === "chat" && (
         <HeroSection
-          title="你的中国旅行 AI 助手"
-          subtitle="AI 驱动的智能行程规划 · 地道美食推荐 · 交通出行指南"
-          ctaText="开始探索"
+          title={t("HomePage.title")}
+          subtitle={t("HomePage.subtitle")}
+          ctaText={t("HomePage.cta")}
           onCtaClick={handleHeroCtaClick}
           gradient="from-emerald-600 to-teal-700"
         />
