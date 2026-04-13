@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { ItineraryRoute } from '@/lib/itineraries';
+import { useClientI18n } from '@/lib/i18n/client';
 
 interface FeaturedTripsGridProps {
   trips: ItineraryRoute[];
@@ -18,6 +19,7 @@ const cityEmojis: Record<string, string> = {
 };
 
 export default function FeaturedTripsGrid({ trips, onTripSelect }: FeaturedTripsGridProps) {
+  const { t } = useClientI18n();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleTripClick = (trip: ItineraryRoute) => {
@@ -30,7 +32,7 @@ export default function FeaturedTripsGrid({ trips, onTripSelect }: FeaturedTrips
 
   return (
     <section>
-      <h2 className="text-lg font-bold text-gray-900 mb-3">🌟 Featured Routes</h2>
+      <h2 className="text-lg font-bold text-gray-900 mb-3">{t('TripsPage.featuredRoutes')}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {trips.map(trip => (
           <button
@@ -57,7 +59,7 @@ export default function FeaturedTripsGrid({ trips, onTripSelect }: FeaturedTrips
         <div className="fixed inset-0 z-50 bg-white/80 backdrop-blur-sm flex items-center justify-center">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">Loading...</p>
+            <p className="text-gray-600">{t('TripsPage.loading')}</p>
           </div>
         </div>
       )}

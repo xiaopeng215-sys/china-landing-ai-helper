@@ -9,6 +9,8 @@
     "home": "홈",
     "chat": "채팅",
     "trips": "여행",
+    "food": "맛집",
+    "transport": "교통",
     "profile": "프로필",
     "settings": "설정"
   },
@@ -22,7 +24,11 @@
       "주변 맛집 추천",
       "알리페이 사용법",
       "만리장성 지하철 경로"
-    ]
+    ],
+    "typing": "입력 중...",
+    "error": "메시지 전송에 실패했습니다. 다시 시도해주세요.",
+    "clearHistory": "대화 지우기",
+    "newChat": "새 대화"
   },
   "ProfilePage": {
     "title": "프로필",
@@ -41,7 +47,13 @@
     "cancel": "취소",
     "logout": "로그아웃",
     "deleteAccount": "계정 삭제",
-    "exportData": "데이터 내보내기"
+    "exportData": "데이터 내보내기",
+    "version": "버전",
+    "about": "앱 정보",
+    "helpCenter": "도움말 센터",
+    "feedback": "피드백",
+    "privacyPolicy": "개인정보 처리방침",
+    "termsOfService": "서비스 약관"
   },
   "AuthPage": {
     "signIn": "로그인",
@@ -52,29 +64,68 @@
     "forgotPassword": "비밀번호 찾기",
     "noAccount": "계정이 없으신가요?",
     "haveAccount": "이미 계정이 있으신가요?",
-    "signInWithGoogle": "Google 로 로그인",
+    "signInWithGoogle": "Google로 로그인",
     "signInWithEmail": "이메일로 로그인",
     "sendMagicLink": "매직 링크 보내기",
     "checkEmail": "이메일을 확인하세요",
     "magicLinkSent": "이메일로 매직 링크를 보냈습니다",
-    "backToLogin": "로그인으로 돌아가기"
+    "backToLogin": "로그인으로 돌아가기",
+    "agreeTerms": "로그인하면 동의하는 것으로 간주됩니다",
+    "and": "및",
+    "privacyPolicy": "개인정보 처리방침",
+    "termsOfService": "서비스 약관",
+    "continueWithEmail": "이메일로 계속하기",
+    "or": "또는"
   },
   "TripsPage": {
     "title": "내 여행",
     "noTrips": "여행이 없습니다",
     "createTrip": "여행 만들기",
+    "editTrip": "여행 편집",
+    "deleteTrip": "여행 삭제",
     "destinations": {
       "shanghai": "상하이",
       "beijing": "베이징",
       "xian": "시안",
       "chengdu": "청두",
       "guilin": "계림",
-      "hangzhou": "항저우"
+      "hangzhou": "항저우",
+      "guangzhou": "광저우",
+      "shenzhen": "선전",
+      "chongqing": "충칭",
+      "nanjing": "난징"
     },
     "duration": "기간",
-    "days": "{count} 일",
+    "days": "{count}일",
     "viewDetails": "자세히 보기",
-    "delete": "삭제"
+    "delete": "삭제",
+    "share": "공유",
+    "export": "내보내기",
+    "startDate": "출발일",
+    "endDate": "귀국일",
+    "travelers": "여행 인원",
+    "budget": "예산",
+    "preferences": "선호 설정",
+    "notes": "메모",
+    "subtitle": "완벽한 중국 여행을 계획하세요 ✨",
+    "planTrip": "여행 계획",
+    "planTripDesc": "AI가 맞춤 일정을 만들어 드립니다",
+    "create": "만들기 →",
+    "featuredRoutes": "🌟 추천 코스",
+    "allRoutes": "📍 전체 코스",
+    "moreDestinations": "🗺️ 더 많은 목적지",
+    "quickPreview": "빠른 미리보기",
+    "day": "일",
+    "moreDays": "+{count}일 더...",
+    "best": "최적",
+    "tips": "💡 팁",
+    "loading": "로딩 중...",
+    "all": "전체",
+    "tagHistory": "역사",
+    "tagNature": "자연",
+    "tagFood": "음식",
+    "tagCulture": "문화",
+    "planWithAI": "AI로 이 여행 계획하기 ✈️"
   },
   "Common": {
     "loading": "로딩 중...",
@@ -82,6 +133,7 @@
     "retry": "다시 시도",
     "close": "닫기",
     "confirm": "확인",
+    "cancel": "취소",
     "back": "뒤로",
     "next": "다음",
     "previous": "이전",
@@ -89,22 +141,155 @@
     "filter": "필터",
     "sort": "정렬",
     "ascending": "오름차순",
-    "descending": "내림차순"
+    "descending": "내림차순",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "create": "만들기",
+    "update": "업데이트",
+    "submit": "제출",
+    "reset": "초기화",
+    "refresh": "새로고침",
+    "done": "완료",
+    "yes": "예",
+    "no": "아니오",
+    "ok": "확인",
+    "apply": "적용",
+    "clear": "지우기",
+    "more": "더 보기",
+    "less": "접기",
+    "seeAll": "전체 보기",
+    "showMore": "더 표시",
+    "showLess": "접기"
   },
   "Errors": {
     "required": "필수 입력 항목입니다",
     "invalidEmail": "유효한 이메일을 입력하세요",
-    "passwordTooShort": "비밀번호는 8 자 이상이어야 합니다",
+    "passwordTooShort": "비밀번호는 8자 이상이어야 합니다",
     "passwordsDontMatch": "비밀번호가 일치하지 않습니다",
     "networkError": "네트워크 오류입니다. 다시 시도해주세요.",
     "serverError": "서버 오류입니다. 나중에 다시 시도해주세요.",
     "unauthorized": "계속하려면 로그인하세요",
-    "notFound": "페이지를 찾을 수 없습니다"
+    "notFound": "페이지를 찾을 수 없습니다",
+    "timeout": "요청 시간이 초과되었습니다. 다시 시도해주세요.",
+    "forbidden": "이 작업을 수행할 권한이 없습니다",
+    "sessionExpired": "세션이 만료되었습니다. 다시 로그인해주세요.",
+    "generic": "알 수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요."
   },
   "Footer": {
     "privacy": "개인정보 처리방침",
     "terms": "서비스 약관",
     "contact": "문의하기",
-    "copyright": "© 2026 China Landing AI Helper. All rights reserved."
+    "copyright": "© 2026 China Landing AI Helper. All rights reserved.",
+    "cookies": "쿠키 정책",
+    "installGuide": "설치 가이드"
+  },
+  "Loading": {
+    "initial": "준비 중...",
+    "fetching": "데이터 불러오는 중...",
+    "processing": "처리 중...",
+    "saving": "저장 중...",
+    "generating": "생성 중...",
+    "searching": "검색 중...",
+    "loading": "로딩 중..."
+  },
+  "EmptyStates": {
+    "noData": {
+      "title": "데이터가 없습니다",
+      "description": "데이터를 불러오는 중입니다. 잠시 후 다시 시도해주세요."
+    },
+    "noHistory": {
+      "title": "검색 기록이 없습니다",
+      "description": "중국의 멋진 여행지를 탐색해보세요"
+    },
+    "noFavorites": {
+      "title": "즐겨찾기가 없습니다",
+      "description": "마음에 드는 콘텐츠를 즐겨찾기에 추가해보세요"
+    },
+    "noResults": {
+      "title": "결과가 없습니다",
+      "description": "다른 키워드로 검색하거나 추천 항목을 확인해보세요"
+    },
+    "offline": {
+      "title": "오프라인 상태입니다",
+      "description": "네트워크 설정을 확인해주세요"
+    },
+    "firstTime": {
+      "title": "중국 여행에 오신 것을 환영합니다",
+      "description": "완벽한 여행 일정을 계획해보세요"
+    }
+  },
+  "Actions": {
+    "explore": "탐색하기",
+    "retry": "다시 시도",
+    "startPlanning": "계획 시작",
+    "refresh": "새로고침",
+    "goBack": "홈으로 돌아가기",
+    "viewDetails": "자세히 보기",
+    "share": "공유"
+  },
+  "Notifications": {
+    "success": "작업이 성공했습니다",
+    "error": "작업에 실패했습니다",
+    "warning": "경고",
+    "info": "알림",
+    "confirmDelete": "삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "confirmLogout": "로그아웃하시겠습니까?",
+    "copiedToClipboard": "클립보드에 복사되었습니다"
+  },
+  "FoodPage": {
+    "title": "음식 가이드",
+    "subtitle": "현지 맛집 탐방",
+    "searchPlaceholder": "식당 또는 음식 검색...",
+    "search": "검색",
+    "categories": "카테고리",
+    "recommended": "주변 추천",
+    "askAI": "AI 추천 받기",
+    "aiCta": "맞춤 추천이 필요하신가요?",
+    "aiCtaDesc": "취향을 알려주시면 최고의 맛집을 추천해 드릴게요!",
+    "catDumplings": "만두",
+    "catNoodles": "면요리",
+    "catHotPot": "훠궈",
+    "catPekingDuck": "베이징 오리",
+    "catStreetFood": "길거리 음식",
+    "catRice": "밥요리",
+    "catVegetarian": "채식",
+    "catDesserts": "디저트"
+  },
+  "ProfileViewPage": {
+    "title": "프로필",
+    "subtitle": "설정 관리",
+    "guestUser": "게스트",
+    "guestDesc": "로그인하여 여행을 동기화하세요",
+    "signIn": "로그인",
+    "trips": "여행",
+    "favorites": "즐겨찾기",
+    "reviews": "리뷰",
+    "settings": "설정",
+    "support": "지원",
+    "account": "계정",
+    "notLoggedIn": "로그인 안됨",
+    "language": "언어",
+    "notifications": "알림",
+    "notificationsOn": "켜짐",
+    "theme": "테마",
+    "themeLight": "라이트",
+    "helpCenter": "도움말",
+    "contactUs": "문의하기",
+    "rateApp": "앱 평가",
+    "privacyPolicy": "개인정보 처리방침",
+    "appName": "China Landing AI Helper",
+    "version": "버전 1.0.0-beta",
+    "madeWith": "여행자를 위해 ❤️로 만들었습니다"
+  },
+  "ChatViewPage": {
+    "title": "AI 여행 도우미",
+    "sessionHistory": "대화 기록",
+    "newChat": "새 대화",
+    "noSessions": "대화 없음",
+    "startConversation": "첫 번째 대화를 시작하세요",
+    "askAnything": "중국 여행에 대해 무엇이든 물어보세요",
+    "inputPlaceholder": "메시지를 입력하세요...",
+    "aiThinking": "AI가 생각 중..."
   }
 }

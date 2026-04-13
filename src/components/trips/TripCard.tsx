@@ -3,6 +3,7 @@
 import React from 'react';
 import { DollarSign, MapPin } from 'lucide-react';
 import type { ItineraryRoute } from '@/lib/itineraries';
+import { useClientI18n } from '@/lib/i18n/client';
 
 interface TripCardProps {
   trip: ItineraryRoute;
@@ -19,6 +20,7 @@ const cityEmojis: Record<string, string> = {
 };
 
 export default function TripCard({ trip, onViewDetails }: TripCardProps) {
+  const { t } = useClientI18n();
   const emoji = cityEmojis[trip.cityEn] ?? '📍';
 
   return (
@@ -63,7 +65,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
 
       {/* Day Preview */}
       <div className="px-5 py-4">
-        <p className="text-xs font-semibold text-gray-500 mb-2">Quick Preview</p>
+        <p className="text-xs font-semibold text-gray-500 mb-2">{t('TripsPage.quickPreview')}</p>
         <div className="space-y-2">
           {trip.dayPlans.slice(0, 2).map(day => (
             <div key={day.day} className="flex items-center gap-3">
@@ -74,7 +76,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
             </div>
           ))}
           {trip.dayPlans.length > 2 && (
-            <p className="text-xs text-gray-400">+{trip.dayPlans.length - 2} more days...</p>
+            <p className="text-xs text-gray-400">+{trip.dayPlans.length - 2} {t('TripsPage.moreDays', 'more days...')}</p>
           )}
         </div>
       </div>
@@ -85,10 +87,10 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
           onClick={() => onViewDetails(trip)}
           className="flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-2xl shadow-md active:scale-[0.98] transition-transform touch-manipulation"
         >
-          View Details
+          {t('TripsPage.viewDetails')}
         </button>
         <button className="px-4 py-3 bg-gray-100 text-gray-600 font-semibold rounded-2xl active:bg-gray-200 transition-colors touch-manipulation">
-          Share
+          {t('TripsPage.share')}
         </button>
       </div>
     </article>

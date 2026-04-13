@@ -27,7 +27,7 @@ export function ChatInput({ inputValue, isTyping, onSend, onChange, onSubmit }: 
             value={inputValue}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="输入消息..."
+            placeholder={t('ChatViewPage.inputPlaceholder')}
             rows={1}
             className="w-full px-4 py-3 bg-gray-50 rounded-2xl border border-gray-200 
                        focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent

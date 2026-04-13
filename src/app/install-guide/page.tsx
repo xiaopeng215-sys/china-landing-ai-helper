@@ -2,57 +2,77 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { useClientI18n } from '@/lib/i18n/client';
 
 export default function InstallGuidePage() {
   const router = useRouter();
+  const { t } = useClientI18n();
 
   const steps = [
     {
       icon: '📱',
       title: 'iOS Safari',
       steps: [
-        '点击底部工具栏的分享按钮',
-        '向下滚动并点击"添加到主屏幕"',
-        '点击右上角的"添加"',
+        t('InstallGuide.ios.step1', 'Tap the Share button in the bottom toolbar'),
+        t('InstallGuide.ios.step2', 'Scroll down and tap "Add to Home Screen"'),
+        t('InstallGuide.ios.step3', 'Tap "Add" in the top right corner'),
       ],
     },
     {
       icon: '🤖',
       title: 'Android Chrome',
       steps: [
-        '点击右上角的三个点菜单',
-        '点击"添加到主屏幕"',
-        '点击"添加"确认',
+        t('InstallGuide.android.step1', 'Tap the three-dot menu in the top right'),
+        t('InstallGuide.android.step2', 'Tap "Add to Home Screen"'),
+        t('InstallGuide.android.step3', 'Tap "Add" to confirm'),
       ],
     },
     {
       icon: '💻',
-      title: '桌面浏览器',
+      title: t('InstallGuide.desktop.title', 'Desktop Browser'),
       steps: [
-        '查看地址栏右侧的安装图标',
-        '点击"安装"按钮',
-        '在弹出的对话框中确认',
+        t('InstallGuide.desktop.step1', 'Look for the install icon in the address bar'),
+        t('InstallGuide.desktop.step2', 'Click the "Install" button'),
+        t('InstallGuide.desktop.step3', 'Confirm in the dialog that appears'),
       ],
     },
   ];
 
   const benefits = [
-    { icon: '⚡', title: '快速启动', desc: '无需打开浏览器，直接从主屏幕启动' },
-    { icon: '📶', title: '离线使用', desc: '部分功能支持离线访问' },
-    { icon: '🔔', title: '消息通知', desc: '接收重要提醒和更新' },
-    { icon: '💾', title: '节省空间', desc: '比原生应用更小，不占存储空间' },
+    { icon: '⚡', title: t('InstallGuide.benefits.fast.title', 'Fast Launch'), desc: t('InstallGuide.benefits.fast.desc', 'Launch directly from your home screen, no browser needed') },
+    { icon: '📶', title: t('InstallGuide.benefits.offline.title', 'Offline Access'), desc: t('InstallGuide.benefits.offline.desc', 'Some features work without an internet connection') },
+    { icon: '🔔', title: t('InstallGuide.benefits.notifications.title', 'Notifications'), desc: t('InstallGuide.benefits.notifications.desc', 'Receive important reminders and updates') },
+    { icon: '💾', title: t('InstallGuide.benefits.storage.title', 'Saves Space'), desc: t('InstallGuide.benefits.storage.desc', 'Smaller than a native app, uses minimal storage') },
+  ];
+
+  const faqs = [
+    {
+      q: t('InstallGuide.faq.free.q', 'Is it free to install?'),
+      a: t('InstallGuide.faq.free.a', 'Completely free! This is a Progressive Web App (PWA) — no cost at all.'),
+    },
+    {
+      q: t('InstallGuide.faq.storage.q', 'Does it use a lot of storage?'),
+      a: t('InstallGuide.faq.storage.a', 'No, PWAs are very lightweight — typically just a few MB.'),
+    },
+    {
+      q: t('InstallGuide.faq.uninstall.q', 'How do I uninstall?'),
+      a: t('InstallGuide.faq.uninstall.a', 'Just like a regular app — long press the icon and select Remove.'),
+    },
+    {
+      q: t('InstallGuide.faq.updates.q', 'Does it update automatically?'),
+      a: t('InstallGuide.faq.updates.a', 'Yes, PWAs update automatically to the latest version — no manual action needed.'),
+    },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
       <header className="bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white py-8 relative overflow-hidden">
-        {/* Animated Background */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-4 right-10 w-20 h-20 bg-white rounded-full animate-float"></div>
           <div className="absolute bottom-8 left-20 w-24 h-24 bg-white rounded-full animate-float" style={{ animationDelay: '1s' }}></div>
         </div>
-        
+
         <div className="max-w-3xl mx-auto px-4 relative z-10">
           <button
             onClick={() => router.back()}
@@ -61,10 +81,12 @@ export default function InstallGuidePage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span>返回</span>
+            <span>{t('Common.back', 'Back')}</span>
           </button>
-          <h1 className="text-3xl font-bold mb-2 animate-slide-up">📲 安装应用</h1>
-          <p className="text-white/80 animate-slide-up" style={{ animationDelay: '0.1s' }}>将 China AI Helper 添加到您的设备</p>
+          <h1 className="text-3xl font-bold mb-2 animate-slide-up">📲 {t('InstallGuide.title', 'Install App')}</h1>
+          <p className="text-white/80 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+            {t('InstallGuide.subtitle', 'Add China AI Helper to your device')}
+          </p>
         </div>
       </header>
 
@@ -72,11 +94,11 @@ export default function InstallGuidePage() {
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-8">
         {/* Benefits */}
         <section className="animate-slide-up">
-          <h2 className="text-xl font-bold text-[#484848] mb-4">✨ 为什么要安装？</h2>
+          <h2 className="text-xl font-bold text-[#484848] mb-4">✨ {t('InstallGuide.whyInstall', 'Why install?')}</h2>
           <div className="grid grid-cols-2 gap-4">
             {benefits.map((benefit, index) => (
-              <div 
-                key={benefit.title} 
+              <div
+                key={benefit.title}
                 className="bg-white rounded-2xl shadow-md p-4 border border-gray-100 hover-lift stagger-item"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -90,11 +112,11 @@ export default function InstallGuidePage() {
 
         {/* Installation Steps */}
         <section className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <h2 className="text-xl font-bold text-[#484848] mb-4">📖 如何安装</h2>
+          <h2 className="text-xl font-bold text-[#484848] mb-4">📖 {t('InstallGuide.howToInstall', 'How to install')}</h2>
           <div className="space-y-4">
             {steps.map((platform, index) => (
-              <div 
-                key={platform.title} 
+              <div
+                key={platform.title}
                 className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 hover-lift stagger-item"
                 style={{ animationDelay: `${0.3 + index * 0.15}s` }}
               >
@@ -123,16 +145,11 @@ export default function InstallGuidePage() {
 
         {/* FAQ */}
         <section className="animate-slide-up" style={{ animationDelay: '0.6s' }}>
-          <h2 className="text-xl font-bold text-[#484848] mb-4">❓ 常见问题</h2>
+          <h2 className="text-xl font-bold text-[#484848] mb-4">❓ {t('InstallGuide.faqTitle', 'FAQ')}</h2>
           <div className="space-y-3">
-            {[
-              { q: '安装需要付费吗？', a: '完全免费！这是一个渐进式 Web 应用 (PWA)，不需要任何费用。' },
-              { q: '会占用很多存储空间吗？', a: '不会，PWA 非常轻量，通常只占用几 MB 空间。' },
-              { q: '如何卸载？', a: '像卸载普通应用一样，长按图标选择移除即可。' },
-              { q: '会自动更新吗？', a: '会的，PWA 会自动更新到最新版本，无需手动操作。' },
-            ].map((faq, index) => (
-              <div 
-                key={index} 
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
                 className="bg-white rounded-2xl shadow-md p-4 border border-gray-100 hover-lift stagger-item"
                 style={{ animationDelay: `${0.7 + index * 0.1}s` }}
               >
@@ -146,13 +163,13 @@ export default function InstallGuidePage() {
         {/* CTA */}
         <div className="bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-3xl shadow-xl p-6 text-white text-center animate-bounce-in" style={{ animationDelay: '1s' }}>
           <div className="text-5xl mb-4 animate-float">🚀</div>
-          <h2 className="text-2xl font-bold mb-2">准备好安装了吗？</h2>
-          <p className="text-white/80 mb-6">只需几秒钟，即可获得更好的使用体验</p>
+          <h2 className="text-2xl font-bold mb-2">{t('InstallGuide.readyToInstall', 'Ready to install?')}</h2>
+          <p className="text-white/80 mb-6">{t('InstallGuide.readyDesc', 'Just a few seconds for a better experience')}</p>
           <button
             onClick={() => router.push('/')}
             className="px-8 py-3 bg-white text-[#ff5a5f] rounded-xl font-bold shadow-lg hover:shadow-xl transition-all hover-lift tap-feedback"
           >
-            🏠 返回首页
+            🏠 {t('Actions.goBack', 'Back to Home')}
           </button>
         </div>
       </main>

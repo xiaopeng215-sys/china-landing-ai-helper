@@ -31,7 +31,7 @@ export const beijing5Days: ItineraryRoute = {
       theme: '天安门 · 故宫 · 国家博物馆',
       activities: [
         { time: '08:00', name: '天安门广场', nameEn: 'Tiananmen Square', type: 'attraction', duration: '1 小时', description: '世界最大的城市广场，每天升降旗仪式是必看项目。', price: '免费', location: '东城区天安门广场', locationLat: 39.9042, locationLng: 116.3975, highlights: ['人民英雄纪念碑', '毛主席纪念堂', '人民大会堂'], tips: '周一毛纪念堂闭馆，请携带身份证' },
-        { time: '09:30', name: '故宫博物院', nameEn: 'Forbidden City', type: 'attraction', duration: '4 小时', description: '明清两代皇宫，世界最大宫殿建筑群，建议租讲解器。', price: '¥60 (旺季¥80)', location: '东城区景山前街', locationLat: 39.9163, locationLng: 116.3972, highlights: ['午门', '太和殿', '乾清宫', '御花园'], tips: '从午门进，神武门出，建议租用讲解器¥20' },
+        { time: '09:30', name: '故宫博物院', nameEn: 'Forbidden City', type: 'attraction', duration: '4 小时', description: '明清两代皇宫，世界最大宫殿建筑群，建议租讲解器。', price: '¥60 (旺季4-10月) / ¥40 (淡季11-3月)', location: '东城区景山前街', locationLat: 39.9163, locationLng: 116.3972, highlights: ['午门', '太和殿', '乾清宫', '御花园'], tips: '从午门进，神武门出，建议租用讲解器¥20' },
         { time: '14:00', name: '景山公园', nameEn: 'Jingshan Park', type: 'attraction', duration: '1 小时', description: '故宫最佳观景点，俯瞰紫禁城全貌。', price: '¥2', location: '西城区景山前街', locationLat: 39.9183, locationLng: 116.3970, highlights: ['万春亭俯瞰故宫', '南北中轴线'], tips: '下午 3-4 点光线最好，拍照绝美' },
         { time: '16:00', name: '国家博物馆', nameEn: 'National Museum of China', type: 'attraction', duration: '2 小时', description: '中华文化最高殿堂，古代中国展品丰富。', price: '免费 (预约)', location: '东城区东长安街', locationLat: 39.9045, locationLng: 116.4036, highlights: ['古代中国展', '复兴之路', '特展'], tips: '必须提前在官方小程序预约，周一闭馆' }
       ],

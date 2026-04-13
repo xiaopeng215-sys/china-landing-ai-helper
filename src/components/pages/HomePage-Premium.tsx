@@ -39,9 +39,8 @@ export default function HomePagePremium() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSendMessage = (message: string) => {
-    console.log('User sent:', message);
-    // 可以在这里添加实际的消息处理逻辑
+  const handleSendMessage = (_message: string) => {
+    // 消息处理由 ChatView 组件负责
   };
 
   return (

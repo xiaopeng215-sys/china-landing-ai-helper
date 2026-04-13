@@ -255,12 +255,13 @@ async function sendToQwen(
       content: structuredPrompt
     };
     
+    // 如果传入的 messages 已包含 system message，不再重复添加
+    const hasSystemMessage = messages.length > 0 && messages[0].role === 'system';
+    const finalMessages = hasSystemMessage ? messages : [systemMessage, ...messages];
+
     const requestBody = {
       model: process.env.QWEN_MODEL || 'qwen-plus',
-      messages: [
-        systemMessage,
-        ...messages,
-      ],
+      messages: finalMessages,
       temperature: 0.7,
       max_tokens: parseInt(process.env.QWEN_MAX_TOKENS || '1500'),
     };
@@ -428,15 +429,18 @@ async function sendToMiniMax(
       role: 'system' as const,
       content: structuredPrompt
     };
+
+    // 如果传入的 messages 已包含 system message，不再重复添加
+    const hasSystemMessage = messages.length > 0 && messages[0].role === 'system';
+    const finalMessages = hasSystemMessage ? messages : [systemMessage, ...messages];
     
     const requestBody = {
       model: process.env.MINIMAX_MODEL || 'MiniMax-M2.7',
-      messages: [
-        systemMessage,
-        ...messages,
-      ],
+      messages: finalMessages,
       temperature: 0.7,
-      max_tokens: parseInt(process.env.MINIMAX_MAX_TOKENS || '8000'),
+      // M2.7 是推理模型，限制 thinking_budget 避免推理 token 耗尽导致回复为空
+      max_tokens: parseInt(process.env.MINIMAX_MAX_TOKENS || '2000'),
+      thinking_budget: 800,
     };
 
     console.log('🤖 发送请求到 MiniMax API...');

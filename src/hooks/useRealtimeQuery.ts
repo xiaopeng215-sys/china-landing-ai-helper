@@ -210,7 +210,7 @@ export function useRealtimeQuery<T = unknown>(
       // 重试逻辑
       if (retryCountRef.current < retryCount) {
         retryCountRef.current++;
-        console.log(`[RealtimeQuery] Retry ${retryCountRef.current}/${retryCount} for ${queryKey}`);
+        // console.log(`[RealtimeQuery] Retry ${retryCountRef.current}/${retryCount} for ${queryKey}`);
         
         await new Promise((resolve) => setTimeout(resolve, retryInterval * retryCountRef.current));
         // P1-08 Fix: 重试前检查卸载状态
@@ -322,7 +322,7 @@ export function useRealtimeQuery<T = unknown>(
         return;
       }
       
-      console.log(`[RealtimeQuery] Received update for ${queryKey}:`, updateData);
+      // console.log(`[RealtimeQuery] Received update for ${queryKey}:`, updateData);
       
       // 应用更新 (假设更新是完整数据或增量)
       const transformedData = transform ? transform(updateData) : updateData as T;

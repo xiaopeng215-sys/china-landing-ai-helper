@@ -3,72 +3,111 @@
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useClientI18n } from '@/lib/i18n/client';
 
 function AuthErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
+  const { t } = useClientI18n();
 
   const getErrorMessage = (errorCode: string | null) => {
     switch (errorCode) {
       case 'Verification':
-        return { title: '验证链接无效', message: '该验证链接已过期或已被使用。请重新请求登录链接。', icon: '⚠️' };
+        return {
+          title: t('AuthErrors.verification.title', 'Invalid verification link'),
+          message: t('AuthErrors.verification.message', 'This link has expired or already been used. Please request a new sign-in link.'),
+          icon: '⚠️',
+        };
       case 'AccessDenied':
-        return { title: '访问被拒绝', message: '您没有权限访问此资源。请联系管理员。', icon: '🚫' };
+        return {
+          title: t('AuthErrors.accessDenied.title', 'Access denied'),
+          message: t('AuthErrors.accessDenied.message', 'You do not have permission to access this resource. Please contact support.'),
+          icon: '🚫',
+        };
       case 'CredentialsSignin':
-        return { title: '登录失败', message: '邮箱或密码错误。请检查后重试。', icon: '❌' };
+        return {
+          title: t('AuthErrors.credentialsSignin.title', 'Sign in failed'),
+          message: t('AuthErrors.credentialsSignin.message', 'Incorrect email or password. Please check and try again.'),
+          icon: '❌',
+        };
       case 'OAuthSignin':
-        return { title: '第三方登录失败', message: '无法通过第三方账号登录。请尝试其他方式。', icon: '🔐' };
+        return {
+          title: t('AuthErrors.oauthSignin.title', 'OAuth sign-in failed'),
+          message: t('AuthErrors.oauthSignin.message', 'Could not sign in with this provider. Please try another method.'),
+          icon: '🔐',
+        };
       case 'OAuthCallback':
-        return { title: '授权回调失败', message: '第三方授权过程中出现错误。请重试。', icon: '🔄' };
+        return {
+          title: t('AuthErrors.oauthCallback.title', 'OAuth callback failed'),
+          message: t('AuthErrors.oauthCallback.message', 'An error occurred during authorization. Please try again.'),
+          icon: '🔄',
+        };
       case 'OAuthCreateAccount':
-        return { title: '账号创建失败', message: '无法使用第三方账号创建新用户。请联系管理员。', icon: '👤' };
+        return {
+          title: t('AuthErrors.oauthCreateAccount.title', 'Account creation failed'),
+          message: t('AuthErrors.oauthCreateAccount.message', 'Could not create account with this provider. Please contact support.'),
+          icon: '👤',
+        };
       case 'EmailCreateAccount':
-        return { title: '邮箱账号创建失败', message: '无法使用该邮箱创建账号。请尝试其他方式。', icon: '📧' };
+        return {
+          title: t('AuthErrors.emailCreateAccount.title', 'Email account creation failed'),
+          message: t('AuthErrors.emailCreateAccount.message', 'Could not create account with this email. Please try another method.'),
+          icon: '📧',
+        };
       case 'Callback':
-        return { title: '回调错误', message: '登录回调过程中出现错误。请重试。', icon: '⚡' };
+        return {
+          title: t('AuthErrors.callback.title', 'Callback error'),
+          message: t('AuthErrors.callback.message', 'An error occurred during sign-in callback. Please try again.'),
+          icon: '⚡',
+        };
       case 'OAuthAccountNotLinked':
-        return { title: '账号未关联', message: '该第三方账号未与任何用户关联。请先注册账号。', icon: '🔗' };
+        return {
+          title: t('AuthErrors.oauthNotLinked.title', 'Account not linked'),
+          message: t('AuthErrors.oauthNotLinked.message', 'This provider account is not linked to any user. Please sign up first.'),
+          icon: '🔗',
+        };
       default:
-        return { title: '认证错误', message: '登录过程中出现未知错误。请重试或联系客服。', icon: '❓' };
+        return {
+          title: t('AuthErrors.default.title', 'Authentication error'),
+          message: t('AuthErrors.default.message', 'An unknown error occurred during sign-in. Please try again or contact support.'),
+          icon: '❓',
+        };
     }
   };
 
   const errorInfo = getErrorMessage(error);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 flex items-center justify-center px-4 py-12" role="main" aria-label="认证错误">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50 flex items-center justify-center px-4 py-12" role="main">
       <div className="max-w-md w-full text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-red-400 to-red-500 rounded-3xl flex items-center justify-center text-5xl shadow-lg mx-auto mb-6" aria-hidden="true">
           {errorInfo.icon}
         </div>
         <h1 className="text-2xl font-bold text-[#484848] mb-4">{errorInfo.title}</h1>
-        <p className="text-[#767676] mb-8 leading-relaxed" id="error-description">{errorInfo.message}</p>
+        <p className="text-[#767676] mb-8 leading-relaxed">{errorInfo.message}</p>
         <div className="space-y-4">
-          <Link 
-            href="/auth/signin" 
+          <Link
+            href="/auth/signin"
             className="block w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
-            aria-label="重新登录"
           >
-            重新登录
+            {t('AuthPage.signIn', 'Sign In Again')}
           </Link>
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="block w-full py-3 bg-white border border-gray-200 text-[#484848] rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200"
-            aria-label="返回首页"
           >
-            返回首页
+            {t('Actions.goBack', 'Back to Home')}
           </Link>
         </div>
         <div className="mt-8 text-sm text-[#767676]">
-          <p>仍有问题？</p>
+          <p>{t('AuthErrors.needHelp', 'Still having trouble?')}</p>
           <p className="mt-1">
-            联系支持：
-            <a 
-              href="mailto:support@chinalanding.ai" 
+            {t('AuthErrors.contactSupport', 'Contact support')}:{' '}
+            <a
+              href="mailto:support@travelerlocal.ai"
               className="text-[#ff5a5f] hover:underline"
-              aria-label="发送邮件至支持团队"
             >
-              support@chinalanding.ai
+              support@travelerlocal.ai
             </a>
           </p>
         </div>
@@ -79,7 +118,7 @@ function AuthErrorContent() {
 
 export default function AuthErrorPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">加载中...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff5a5f]" /></div>}>
       <AuthErrorContent />
     </Suspense>
   );

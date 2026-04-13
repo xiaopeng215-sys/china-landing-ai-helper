@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useClientI18n } from '@/lib/i18n/client';
 
 interface Destination {
   name: string;
@@ -20,9 +21,10 @@ const destinations: Destination[] = [
 ];
 
 export default function MoreDestinations({ onDestinationSelect }: MoreDestinationsProps) {
+  const { t } = useClientI18n();
   return (
     <section className="bg-white rounded-3xl shadow-lg p-5 border border-gray-100">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">🗺️ More Destinations</h3>
+      <h3 className="text-lg font-bold text-gray-900 mb-4">{t('TripsPage.moreDestinations')}</h3>
       <div className="grid grid-cols-2 gap-3">
         {destinations.map(city => (
           <button
@@ -32,7 +34,7 @@ export default function MoreDestinations({ onDestinationSelect }: MoreDestinatio
           >
             <span className="text-2xl mb-1 block">{city.emoji}</span>
             <span className="font-semibold text-gray-900 text-sm">{city.name}</span>
-            <span className="text-xs text-gray-400">{city.tag}</span>
+            <span className="text-xs text-gray-400">{t(`TripsPage.tag${city.tag}`)}</span>
           </button>
         ))}
       </div>

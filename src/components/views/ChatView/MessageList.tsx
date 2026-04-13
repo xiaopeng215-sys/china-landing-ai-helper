@@ -3,6 +3,7 @@
 import React from 'react';
 import { ExternalLink, MapPin, Star, Camera } from 'lucide-react';
 import type { Message, Recommendation, Action, ChatImage } from './types';
+import { useClientI18n } from '@/lib/i18n/client';
 
 interface MessageListProps {
   messages: Message[];
@@ -10,13 +11,15 @@ interface MessageListProps {
 }
 
 export function MessageList({ messages, messagesEndRef }: MessageListProps) {
+  const { t, locale } = useClientI18n();
+
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center text-center p-8">
         <div>
           <div className="text-6xl mb-4">💬</div>
-          <p className="text-[#767676]">开始您的第一次对话</p>
-          <p className="text-sm text-[#767676] mt-2">询问关于中国旅行的任何问题</p>
+          <p className="text-[#767676]">{t('ChatViewPage.startConversation')}</p>
+          <p className="text-sm text-[#767676] mt-2">{t('ChatViewPage.askAnything')}</p>
         </div>
       </div>
     );
@@ -79,8 +82,8 @@ export function MessageList({ messages, messagesEndRef }: MessageListProps) {
             {/* 时间戳 */}
             <div className={`text-xs mt-2 ${message.role === 'user' ? 'text-white/70' : 'text-[#767676]'}`}>
               {typeof message.timestamp === 'string' 
-                ? new Date(message.timestamp).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
-                : message.timestamp.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+                ? new Date(message.timestamp).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
+                : message.timestamp.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
               }
             </div>
           </div>

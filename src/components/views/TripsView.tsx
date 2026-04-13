@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { allItineraries, getFeaturedItineraries, type ItineraryRoute } from '@/lib/itineraries';
 import { 
   TripDetailModal,
@@ -36,10 +37,11 @@ export default function TripsView() {
     setSelectedCity(city);
   };
 
-  const handlePlanTrip = () => {
-    // TODO: Navigate to AI trip planner
-    console.log('Navigate to AI trip planner');
-  };
+  const router = useRouter();
+
+  const handlePlanTrip = useCallback(() => {
+    router.push('/chat');
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-gray-50">

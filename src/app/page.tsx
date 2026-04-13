@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useEffect } from "react";
 import dynamic from "next/dynamic";
 import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
@@ -46,6 +46,16 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("chat");
   const [showHero, setShowHero] = useState(true);
   const { t } = useClientI18n();
+
+  // Support ?tab= query param for redirects from /chat, /food, /trips
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab') as Tab;
+    if (tab && TAB_VALUES.includes(tab)) {
+      setActiveTab(tab);
+      setShowHero(false);
+    }
+  }, []);
 
   // 使用 useMemo 缓存渲染结果，避免不必要的重新渲染
   const renderView = React.useMemo(() => {

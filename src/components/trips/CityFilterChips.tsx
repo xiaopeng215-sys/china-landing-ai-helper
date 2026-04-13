@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useClientI18n } from '@/lib/i18n/client';
 
 interface CityFilter {
   key: string;
@@ -12,17 +13,20 @@ interface CityFilterChipsProps {
   onCitySelect: (city: string) => void;
 }
 
-const CITY_FILTERS: CityFilter[] = [
-  { key: 'all', label: 'All' },
-  { key: 'shanghai-4days', label: '🇨🇳 Shanghai' },
-  { key: 'beijing-5days', label: '🏯 Beijing' },
-  { key: 'xian-3days', label: '🏛️ Xi\'an' },
-  { key: 'chengdu-3days', label: '🐼 Chengdu' },
-  { key: 'guilin-3days', label: '🏞️ Guilin' },
-  { key: 'hangzhou-2days', label: '🌸 Hangzhou' },
-];
 
 export default function CityFilterChips({ selectedCity, onCitySelect }: CityFilterChipsProps) {
+  const { t } = useClientI18n();
+
+  const CITY_FILTERS: CityFilter[] = [
+    { key: 'all', label: t('TripsPage.all') },
+    { key: 'shanghai-4days', label: '🇨🇳 Shanghai' },
+    { key: 'beijing-5days', label: '🏯 Beijing' },
+    { key: 'xian-3days', label: "🏛️ Xi'an" },
+    { key: 'chengdu-3days', label: '🐼 Chengdu' },
+    { key: 'guilin-3days', label: '🏞️ Guilin' },
+    { key: 'hangzhou-2days', label: '🌸 Hangzhou' },
+  ];
+
   return (
     <div className="overflow-x-auto scrollbar-hide">
       <div className="flex gap-2 px-4 pb-3">

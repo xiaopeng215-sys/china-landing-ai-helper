@@ -8,6 +8,7 @@ import { MessageList } from './MessageList';
 import { ChatInput } from './ChatInput';
 import { SessionList } from './SessionList';
 import type { Message, ChatSession } from './types';
+import { useClientI18n } from '@/lib/i18n/client';
 
 export type AIModel = 'minimax' | 'qwen';
 
@@ -187,7 +188,7 @@ export default function ChatView() {
         id: (Date.now() + 1).toString(),
         type: 'ai',
         role: 'assistant',
-        content: '❌ 发送失败，请检查网络连接后重试',
+        content: '❌ Failed to send. Please check your connection and try again.',
         timestamp: new Date().toISOString(),
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -201,6 +202,8 @@ export default function ChatView() {
     handleSendMessage();
   };
 
+  const { t } = useClientI18n();
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Header */}
@@ -208,7 +211,7 @@ export default function ChatView() {
         <div className="flex items-center gap-3">
           <MessagesSquare className="w-6 h-6 text-[#ff5a5f]" />
           <div>
-            <h1 className="font-bold text-lg">AI Travel Assistant</h1>
+            <h1 className="font-bold text-lg">{t('ChatViewPage.title')}</h1>
           </div>
         </div>
         <button
@@ -233,7 +236,7 @@ export default function ChatView() {
               <span className="w-2 h-2 bg-[#ff5a5f] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
               <span className="w-2 h-2 bg-[#ff5a5f] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
             </div>
-            <span>AI 正在思考...</span>
+            <span>{t('ChatViewPage.aiThinking')}</span>
           </div>
         </div>
       )}

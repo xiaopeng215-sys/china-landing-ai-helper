@@ -1,27 +1,23 @@
 'use client';
 
 import React from 'react';
-
-interface SettingItem {
-  icon: string;
-  label: string;
-  value?: string;
-  showArrow?: boolean;
-}
+import { useClientI18n } from '@/lib/i18n/client';
 
 export default function ProfileView() {
-  const settings: SettingItem[] = [
-    { icon: '👤', label: 'Account', value: 'Not logged in', showArrow: true },
-    { icon: '🌐', label: 'Language', value: 'English', showArrow: true },
-    { icon: '🔔', label: 'Notifications', value: 'On', showArrow: true },
-    { icon: '🎨', label: 'Theme', value: 'Light', showArrow: true },
+  const { t } = useClientI18n();
+
+  const settings = [
+    { icon: '👤', labelKey: 'ProfileViewPage.account', valueKey: 'ProfileViewPage.notLoggedIn', showArrow: true },
+    { icon: '🌐', labelKey: 'ProfileViewPage.language', valueKey: 'ProfileViewPage.language', showArrow: true },
+    { icon: '🔔', labelKey: 'ProfileViewPage.notifications', valueKey: 'ProfileViewPage.notificationsOn', showArrow: true },
+    { icon: '🎨', labelKey: 'ProfileViewPage.theme', valueKey: 'ProfileViewPage.themeLight', showArrow: true },
   ];
 
-  const support: SettingItem[] = [
-    { icon: '❓', label: 'Help Center', showArrow: true },
-    { icon: '📧', label: 'Contact Us', showArrow: true },
-    { icon: '⭐', label: 'Rate App', showArrow: true },
-    { icon: '📋', label: 'Privacy Policy', showArrow: true },
+  const support = [
+    { icon: '❓', labelKey: 'ProfileViewPage.helpCenter', showArrow: true },
+    { icon: '📧', labelKey: 'ProfileViewPage.contactUs', showArrow: true },
+    { icon: '⭐', labelKey: 'ProfileViewPage.rateApp', showArrow: true },
+    { icon: '📋', labelKey: 'ProfileViewPage.privacyPolicy', showArrow: true },
   ];
 
   return (
@@ -29,8 +25,8 @@ export default function ProfileView() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-[#484848]">Profile</h1>
-          <p className="text-sm text-[#767676]">Manage your settings</p>
+          <h1 className="text-2xl font-bold text-[#484848]">{t('ProfileViewPage.title')}</h1>
+          <p className="text-sm text-[#767676]">{t('ProfileViewPage.subtitle')}</p>
         </div>
       </header>
 
@@ -43,11 +39,11 @@ export default function ProfileView() {
               👤
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold">Guest User</h2>
-              <p className="text-white/80 text-sm">Sign in to sync your trips</p>
+              <h2 className="text-xl font-bold">{t('ProfileViewPage.guestUser')}</h2>
+              <p className="text-white/80 text-sm">{t('ProfileViewPage.guestDesc')}</p>
             </div>
             <button className="px-4 py-2 bg-white text-[#ff5a5f] rounded-xl font-semibold text-sm hover:bg-white/90 transition-all">
-              Sign In
+              {t('ProfileViewPage.signIn')}
             </button>
           </div>
         </div>
@@ -55,14 +51,14 @@ export default function ProfileView() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: 'Trips', value: '0', icon: '📅' },
-            { label: 'Favorites', value: '0', icon: '❤️' },
-            { label: 'Reviews', value: '0', icon: '⭐' },
+            { labelKey: 'ProfileViewPage.trips', value: '0', icon: '📅' },
+            { labelKey: 'ProfileViewPage.favorites', value: '0', icon: '❤️' },
+            { labelKey: 'ProfileViewPage.reviews', value: '0', icon: '⭐' },
           ].map((stat) => (
-            <div key={stat.label} className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100">
+            <div key={stat.labelKey} className="bg-white rounded-2xl shadow-md p-4 text-center border border-gray-100">
               <div className="text-2xl mb-2">{stat.icon}</div>
               <div className="text-2xl font-bold text-[#484848]">{stat.value}</div>
-              <div className="text-xs text-[#767676]">{stat.label}</div>
+              <div className="text-xs text-[#767676]">{t(stat.labelKey)}</div>
             </div>
           ))}
         </div>
@@ -70,18 +66,18 @@ export default function ProfileView() {
         {/* Settings */}
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
           <div className="p-4 border-b border-gray-100">
-            <h3 className="font-bold text-[#484848]">Settings</h3>
+            <h3 className="font-bold text-[#484848]">{t('ProfileViewPage.settings')}</h3>
           </div>
           <div className="divide-y divide-gray-100">
             {settings.map((item) => (
               <button
-                key={item.label}
+                key={item.labelKey}
                 className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-all"
               >
                 <div className="text-2xl">{item.icon}</div>
                 <div className="flex-1 text-left">
-                  <p className="font-medium text-[#484848]">{item.label}</p>
-                  {item.value && <p className="text-sm text-[#767676]">{item.value}</p>}
+                  <p className="font-medium text-[#484848]">{t(item.labelKey)}</p>
+                  {item.valueKey && <p className="text-sm text-[#767676]">{t(item.valueKey)}</p>}
                 </div>
                 {item.showArrow && <div className="text-[#767676]">→</div>}
               </button>
@@ -92,17 +88,17 @@ export default function ProfileView() {
         {/* Support */}
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
           <div className="p-4 border-b border-gray-100">
-            <h3 className="font-bold text-[#484848]">Support</h3>
+            <h3 className="font-bold text-[#484848]">{t('ProfileViewPage.support')}</h3>
           </div>
           <div className="divide-y divide-gray-100">
             {support.map((item) => (
               <button
-                key={item.label}
+                key={item.labelKey}
                 className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-all"
               >
                 <div className="text-2xl">{item.icon}</div>
                 <div className="flex-1 text-left">
-                  <p className="font-medium text-[#484848]">{item.label}</p>
+                  <p className="font-medium text-[#484848]">{t(item.labelKey)}</p>
                 </div>
                 {item.showArrow && <div className="text-[#767676]">→</div>}
               </button>
@@ -113,11 +109,9 @@ export default function ProfileView() {
         {/* App Info */}
         <div className="text-center py-6">
           <div className="text-4xl mb-2">🇨🇳</div>
-          <p className="font-bold text-[#484848]">China Landing AI Helper</p>
-          <p className="text-sm text-[#767676]">Version 1.0.0-beta</p>
-          <p className="text-xs text-[#767676] mt-4">
-            Made with ❤️ for travelers
-          </p>
+          <p className="font-bold text-[#484848]">{t('ProfileViewPage.appName')}</p>
+          <p className="text-sm text-[#767676]">{t('ProfileViewPage.version')}</p>
+          <p className="text-xs text-[#767676] mt-4">{t('ProfileViewPage.madeWith')}</p>
         </div>
       </main>
     </div>
