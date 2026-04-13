@@ -1,0 +1,110 @@
+{
+  "conversations": [
+    {
+      "id": "example-001",
+      "title": "上海行程规划",
+      "messages": [
+        {
+          "id": "msg-001",
+          "role": "user",
+          "content": "帮我规划上海 4 天行程",
+          "timestamp": "2024-04-12T10:00:00Z"
+        },
+        {
+          "id": "msg-002",
+          "role": "assistant",
+          "content": "{\"text\":\"🗽 **上海 4 天经典行程**\\n\\n📍 **Day 1**: 经典地标\\n• 上午：外滩 (免费) - 经典 skyline 拍照\\n• 下午：豫园 (¥40) - 古典园林\\n• 晚上：南京路步行街\\n\\n📍 **Day 2**: 文化体验\\n• 上午：上海博物馆 (免费)\\n• 下午：田子坊 (免费) - 艺术街区\\n• 晚上：新天地\\n\\n📍 **Day 3**: 现代上海\\n• 上午：陆家嘴 - 东方明珠 (¥180)\\n• 下午：上海中心观景台 (¥180)\\n• 晚上：滨江骑行 (免费)\\n\\n📍 **Day 4**: 水乡风情\\n• 全天：朱家角古镇 (免费)\\n• 品尝：扎肉、阿婆粽\\n\\n💰 **预算参考**: ¥2000-3000/人 (不含住宿)\\n\\n需要我详细规划某一天吗？或者你有其他偏好？\",\"recommendations\":[{\"type\":\"attraction\",\"id\":\"bund-shanghai\",\"name\":\"外滩\",\"nameEn\":\"The Bund\",\"reason\":\"上海标志性景点，欣赏浦江两岸美景\",\"price\":\"免费\",\"location\":\"上海市黄浦区中山东一路\",\"image\":\"https://images.unsplash.com/photo-1548266652-99cf277df1f8?w=800&h=600&fit=crop\"},{\"type\":\"attraction\",\"id\":\"yu-garden\",\"name\":\"豫园\",\"nameEn\":\"Yu Garden\",\"reason\":\"明代古典园林，体验传统江南园林艺术\",\"price\":\"¥40\",\"location\":\"上海市黄浦区安仁街 218 号\",\"image\":\"https://images.unsplash.com/photo-1599661448666-2496d6c6c0ca?w=800&h=600&fit=crop\"},{\"type\":\"attraction\",\"id\":\"oriental-pearl\",\"name\":\"东方明珠\",\"nameEn\":\"Oriental Pearl Tower\",\"reason\":\"上海地标建筑，俯瞰全城美景\",\"price\":\"¥180\",\"location\":\"上海市浦东新区陆家嘴世纪大道 1 号\",\"image\":\"https://images.unsplash.com/photo-1548266652-99cf277df1f8?w=800&h=600&fit=crop\"}],\"actions\":[{\"type\":\"book\",\"provider\":\"klook\",\"url\":\"https://www.klook.com/zh-CN/activity/123-shanghai-tour/\",\"text\":\"预订上海一日游\"},{\"type\":\"navigate\",\"provider\":\"amap\",\"url\":\"https://www.amap.com/\",\"text\":\"查看地图\"}],\"images\":[{\"url\":\"https://images.unsplash.com/photo-1548266652-99cf277df1f8?w=800&h=600&fit=crop\",\"caption\":\"上海外滩夜景\"}]}",
+          "timestamp": "2024-04-12T10:00:05Z",
+          "tokens": 450
+        }
+      ]
+    },
+    {
+      "id": "example-002",
+      "title": "美食推荐",
+      "messages": [
+        {
+          "id": "msg-003",
+          "role": "user",
+          "content": "推荐上海美食",
+          "timestamp": "2024-04-12T11:00:00Z"
+        },
+        {
+          "id": "msg-004",
+          "role": "assistant",
+          "content": "{\"text\":\"🍜 **上海必吃美食推荐**\\n\\n🥟 **本帮菜**\\n• 南翔馒头店 - 小笼包 (人均¥60)\\n• 老正兴菜馆 - 本帮菜 (人均¥150)\\n\\n🍜 **面食**\\n• 大壶春 - 生煎包 (人均¥30)\\n• 鲜得来 - 排骨年糕 (人均¥25)\\n\\n🦀 **特色**\\n• 王宝和酒家 - 大闸蟹 (季节性，人均¥300)\\n• 上海老饭店 - 八宝鸭 (人均¥200)\\n\\n🍢 **小吃街**\\n• 城隍庙小吃街\\n• 云南南路美食街\\n\\n💰 **预算参考**: ¥100-200/天\\n\\n需要推荐具体某类美食吗？\",\"recommendations\":[{\"type\":\"restaurant\",\"id\":\"nanxiang-bun\",\"name\":\"南翔馒头店\",\"nameEn\":\"Nanxiang Bun Shop\",\"reason\":\"上海最著名的小笼包店，皮薄馅大\",\"price\":\"人均¥60\",\"location\":\"上海市黄浦区豫园路 85 号\",\"image\":\"https://images.unsplash.com/photo-1563245372-f21720e32c4d?w=800&h=600&fit=crop\"},{\"type\":\"restaurant\",\"id\":\"dachuhu\",\"name\":\"大壶春\",\"nameEn\":\"Da Hu Chun\",\"reason\":\"老字号生煎包，外酥里嫩\",\"price\":\"人均¥30\",\"location\":\"上海市黄浦区四川中路 136 号\",\"image\":\"https://images.unsplash.com/photo-1563245372-f21720e32c4d?w=800&h=600&fit=crop\"},{\"type\":\"restaurant\",\"id\":\"laozhengxing\",\"name\":\"老正兴菜馆\",\"nameEn\":\"Lao Zheng Xing\",\"reason\":\"百年老店，正宗本帮菜\",\"price\":\"人均¥150\",\"location\":\"上海市黄浦区福州路 556 号\",\"image\":\"https://images.unsplash.com/photo-1563245372-f21720e32c4d?w=800&h=600&fit=crop\"}],\"actions\":[{\"type\":\"book\",\"provider\":\"meituan\",\"url\":\"https://www.meituan.com/\",\"text\":\"预订餐厅\"},{\"type\":\"navigate\",\"provider\":\"amap\",\"url\":\"https://www.amap.com/\",\"text\":\"导航到店\"}],\"images\":[{\"url\":\"https://images.unsplash.com/photo-1563245372-f21720e32c4d?w=800&h=600&fit=crop\",\"caption\":\"上海小笼包\"}]}",
+          "timestamp": "2024-04-12T11:00:05Z",
+          "tokens": 380
+        }
+      ]
+    },
+    {
+      "id": "example-003",
+      "title": "交通指南",
+      "messages": [
+        {
+          "id": "msg-005",
+          "role": "user",
+          "content": "怎么坐地铁去外滩？",
+          "timestamp": "2024-04-12T12:00:00Z"
+        },
+        {
+          "id": "msg-006",
+          "role": "assistant",
+          "content": "{\"text\":\"🚇 **上海交通指南**\\n\\n📱 **推荐 App**\\n• Metro 大都会 - 地铁官方 App\\n• 支付宝 - 可刷地铁/公交\\n• 滴滴出行 - 打车\\n\\n🚇 **地铁**\\n• 票价：¥3-8\\n• 运营时间：5:30-23:00\\n• 推荐购买：一日票 (¥18)\\n\\n🚕 **打车**\\n• 起步价：¥14 (3 公里)\\n• 推荐：滴滴 (可英文界面)\\n• 机场到市区：¥150-200\\n\\n🚴 **共享单车**\\n• 美团单车：¥1.5/30 分钟\\n• 哈啰单车：¥1.5/30 分钟\\n• 需押金或信用分\\n\\n💡 **实用提示**\\n• 避开早晚高峰 (8-9 点，17-18 点)\\n• 地铁站有英文标识\\n• 支付宝绑定国际卡可刷公交\\n\\n需要具体路线规划吗？\",\"recommendations\":[{\"type\":\"transport\",\"id\":\"shanghai-metro\",\"name\":\"上海地铁\",\"nameEn\":\"Shanghai Metro\",\"reason\":\"最便捷的出行方式，覆盖全市主要景点\",\"price\":\"¥3-8\",\"location\":\"全市\",\"image\":\"https://images.unsplash.com/photo-1543169106-92d95c62f06b?w=800&h=600&fit=crop\"},{\"type\":\"transport\",\"id\":\"didi-taxi\",\"name\":\"滴滴出行\",\"nameEn\":\"DiDi Ride-hailing\",\"reason\":\"支持英文界面，可绑定国际信用卡\",\"price\":\"起步价¥14\",\"location\":\"全市\",\"image\":\"https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&h=600&fit=crop\"}],\"actions\":[{\"type\":\"navigate\",\"provider\":\"amap\",\"url\":\"https://www.amap.com/\",\"text\":\"查看路线\"},{\"type\":\"book\",\"provider\":\"didi\",\"url\":\"https://www.xiaojukeji.com/\",\"text\":\"叫车\"}],\"images\":[{\"url\":\"https://images.unsplash.com/photo-1543169106-92d95c62f06b?w=800&h=600&fit=crop\",\"caption\":\"上海地铁站\"}]}",
+          "timestamp": "2024-04-12T12:00:05Z",
+          "tokens": 320
+        }
+      ]
+    },
+    {
+      "id": "example-004",
+      "title": "支付设置",
+      "messages": [
+        {
+          "id": "msg-007",
+          "role": "user",
+          "content": "如何设置支付宝？",
+          "timestamp": "2024-04-12T13:00:00Z"
+        },
+        {
+          "id": "msg-008",
+          "role": "assistant",
+          "content": "{\"text\":\"💳 **中国支付设置指南**\\n\\n📱 **支付宝 (推荐)**\\n1. 下载支付宝 App\\n2. 注册账号 (支持国际手机号)\\n3. 添加国际信用卡 (Visa/Mastercard)\\n4. 完成身份验证 (护照)\\n5. 开始使用\\n\\n✅ **支持场景**\\n• 餐厅/商店付款\\n• 地铁/公交\\n• 共享单车\\n• 网购\\n\\n💳 **微信支付**\\n1. 下载微信 App\\n2. 注册账号\\n3. 钱包 → 添加银行卡\\n4. 完成身份验证\\n\\n⚠️ **注意事项**\\n• 部分小商家只接受支付宝/微信\\n• 建议准备少量现金 (¥200-500)\\n• 国际卡可能收取 3% 手续费\\n\\n💡 **实用提示**\\n• 在大型商场/连锁店，国际信用卡可直接使用\\n• 酒店、机票可用国际信用卡预订\\n• 建议同时安装支付宝和微信\\n\\n需要详细的设置截图教程吗？\",\"images\":[{\"url\":\"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop\",\"caption\":\"中国移动支付\"}],\"actions\":[{\"type\":\"info\",\"provider\":\"klook\",\"url\":\"https://www.klook.com/zh-CN/activity/alipay-setup/\",\"text\":\"查看支付宝设置教程\"},{\"type\":\"info\",\"provider\":\"trip\",\"url\":\"https://www.trip.com/\",\"text\":\"预订酒店/机票\"}]}",
+          "timestamp": "2024-04-12T13:00:05Z",
+          "tokens": 290
+        }
+      ]
+    },
+    {
+      "id": "example-005",
+      "title": "欢迎对话",
+      "messages": [
+        {
+          "id": "msg-009",
+          "role": "user",
+          "content": "你好",
+          "timestamp": "2024-04-12T14:00:00Z"
+        },
+        {
+          "id": "msg-010",
+          "role": "assistant",
+          "content": "{\"text\":\"👋 欢迎来到 China Landing AI Helper!\\n\\n我可以帮你：\\n🗽 规划行程 - \\\"帮我规划上海 4 天行程\\\"\\n🍜 推荐美食 - \\\"推荐北京美食\\\"\\n🚇 交通指南 - \\\"怎么坐地铁去外滩？\\\"\\n💳 支付设置 - \\\"如何设置支付宝？\\\"\\n\\n请告诉我你的具体需求，我会为你提供详细、实用的建议！\",\"recommendations\":[],\"actions\":[],\"images\":[]}",
+          "timestamp": "2024-04-12T14:00:03Z",
+          "tokens": 150
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "2.0",
+    "created": "2024-04-12T20:50:00+08:00",
+    "description": "AI 对话功能修复后的示例数据 - 包含中文回复、图片 URL、优化推荐逻辑",
+    "features": [
+      "✅ 强制使用简体中文回复",
+      "✅ 所有推荐包含图片 URL",
+      "✅ 优化推荐逻辑 (先对话后推荐)",
+      "✅ 结构化响应 (JSON 格式)"
+    ]
+  }
+}
