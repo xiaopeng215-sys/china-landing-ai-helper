@@ -65,12 +65,12 @@ export const authOptions: NextAuthOptions = {
   adapter: undefined,
   
   providers: [
-    // 邮箱登录（无密码，发送魔法链接）
-    EmailProvider({
+    // 邮箱登录（仅在 EMAIL_SERVER 配置时启用）
+    ...(process.env.EMAIL_SERVER ? [EmailProvider({
       server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM || 'no-reply@example.com',
-      maxAge: 24 * 60 * 60, // 24 小时
-    }),
+      from: process.env.EMAIL_FROM || 'no-reply@travelerlocal.ai',
+      maxAge: 24 * 60 * 60,
+    })] : []),
     
     // 账号密码登录
     CredentialsProvider({

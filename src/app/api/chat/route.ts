@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
       ],
       model: selectedModel,
       temperature: 0.7,
-      language: 'zh-CN',
+      language: 'en-US',
     };
 
     try {
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
       const aiResponse = await sendToAIWithCache(aiContext.messages, {
         model: selectedModel as any,
         structured: true,
-        language: 'zh-CN',
+        language: 'en-US',
       });
 
       // 检查是否命中缓存
