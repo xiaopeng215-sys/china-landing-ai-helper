@@ -439,6 +439,7 @@ async function sendToMiniMax(
       messages: finalMessages,
       temperature: 0.7,
       // M2.7 是推理模型，限制 thinking_budget 避免推理 token 耗尽导致回复为空
+      // 注意：thinking_budget 仅在 /v1/text/chatcompletion_v2 端点有效
       max_tokens: parseInt(process.env.MINIMAX_MAX_TOKENS || '2000'),
       thinking_budget: 800,
     };
@@ -446,7 +447,8 @@ async function sendToMiniMax(
     console.log('🤖 发送请求到 MiniMax API...');
     
     // 发送请求 (60s 超时，M2.7 推理模型需要更长时间)
-    const response = await fetch(`${MINIMAX_API_URL}/chat/completions`, {
+    // 使用 /v1/text/chatcompletion_v2 端点，支持 thinking_budget 参数
+    const response = await fetch(`${MINIMAX_API_URL}/text/chatcompletion_v2`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

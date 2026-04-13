@@ -225,7 +225,7 @@ export async function POST(request: NextRequest) {
       const aiResponse = await sendToAIWithCache(aiContext.messages, {
         model: selectedModel as any,
         structured: true,
-        language: selectedLanguage,
+        language: detectedLanguage,
       });
 
       // 检查是否命中缓存
