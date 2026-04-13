@@ -203,18 +203,7 @@ export default function ChatView() {
         <div className="flex items-center gap-3">
           <MessagesSquare className="w-6 h-6 text-[#ff5a5f]" />
           <div>
-            <h1 className="font-bold text-lg">AI 旅行助手</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <button
-                onClick={() => setShowModelSelector(!showModelSelector)}
-                className="flex items-center gap-1 px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-              >
-                <Cpu className="w-3 h-3 text-[#767676]" />
-                <span className="text-[#767676] font-medium">
-                  {selectedModel === 'qwen' ? 'Qwen' : 'MiniMax'}
-                </span>
-              </button>
-            </div>
+            <h1 className="font-bold text-lg">AI Travel Assistant</h1>
           </div>
         </div>
         <button
@@ -225,44 +214,7 @@ export default function ChatView() {
         </button>
       </header>
 
-      {/* Model Selector Dropdown */}
-      {showModelSelector && (
-        <div className="absolute top-16 right-4 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 min-w-[160px]">
-          <div className="px-3 py-2 border-b border-gray-100">
-            <p className="text-xs font-semibold text-[#767676]">选择 AI 模型</p>
-          </div>
-          <button
-            onClick={() => {
-              setSelectedModel('qwen');
-              setShowModelSelector(false);
-            }}
-            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors flex items-center justify-between ${
-              selectedModel === 'qwen' ? 'bg-[#ff5a5f]/10 text-[#ff5a5f]' : 'text-[#484848]'
-            }`}
-          >
-            <span>Qwen (阿里云)</span>
-            {selectedModel === 'qwen' && <span className="text-[#ff5a5f]">✓</span>}
-          </button>
-          <button
-            onClick={() => {
-              setSelectedModel('minimax');
-              setShowModelSelector(false);
-            }}
-            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors flex items-center justify-between ${
-              selectedModel === 'minimax' ? 'bg-[#ff5a5f]/10 text-[#ff5a5f]' : 'text-[#484848]'
-            }`}
-          >
-            <span>MiniMax</span>
-            {selectedModel === 'minimax' && <span className="text-[#ff5a5f]">✓</span>}
-          </button>
-          <div className="px-3 py-2 mt-1 border-t border-gray-100">
-            <p className="text-[10px] text-[#767676]">
-              💡 Qwen: 擅长中文理解<br/>
-              🚀 MiniMax: 响应速度快
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Model Selector hidden - internal use only */}
 
       {/* Messages */}
       <MessageList messages={messages} messagesEndRef={messagesEndRef} />

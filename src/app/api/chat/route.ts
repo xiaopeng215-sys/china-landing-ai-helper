@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
     // 优化：使用 AI 响应缓存 (包含消息历史)
     const aiContext = {
       messages: [
-        { role: 'system' as const, content: '你是一个中国旅行助手，帮助用户规划行程、推荐美食、提供交通指南。请用简洁友好的中文回复。' },
+        { role: 'system' as const, content: 'You are a helpful travel assistant for international visitors to China. Always respond in English only. Help users plan itineraries, recommend food, and provide transportation guides. Be friendly, concise, and practical. Never mention the AI model name or provider.' },
         ...messageHistory.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
         { role: 'user' as const, content: message }
       ],
@@ -234,7 +234,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         ...structuredData,
         sessionId: responseSessionId,
-        model: selectedModel,
         cacheHit,
         performance: {
           duration,
@@ -254,9 +253,17 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      throw createAIServiceError('AI 服务暂时不可用，请稍后重试', {
-        originalError: aiError instanceof Error ? aiError.message : String(aiError),
-      });
+      // 区分超时错误
+      const isTimeout = aiError instanceof Error && 
+        (aiError.name === 'TimeoutError' || aiError.name === 'AbortError');
+      
+      throw createAIServiceError(
+        isTimeout ? 'AI 服务请求超时，请稍后重试' : 'AI 服务暂时不可用，请稍后重试',
+        {
+          originalError: aiError instanceof Error ? aiError.message : String(aiError),
+          isTimeout,
+        }
+      );
     }
   } catch (error) {
     console.error('❌ [Chat API] 错误:', error);
