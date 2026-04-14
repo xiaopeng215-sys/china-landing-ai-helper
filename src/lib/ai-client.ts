@@ -1,19 +1,24 @@
 /**
- * AI 客户端 - 多模型集成 (MiniMax + Qwen + Mock)
- * Fallback 策略：MiniMax → Qwen → Mock
+ * AI 客户端 - 多模型集成 (Grok + MiniMax + Mock)
+ * Fallback 策略：Grok → MiniMax → Mock
  */
+
+// xAI Grok 配置
+const GROK_API_URL = 'https://api.x.ai/v1/chat/completions';
+const GROK_API_KEY = process.env.XAI_API_KEY || process.env.GROK_API_KEY || '';
+const GROK_MODEL = 'grok-3-fast'; // 速度最快的 Grok 模型
 
 // MiniMax 配置
 const MINIMAX_API_KEY = process.env.MINIMAX_API_KEY || '';
 const MINIMAX_API_URL = 'https://api.minimaxi.com/v1';
 
-// Qwen 配置 (阿里云百炼)
+// Qwen 配置 (阿里云百炼，保留备用)
 const QWEN_API_KEY = process.env.QWEN_API_KEY || '';
 const QWEN_API_URL = process.env.QWEN_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1';
 
 // AI 模型优先级配置
-export type AIModel = 'minimax' | 'qwen' | 'mock';
-export const AI_MODEL_PRIORITY: AIModel[] = ['minimax', 'qwen', 'mock'];
+export type AIModel = 'grok' | 'minimax' | 'qwen' | 'mock';
+export const AI_MODEL_PRIORITY: AIModel[] = ['grok', 'minimax', 'mock'];
 
 export interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -313,8 +318,84 @@ async function sendToQwen(
 }
 
 /**
+ * 发送消息到 xAI Grok (OpenAI 兼容格式)
+ */
+async function sendToGrok(
+  messages: Message[],
+  options?: {
+    intent?: string;
+    variables?: Record<string, string>;
+    language?: string;
+    structured?: boolean;
+  }
+): Promise<AIResponse> {
+  if (!GROK_API_KEY) {
+    console.warn('⚠️ Grok API Key 未配置 (XAI_API_KEY)');
+    throw new Error('Grok API Key 未配置');
+  }
+
+  try {
+    const intent = options?.intent || detectIntent(messages[messages.length - 1].content);
+    const language = options?.language || 'English';
+
+    let systemPrompt = selectPromptTemplate(intent);
+    if (options?.variables) {
+      systemPrompt = replaceTemplate(systemPrompt, { ...options.variables, language });
+    }
+
+    const structuredPrompt = options?.structured
+      ? systemPrompt + '\n\n【重要】请用 JSON 格式回复，必须包含以下字段：\n{\n  "text": "你的文字回复",\n  "recommendations": [{"type": "attraction|restaurant|hotel|transport", "id": "唯一 ID", "name": "名称", "nameEn": "英文名", "reason": "推荐理由", "price": "价格", "location": "位置"}],\n  "actions": [{"type": "book|navigate|info", "provider": "klook|trip|amap|didi|meituan", "url": "链接", "text": "按钮文字"}],\n  "images": [{"url": "图片 URL", "caption": "图片说明"}]\n}'
+      : systemPrompt;
+
+    const systemMessage = { role: 'system' as const, content: structuredPrompt };
+    const hasSystemMessage = messages.length > 0 && messages[0].role === 'system';
+    const finalMessages = hasSystemMessage ? messages : [systemMessage, ...messages];
+
+    const requestBody = {
+      model: GROK_MODEL,
+      messages: finalMessages,
+      temperature: 0.7,
+      max_tokens: 1500,
+      stream: false,
+    };
+
+    console.log('🤖 发送请求到 Grok API...');
+
+    const response = await fetch(GROK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${GROK_API_KEY}`,
+      },
+      body: JSON.stringify(requestBody),
+      signal: AbortSignal.timeout(30000),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Grok API 错误:', response.status, errorText);
+      throw new Error(`Grok API 错误：${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    const rawContent = data.choices[0].message.content;
+
+    console.log('✅ Grok API 响应成功');
+
+    const structured = parseAIResponse(rawContent);
+    if (structured.recommendations?.length || structured.actions?.length) {
+      return { content: JSON.stringify(structured), usage: data.usage };
+    }
+    return { content: rawContent, usage: data.usage };
+  } catch (error) {
+    console.error('❌ sendToGrok 错误:', error);
+    throw error;
+  }
+}
+
+/**
  * 发送消息到 AI (支持多模型 fallback 或指定模型)
- * Fallback 策略：MiniMax → Qwen → Mock
+ * Fallback 策略：Grok → MiniMax → Mock
  * 如果指定了 model 参数，则直接使用指定模型
  */
 export async function sendToAI(
@@ -331,12 +412,14 @@ export async function sendToAI(
   if (options?.model) {
     const selectedModel = options.model;
     console.log(`🎯 使用指定模型：${selectedModel.toUpperCase()}`);
-    
+
     try {
-      if (selectedModel === 'minimax') {
+      if (selectedModel === 'grok') {
+        return await sendToGrok(messages, options);
+      } else if (selectedModel === 'minimax') {
         if (!MINIMAX_API_KEY || MINIMAX_API_KEY === 'your-minimax-api-key') {
-          console.warn('⚠️ MiniMax API Key 未配置，回退到 Qwen');
-          return await sendToQwen(messages, options);
+          console.warn('⚠️ MiniMax API Key 未配置，回退到 Grok');
+          return await sendToGrok(messages, options);
         }
         return await sendToMiniMax(messages, options);
       } else if (selectedModel === 'qwen') {
@@ -349,9 +432,15 @@ export async function sendToAI(
       // 回退到 fallback 策略
     }
   }
-  
-  // Fallback 策略：MiniMax → Qwen → Mock
+
+  // Fallback 策略：Grok → MiniMax → Mock
   const providers = [
+    {
+      name: 'grok' as AIModel,
+      send: async () => {
+        return await sendToGrok(messages, options);
+      }
+    },
     {
       name: 'minimax' as AIModel,
       send: async () => {
@@ -359,12 +448,6 @@ export async function sendToAI(
           throw new Error('MiniMax API Key 未配置');
         }
         return await sendToMiniMax(messages, options);
-      }
-    },
-    {
-      name: 'qwen' as AIModel,
-      send: async () => {
-        return await sendToQwen(messages, options);
       }
     },
     {
