@@ -10,6 +10,48 @@ export interface EssentialTip {
   content: string;
 }
 
+export interface EmergencyNumber {
+  icon: string;
+  label: string;
+  number: string;
+  description: string;
+}
+
+export interface EmbassyEntry {
+  flag: string;
+  name: string;
+  phone: string;
+}
+
+export interface EmbassyCity {
+  city: string;
+  entries: EmbassyEntry[];
+}
+
+export interface EmergencyPhrase {
+  chinese: string;
+  pinyin: string;
+  english: string;
+}
+
+export interface EmergencyGuide {
+  icon: string;
+  title: string;
+  steps: string[];
+}
+
+export interface EmergencySection {
+  id: 'emergency';
+  title: string;
+  subtitle: string;
+  icon: string;
+  color: string;
+  nationalNumbers: EmergencyNumber[];
+  embassies: EmbassyCity[];
+  guides: EmergencyGuide[];
+  phrases: EmergencyPhrase[];
+}
+
 export interface EssentialSection {
   id: string;
   title: string;
@@ -187,60 +229,16 @@ export const ESSENTIALS_DATA: Record<string, EssentialSection> = {
     ],
   },
 
+  // emergency is handled separately via EMERGENCY_DATA
+  // kept as stub for type compatibility
   emergency: {
     id: 'emergency',
     title: 'Emergency',
-    subtitle: 'Critical numbers & contacts',
+    subtitle: 'SOS & Critical Contacts',
     icon: '🆘',
     color: 'red',
-    tips: [
-      {
-        icon: '🚔',
-        title: '110 — Police',
-        content: 'Call 110 for police emergencies: theft, assault, accidents. Some operators speak basic English. Stay calm and state your location.',
-      },
-      {
-        icon: '🚑',
-        title: '120 — Ambulance',
-        content: 'Call 120 for medical emergencies. Response time varies by city. In major cities, some hospitals have English-speaking staff.',
-      },
-      {
-        icon: '🚒',
-        title: '119 — Fire',
-        content: 'Call 119 for fire emergencies. Also handles some rescue situations. State your address clearly.',
-      },
-      {
-        icon: '✈️',
-        title: '12301 — Tourism Hotline',
-        content: 'Call 12301 for tourist complaints, scams, or assistance. Available 24/7. English service available.',
-      },
-      {
-        icon: '🏥',
-        title: 'Hospitals with English Service',
-        content: 'Beijing: Peking Union Medical College Hospital (+86-10-6915-6114). Shanghai: Huashan Hospital International (+86-21-5288-9999). Ask for the "international department".',
-      },
-      {
-        icon: '🏛️',
-        title: 'US Embassy & Consulates',
-        content: 'Beijing Embassy: +86-10-8531-4000. Shanghai Consulate: +86-21-8011-2000. For emergencies after hours, press 0 for duty officer.',
-      },
-      {
-        icon: '🇬🇧',
-        title: 'UK Embassy & Consulates',
-        content: 'Beijing Embassy: +86-10-5192-4000. Shanghai Consulate: +86-21-3279-2000. Emergency: +86-10-5192-4000.',
-      },
-      {
-        icon: '🇪🇺',
-        title: 'Other Embassies',
-        content: 'Search "[your country] embassy Beijing" for contact info. Save the number before you travel. Most embassies have 24/7 emergency lines.',
-      },
-      {
-        icon: '📋',
-        title: 'Travel Insurance',
-        content: 'Always carry your insurance card and policy number. Most Chinese hospitals require upfront payment — keep receipts for reimbursement.',
-      },
-    ],
-  },
+    tips: [],
+  } as EssentialSection,
 };
 
 export type EssentialsTab = 'payment' | 'simcard' | 'vpn' | 'emergency';
@@ -251,3 +249,104 @@ export const ESSENTIALS_TABS: { id: EssentialsTab; label: string; icon: string }
   { id: 'vpn', label: 'VPN', icon: '🔒' },
   { id: 'emergency', label: 'Emergency', icon: '🆘' },
 ];
+
+export const EMERGENCY_DATA: EmergencySection = {
+  id: 'emergency',
+  title: 'Emergency',
+  subtitle: 'SOS & Critical Contacts',
+  icon: '🆘',
+  color: 'red',
+  nationalNumbers: [
+    { icon: '🚔', label: 'Police', number: '110', description: 'Theft, assault, accidents. Say "English please" if needed.' },
+    { icon: '🚑', label: 'Ambulance', number: '120', description: 'Medical emergencies. Also Poison Control.' },
+    { icon: '🚒', label: 'Fire', number: '119', description: 'Fire & rescue. State your address clearly.' },
+    { icon: '🚗', label: 'Traffic Accident', number: '122', description: 'Road accidents & traffic police.' },
+    { icon: '📞', label: 'Tourist Hotline', number: '12301', description: '24/7 English service. Scams, complaints, assistance.' },
+    { icon: '⛑️', label: 'Search & Rescue', number: '12395', description: 'Mountain, water, wilderness rescue.' },
+  ],
+  embassies: [
+    {
+      city: 'Beijing',
+      entries: [
+        { flag: '🇺🇸', name: 'US Embassy', phone: '+86-10-8531-3000' },
+        { flag: '🇬🇧', name: 'UK Embassy', phone: '+86-10-5192-4000' },
+        { flag: '🇦🇺', name: 'Australian Embassy', phone: '+86-10-5140-4111' },
+        { flag: '🇨🇦', name: 'Canadian Embassy', phone: '+86-10-5139-4000' },
+        { flag: '🇩🇪', name: 'German Embassy', phone: '+86-10-8532-9000' },
+        { flag: '🇫🇷', name: 'French Embassy', phone: '+86-10-8531-2000' },
+        { flag: '🇯🇵', name: 'Japanese Embassy', phone: '+86-10-6532-2361' },
+        { flag: '🇰🇷', name: 'Korean Embassy', phone: '+86-10-8531-0700' },
+      ],
+    },
+    {
+      city: 'Shanghai',
+      entries: [
+        { flag: '🇺🇸', name: 'US Consulate', phone: '+86-21-8011-2000' },
+        { flag: '🇬🇧', name: 'UK Consulate', phone: '+86-21-3279-2000' },
+        { flag: '🇦🇺', name: 'Australian Consulate', phone: '+86-21-2215-5200' },
+        { flag: '🇯🇵', name: 'Japanese Consulate', phone: '+86-21-5257-4766' },
+        { flag: '🇰🇷', name: 'Korean Consulate', phone: '+86-21-6295-5000' },
+      ],
+    },
+    {
+      city: 'Guangzhou',
+      entries: [
+        { flag: '🇺🇸', name: 'US Consulate', phone: '+86-20-3814-5000' },
+        { flag: '🇦🇺', name: 'Australian Consulate', phone: '+86-20-3814-0111' },
+        { flag: '🇯🇵', name: 'Japanese Consulate', phone: '+86-20-8334-3009' },
+      ],
+    },
+    {
+      city: 'Chengdu',
+      entries: [
+        { flag: '🇺🇸', name: 'US Consulate', phone: '+86-28-8558-3992' },
+        { flag: '🇩🇪', name: 'German Consulate', phone: '+86-28-8528-0800' },
+      ],
+    },
+  ],
+  guides: [
+    {
+      icon: '🚔',
+      title: 'How to Call Police (110)',
+      steps: [
+        'Dial 110 — available 24/7 nationwide.',
+        'Say "English please" — some operators can assist or transfer.',
+        'State your location first (street name, landmark, hotel name).',
+        'If you can\'t speak, send an SMS to 110 in some cities.',
+        'Stay on the line until help arrives.',
+      ],
+    },
+    {
+      icon: '🚑',
+      title: 'How to Call an Ambulance (120)',
+      steps: [
+        'Dial 120 immediately.',
+        'Give your exact address — use a nearby landmark if unsure.',
+        'Describe the emergency briefly (chest pain, unconscious, etc.).',
+        'Send someone to the street to guide the ambulance.',
+        'Keep the patient still and warm while waiting.',
+      ],
+    },
+    {
+      icon: '🏛️',
+      title: 'How to Contact Your Embassy',
+      steps: [
+        'Call the embassy number for your country (see list below).',
+        'For passport loss: report to police (110) first, get a report number.',
+        'For detention: you have the right to contact your embassy — insist on it.',
+        'For medical emergency: embassy can provide a list of English-speaking doctors.',
+        'After hours: most embassies have a 24/7 duty officer — press 0 or follow prompts.',
+      ],
+    },
+  ],
+  phrases: [
+    { chinese: '救命！', pinyin: 'Jiù mìng!', english: 'Help! / Save me!' },
+    { chinese: '报警！', pinyin: 'Bào jǐng!', english: 'Call the police!' },
+    { chinese: '叫救护车！', pinyin: 'Jiào jiùhùchē!', english: 'Call an ambulance!' },
+    { chinese: '我需要医生。', pinyin: 'Wǒ xūyào yīshēng.', english: 'I need a doctor.' },
+    { chinese: '我迷路了。', pinyin: 'Wǒ mílù le.', english: 'I am lost.' },
+    { chinese: '我的护照丢了。', pinyin: 'Wǒ de hùzhào diū le.', english: 'My passport is lost.' },
+    { chinese: '请说英语。', pinyin: 'Qǐng shuō Yīngyǔ.', english: 'Please speak English.' },
+    { chinese: '这里是哪里？', pinyin: 'Zhèlǐ shì nǎlǐ?', english: 'Where is this place?' },
+  ],
+};
