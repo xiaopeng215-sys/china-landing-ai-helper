@@ -10,7 +10,7 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://china-ai-helper.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.travelerlocal.ai';
 
 export const metadata: Metadata = {
   // SEO
