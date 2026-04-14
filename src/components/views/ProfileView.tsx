@@ -10,9 +10,9 @@ export default function ProfileView() {
 
   const settings = [
     { icon: '👤', labelKey: 'ProfileViewPage.account', valueKey: 'ProfileViewPage.notLoggedIn', showArrow: true, onClick: () => router.push('/auth/signin?callbackUrl=/profile') },
-    { icon: '🌐', labelKey: 'ProfileViewPage.language', valueKey: 'ProfileViewPage.language', showArrow: true, onClick: () => {} },
-    { icon: '🔔', labelKey: 'ProfileViewPage.notifications', valueKey: 'ProfileViewPage.notificationsOn', showArrow: true, onClick: () => {} },
-    { icon: '🎨', labelKey: 'ProfileViewPage.theme', valueKey: 'ProfileViewPage.themeLight', showArrow: true, onClick: () => {} },
+    { icon: '🌐', labelKey: 'ProfileViewPage.language', valueKey: 'ProfileViewPage.language', showArrow: true, onClick: () => alert('Language settings coming soon!') },
+    { icon: '🔔', labelKey: 'ProfileViewPage.notifications', valueKey: 'ProfileViewPage.notificationsOn', showArrow: true, onClick: () => alert('Notification settings coming soon!') },
+    { icon: '🎨', labelKey: 'ProfileViewPage.theme', valueKey: 'ProfileViewPage.themeLight', showArrow: true, onClick: () => alert('Theme settings coming soon!') },
   ];
 
   const support = [
@@ -103,6 +103,8 @@ export default function ProfileView() {
                 onClick={() => {
                   if (item.labelKey === 'ProfileViewPage.privacyPolicy') router.push('/privacy');
                   else if (item.labelKey === 'ProfileViewPage.contactUs') window.open('mailto:support@travelerlocal.ai');
+                  else if (item.labelKey === 'ProfileViewPage.helpCenter') window.open('https://travelerlocal.ai/help', '_blank', 'noopener,noreferrer');
+                  else if (item.labelKey === 'ProfileViewPage.rateApp') window.open('https://apps.apple.com', '_blank', 'noopener,noreferrer');
                 }}
                 className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 active:bg-gray-100 transition-all cursor-pointer"
               >

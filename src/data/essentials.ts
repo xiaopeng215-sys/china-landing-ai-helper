@@ -90,6 +90,11 @@ export const ESSENTIALS_DATA: Record<string, EssentialSection> = {
         title: 'Top up & pay',
         description: 'You can now scan QR codes at shops, restaurants, and transit. Most places accept Alipay.',
       },
+      {
+        step: 5,
+        title: 'Set spending limit → ready to scan & pay!',
+        description: 'Set a spending limit in Alipay settings for security. ⚠️ Tip: Carry ¥200–500 cash as backup — some small vendors are cash-only.',
+      },
     ],
     tips: [
       {
@@ -144,6 +149,26 @@ export const ESSENTIALS_DATA: Record<string, EssentialSection> = {
       },
     ],
     tips: [
+      {
+        icon: '🇨🇳',
+        title: 'China Unicom Tourist SIM',
+        content: '¥99/30 days, 10GB data + calls. Available at airport counters and official stores. Show your passport to register.',
+      },
+      {
+        icon: '📱',
+        title: 'Airalo eSIM',
+        content: '~$15/5GB, instant activation before departure. Download the Airalo app and activate your eSIM before boarding.',
+      },
+      {
+        icon: '🌐',
+        title: 'Nomad eSIM',
+        content: '~$18/10GB, good China coverage. Activate instantly via the Nomad app before you arrive.',
+      },
+      {
+        icon: '💡',
+        title: 'Pro Tip: Buy eSIM BEFORE Arriving',
+        content: 'Airport SIM queues can be 30+ min. Buy and activate an eSIM before departure for instant connectivity on landing.',
+      },
       {
         icon: '📡',
         title: 'China Mobile',
@@ -204,7 +229,7 @@ export const ESSENTIALS_DATA: Record<string, EssentialSection> = {
       {
         icon: '✅',
         title: 'Recommended VPNs',
-        content: 'ExpressVPN, NordVPN, Astrill, and Surfshark have good track records in China. Astrill is often most reliable. Prices: $5–$15/month.',
+        content: 'ExpressVPN — Most reliable in China, ~$8.32/month | NordVPN — Good value, ~$3.99/month | Astrill — Optimized for China, ~$10/month | ⚠️ CRITICAL: Download & test VPN BEFORE entering China. Cannot download inside China.',
       },
       {
         icon: '🚫',

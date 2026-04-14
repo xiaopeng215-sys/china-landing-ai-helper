@@ -38,7 +38,9 @@ export function ChatInput({ inputValue, isTyping, onSend, onChange, onSubmit }: 
           />
           <button
             type="button"
+            onClick={() => alert('Voice input coming soon!')}
             className="absolute right-3 bottom-3 text-[#767676] hover:text-[#ff5a5f]"
+            title="Voice input (coming soon)"
           >
             <Mic className="w-5 h-5" />
           </button>

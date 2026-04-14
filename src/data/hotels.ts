@@ -236,6 +236,44 @@ export const hotels: Hotel[] = [
     tripcomUrl: AFFILIATE_URL,
   },
 
+  // ── Xi'an (additional) ──────────────────────────────────
+  {
+    id: 'xa-7',
+    name: 'Grand Hyatt Xi\'an',
+    city: "Xi'an",
+    cityKey: 'xian',
+    stars: 5,
+    priceRange: 'luxury',
+    pricePerNight: '¥1,600/night',
+    highlights: ['Modern', 'Pool', 'Near Big Wild Goose Pagoda'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+  {
+    id: 'xa-8',
+    name: "Hilton Xi'an",
+    city: "Xi'an",
+    cityKey: 'xian',
+    stars: 5,
+    priceRange: 'luxury',
+    pricePerNight: '¥1,400/night',
+    highlights: ['Business', 'Spa', 'Multiple Restaurants'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+  {
+    id: 'xa-9',
+    name: 'Mercure Xi\'an on Renmin Square',
+    city: "Xi'an",
+    cityKey: 'xian',
+    stars: 4,
+    priceRange: 'mid-range',
+    pricePerNight: '¥580/night',
+    highlights: ['Central', 'Near Bell Tower', 'Free WiFi'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+
   // ── Xi'an ────────────────────────────────────────────────
   {
     id: 'xa-1',
@@ -384,6 +422,56 @@ export const hotels: Hotel[] = [
     tripcomUrl: AFFILIATE_URL,
   },
 
+  // ── Hangzhou ─────────────────────────────────────────────
+  {
+    id: 'hz-1',
+    name: 'Four Seasons Hotel Hangzhou at West Lake',
+    city: 'Hangzhou',
+    cityKey: 'hangzhou',
+    stars: 5,
+    priceRange: 'luxury',
+    pricePerNight: '¥3,200/night',
+    highlights: ['West Lake View', 'Spa', 'Fine Dining'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+  {
+    id: 'hz-2',
+    name: 'Hyatt Regency Hangzhou',
+    city: 'Hangzhou',
+    cityKey: 'hangzhou',
+    stars: 5,
+    priceRange: 'luxury',
+    pricePerNight: '¥1,800/night',
+    highlights: ['City Center', 'Pool', 'Business Center'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+  {
+    id: 'hz-3',
+    name: 'Banyan Tree Hangzhou',
+    city: 'Hangzhou',
+    cityKey: 'hangzhou',
+    stars: 5,
+    priceRange: 'luxury',
+    pricePerNight: '¥2,800/night',
+    highlights: ['Wetland View', 'Spa', 'Private Pool'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+  {
+    id: 'hz-4',
+    name: 'Novotel Hangzhou',
+    city: 'Hangzhou',
+    cityKey: 'hangzhou',
+    stars: 4,
+    priceRange: 'mid-range',
+    pricePerNight: '¥680/night',
+    highlights: ['Modern', 'Near Metro', 'Free WiFi'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+
   // ── Guangzhou ────────────────────────────────────────────
   {
     id: 'gz-1',
@@ -457,6 +545,56 @@ export const hotels: Hotel[] = [
     foreignFriendly: true,
     tripcomUrl: AFFILIATE_URL,
   },
+
+  // ── Xiamen ───────────────────────────────────────────────
+  {
+    id: 'xm-1',
+    name: 'Mandarin Oriental Xiamen',
+    city: 'Xiamen',
+    cityKey: 'xiamen',
+    stars: 5,
+    priceRange: 'luxury',
+    pricePerNight: '¥2,800/night',
+    highlights: ['Sea View', 'Infinity Pool', 'Luxury Spa'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+  {
+    id: 'xm-2',
+    name: 'Hyatt Regency Xiamen Wuyuanwan',
+    city: 'Xiamen',
+    cityKey: 'xiamen',
+    stars: 5,
+    priceRange: 'luxury',
+    pricePerNight: '¥1,500/night',
+    highlights: ['Marina View', 'Pool', 'Tennis'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+  {
+    id: 'xm-3',
+    name: 'Crowne Plaza Xiamen',
+    city: 'Xiamen',
+    cityKey: 'xiamen',
+    stars: 5,
+    priceRange: 'luxury',
+    pricePerNight: '¥1,200/night',
+    highlights: ['Business', 'Near Zhongshan Road', 'Spa'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
+  {
+    id: 'xm-4',
+    name: 'Holiday Inn Express Xiamen City Centre',
+    city: 'Xiamen',
+    cityKey: 'xiamen',
+    stars: 4,
+    priceRange: 'mid-range',
+    pricePerNight: '¥580/night',
+    highlights: ['Budget Friendly', 'Near Metro', 'Free Breakfast'],
+    foreignFriendly: true,
+    tripcomUrl: AFFILIATE_URL,
+  },
 ];
 
 export const CITIES = [
@@ -466,6 +604,8 @@ export const CITIES = [
   { key: 'xian', label: "Xi'an" },
   { key: 'guilin', label: 'Guilin' },
   { key: 'guangzhou', label: 'Guangzhou' },
+  { key: 'hangzhou', label: 'Hangzhou 🏯' },
+  { key: 'xiamen', label: 'Xiamen 🌊' },
 ] as const;
 
 export type CityKey = typeof CITIES[number]['key'];
