@@ -12,6 +12,7 @@ const LOCALE_FLAGS: Record<Locale, string> = {
   'ja-JP': '🇯🇵',
   'es-ES': '🇪🇸',
   'pt-BR': '🇧🇷',
+  'ar-SA': '🇸🇦',
 };
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -22,6 +23,7 @@ const LOCALE_LABELS: Record<Locale, string> = {
   'ja-JP': '日本語',
   'es-ES': 'Español',
   'pt-BR': 'Português',
+  'ar-SA': 'العربية',
 };
 
 interface LanguageSwitcherProps {
