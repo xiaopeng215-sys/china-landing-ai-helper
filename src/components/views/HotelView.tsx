@@ -1,0 +1,162 @@
+"use client";
+
+import React, { useState, useMemo } from "react";
+import { hotels, CITIES } from "@/data/hotels";
+import type { CityKey } from "@/data/hotels";
+
+type PriceFilter = 'all' | 'budget' | 'mid-range' | 'luxury';
+
+const PRICE_FILTERS: { key: PriceFilter; label: string; emoji: string }[] = [
+  { key: 'all', label: 'All', emoji: '🏨' },
+  { key: 'budget', label: 'Budget', emoji: '💰' },
+  { key: 'mid-range', label: 'Mid-range', emoji: '⭐' },
+  { key: 'luxury', label: 'Luxury', emoji: '👑' },
+];
+
+function StarRating({ stars }: { stars: number }) {
+  return (
+    <span className="text-amber-400 text-sm" aria-label={`${stars} stars`}>
+      {'★'.repeat(stars)}{'☆'.repeat(5 - stars)}
+    </span>
+  );
+}
+
+export default function HotelView() {
+  const [activeCity, setActiveCity] = useState<CityKey>('beijing');
+  const [priceFilter, setPriceFilter] = useState<PriceFilter>('all');
+
+  const filtered = useMemo(() => {
+    return hotels.filter(
+      (h) =>
+        h.cityKey === activeCity &&
+        (priceFilter === 'all' || h.priceRange === priceFilter)
+    );
+  }, [activeCity, priceFilter]);
+
+  return (
+    <div className="pb-20 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-4 pt-6 pb-4">
+        <h1 className="text-white text-2xl font-bold">🏨 Hotel Booking</h1>
+        <p className="text-orange-100 text-sm mt-1">
+          Foreign-friendly hotels · Book via Trip.com
+        </p>
+      </div>
+
+      {/* City Tabs */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="flex overflow-x-auto scrollbar-hide px-2 py-2 gap-2">
+          {CITIES.map((city) => (
+            <button
+              key={city.key}
+              onClick={() => setActiveCity(city.key)}
+              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                activeCity === city.key
+                  ? 'bg-orange-500 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-orange-50 hover:text-orange-600'
+              }`}
+            >
+              {city.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Price Filter */}
+      <div className="px-4 py-3 flex gap-2 overflow-x-auto scrollbar-hide">
+        {PRICE_FILTERS.map((f) => (
+          <button
+            key={f.key}
+            onClick={() => setPriceFilter(f.key)}
+            className={`flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+              priceFilter === f.key
+                ? 'bg-orange-500 text-white border-orange-500'
+                : 'bg-white text-gray-600 border-gray-200 hover:border-orange-300'
+            }`}
+          >
+            <span>{f.emoji}</span>
+            <span>{f.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Hotel Cards */}
+      <div className="px-4 pb-4 flex flex-col gap-3">
+        {filtered.length === 0 ? (
+          <div className="text-center py-12 text-gray-400">
+            <div className="text-4xl mb-2">🏨</div>
+            <p>No hotels found for this filter.</p>
+          </div>
+        ) : (
+          filtered.map((hotel) => (
+            <div
+              key={hotel.id}
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+            >
+              {/* Card Header */}
+              <div className="bg-gradient-to-r from-orange-50 to-amber-50 px-4 py-3 flex items-start justify-between">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 text-base leading-tight">
+                    {hotel.name}
+                  </h3>
+                  <div className="mt-0.5">
+                    <StarRating stars={hotel.stars} />
+                  </div>
+                </div>
+                <span
+                  className={`ml-2 flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${
+                    hotel.priceRange === 'luxury'
+                      ? 'bg-purple-100 text-purple-700'
+                      : hotel.priceRange === 'mid-range'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'bg-green-100 text-green-700'
+                  }`}
+                >
+                  {hotel.priceRange === 'mid-range' ? 'Mid-range' : hotel.priceRange.charAt(0).toUpperCase() + hotel.priceRange.slice(1)}
+                </span>
+              </div>
+
+              {/* Card Body */}
+              <div className="px-4 py-3">
+                {/* Price */}
+                <div className="flex items-center gap-1 mb-3">
+                  <span className="text-orange-600 font-bold text-lg">
+                    {hotel.pricePerNight}
+                  </span>
+                  <span className="text-gray-400 text-sm">/ night</span>
+                </div>
+
+                {/* Highlights */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {hotel.highlights.map((h) => (
+                    <span
+                      key={h}
+                      className="bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded-full border border-orange-100"
+                    >
+                      ✓ {h}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Book Now Button */}
+                <a
+                  href={hotel.tripcomUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-center bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+                >
+                  Book Now on Trip.com →
+                </a>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Affiliate Disclosure */}
+      <p className="text-center text-xs text-gray-400 px-4 pb-4">
+        Booking links are affiliate links. Prices are approximate.
+      </p>
+    </div>
+  );
+}
