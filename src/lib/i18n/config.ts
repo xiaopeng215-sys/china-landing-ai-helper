@@ -2,7 +2,7 @@ import {getRequestConfig} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 
 // 支持的语言列表（按产品要求：EN / 中文 / 한국어 / 日本語）
-export const locales = ['en-US', 'zh-CN', 'ko-KR', 'ja-JP'] as const;
+export const locales = ['en-US', 'zh-CN', 'zh-TW', 'ko-KR', 'ja-JP'] as const;
 export type Locale = (typeof locales)[number];
 
 // 默认语言
@@ -12,6 +12,7 @@ export const defaultLocale: Locale = 'en-US';
 export const localeNames: Record<Locale, string> = {
   'en-US': 'English',
   'zh-CN': '中文',
+  'zh-TW': '繁體中文',
   'ko-KR': '한국어',
   'ja-JP': '日本語'
 };
@@ -20,6 +21,7 @@ export const localeNames: Record<Locale, string> = {
 export const localeSwitchLabels: Record<Locale, string> = {
   'en-US': 'EN',
   'zh-CN': '中文',
+  'zh-TW': '繁體',
   'ko-KR': '한국어',
   'ja-JP': '日本語',
 };

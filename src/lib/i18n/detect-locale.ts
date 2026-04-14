@@ -4,12 +4,15 @@
  */
 
 const LOCALE_STORAGE_KEY = 'preferred-locale';
-const SUPPORTED_LOCALES = ['en-US', 'zh-CN', 'ko-KR', 'ja-JP'] as const;
+const SUPPORTED_LOCALES = ['en-US', 'zh-CN', 'zh-TW', 'ko-KR', 'ja-JP'] as const;
 
 const COUNTRY_LOCALE_MAP: Record<string, string> = {
   KR: 'ko-KR',
   JP: 'ja-JP',
   CN: 'zh-CN',
+  TW: 'zh-TW',
+  HK: 'zh-TW',
+  MO: 'zh-TW',
 };
 
 export async function detectLocaleFromIP(): Promise<string> {

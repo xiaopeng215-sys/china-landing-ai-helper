@@ -7,6 +7,7 @@ import { locales, type Locale } from '@/lib/i18n/config';
 const LOCALE_FLAGS: Record<Locale, string> = {
   'en-US': '🇺🇸',
   'zh-CN': '🇨🇳',
+  'zh-TW': '🇹🇼',
   'ko-KR': '🇰🇷',
   'ja-JP': '🇯🇵',
 };
@@ -14,6 +15,7 @@ const LOCALE_FLAGS: Record<Locale, string> = {
 const LOCALE_LABELS: Record<Locale, string> = {
   'en-US': 'English',
   'zh-CN': '中文',
+  'zh-TW': '繁體中文',
   'ko-KR': '한국어',
   'ja-JP': '日本語',
 };
