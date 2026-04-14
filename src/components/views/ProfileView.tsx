@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { useClientI18n } from '@/lib/i18n/client';
 
 export default function ProfileView() {
   const { t } = useClientI18n();
+  const router = useRouter();
 
   const settings = [
     { icon: '👤', labelKey: 'ProfileViewPage.account', valueKey: 'ProfileViewPage.notLoggedIn', showArrow: true },
@@ -42,7 +44,10 @@ export default function ProfileView() {
               <h2 className="text-xl font-bold">{t('ProfileViewPage.guestUser')}</h2>
               <p className="text-white/80 text-sm">{t('ProfileViewPage.guestDesc')}</p>
             </div>
-            <button className="px-4 py-2 bg-white text-[#ff5a5f] rounded-xl font-semibold text-sm hover:bg-white/90 transition-all">
+            <button
+              onClick={() => router.push('/auth/signin?callbackUrl=/profile')}
+              className="px-4 py-2 bg-white text-[#ff5a5f] rounded-xl font-semibold text-sm hover:bg-white/90 transition-all"
+            >
               {t('ProfileViewPage.signIn')}
             </button>
           </div>
