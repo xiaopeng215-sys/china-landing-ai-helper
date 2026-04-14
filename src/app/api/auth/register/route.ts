@@ -51,24 +51,28 @@ export async function POST(request: NextRequest) {
 
     // 速率限制
     if (ratelimit) {
-      const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
-      const { success, limit, reset, remaining } = await ratelimit.limit(ip);
-      if (!success) {
-        return NextResponse.json(
-          {
-            error: 'Too many registration attempts. Please try again later.',
-            retryAfter: Math.ceil((reset - Date.now()) / 1000),
-          },
-          {
-            status: 429,
-            headers: {
-              'X-RateLimit-Limit': limit.toString(),
-              'X-RateLimit-Remaining': remaining.toString(),
-              'X-RateLimit-Reset': reset.toString(),
-              'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
+      try {
+        const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+        const { success, limit, reset, remaining } = await ratelimit.limit(ip);
+        if (!success) {
+          return NextResponse.json(
+            {
+              error: 'Too many registration attempts. Please try again later.',
+              retryAfter: Math.ceil((reset - Date.now()) / 1000),
             },
-          }
-        );
+            {
+              status: 429,
+              headers: {
+                'X-RateLimit-Limit': limit.toString(),
+                'X-RateLimit-Remaining': remaining.toString(),
+                'X-RateLimit-Reset': reset.toString(),
+                'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
+              },
+            }
+          );
+        }
+      } catch (rateLimitError) {
+        console.warn('速率限制检查失败，跳过:', rateLimitError);
       }
     }
 
