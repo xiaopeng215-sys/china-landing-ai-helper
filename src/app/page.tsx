@@ -181,7 +181,7 @@ export default function Home() {
               <p className="text-xs opacity-90 mb-3">&ldquo;I&apos;m landing in Shanghai tomorrow, what should I do first?&rdquo;</p>
               <button
                 onClick={handleHeroCtaClick}
-                className="inline-block bg-white text-teal-600 font-semibold text-sm px-4 py-2 rounded-xl"
+                className="inline-block bg-amber-400 hover:bg-amber-500 text-white font-semibold text-sm px-4 py-2 rounded-xl transition-colors"
               >
                 Ask AI Now →
               </button>

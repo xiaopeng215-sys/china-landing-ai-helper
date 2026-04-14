@@ -93,7 +93,7 @@ export default function HeroSection({
         {/* CTA 按钮 */}
         <button
           onClick={onCtaClick}
-          className="group relative px-8 py-4 bg-white text-teal-700 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-out transform hover:scale-105 active:scale-95 animate-fade-in animation-delay-400"
+          className="group relative px-8 py-4 bg-amber-400 text-white font-semibold rounded-full shadow-lg hover:bg-amber-500 hover:shadow-xl transition-all duration-300 ease-out transform hover:scale-105 active:scale-95 animate-fade-in animation-delay-400"
           aria-label={ctaText}
         >
           <span className="flex items-center gap-2">

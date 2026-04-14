@@ -6,6 +6,8 @@
 :root {
   --primary-color: #0D9488;
   --primary-gradient: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+  --accent-cta: #FBBF24;          /* amber-400: CTA 按钮专用，温暖行动色 */
+  --accent-cta-hover: #F59E0B;    /* amber-500: CTA hover 状态 */
   --text-primary: #484848;
   --text-secondary: #767676;
   --bg-primary: #ffffff;

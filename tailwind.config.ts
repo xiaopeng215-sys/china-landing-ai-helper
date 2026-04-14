@@ -16,8 +16,8 @@ const config: Config = {
           primary: '#0D9488',       // teal-600
           'primary-dark': '#0F766E', // teal-700
           'primary-light': '#CCFBF1', // teal-100
-          accent: '#F97316',         // orange-500（保留CTA用）
-          'accent-dark': '#EA580C',  // orange-600
+          accent: '#FBBF24',         // amber-400（CTA按钮，温暖行动色）
+          'accent-dark': '#F59E0B',  // amber-500（hover状态）
         },
         primary: {
           50: "#f0fdfa",
