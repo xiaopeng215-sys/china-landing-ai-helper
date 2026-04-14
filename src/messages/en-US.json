@@ -454,5 +454,20 @@
     "themeDark": "Dark",
     "notificationsOn": "On",
     "notificationsOff": "Off"
+  },
+  "OfflinePage": {
+    "titleOnline": "🎉 Back Online",
+    "titleOffline": "📡 Offline Mode",
+    "messageOnline": "Connection restored, redirecting...",
+    "messageOffline": "No network connection. Please check your network settings.",
+    "statusOnline": "✅ Connected",
+    "statusOffline": "❌ Disconnected",
+    "tips": "💡 Tips",
+    "tip1": "Some cached content is still available",
+    "tip2": "Check your Wi-Fi or mobile data settings",
+    "tip3": "Try refreshing the page to reconnect",
+    "tip4": "Toggle airplane mode to reset your connection",
+    "retry": "🔄 Retry",
+    "goHome": "🏠 Go Home"
   }
 }

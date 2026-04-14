@@ -477,5 +477,20 @@
     "themeDark": "다크",
     "notificationsOn": "켜짐",
     "notificationsOff": "꺼짐"
+  },
+  "OfflinePage": {
+    "titleOnline": "🎉 연결 복구됨",
+    "titleOffline": "📡 오프라인 모드",
+    "messageOnline": "네트워크 연결이 복구되었습니다. 리디렉션 중...",
+    "messageOffline": "네트워크에 연결할 수 없습니다. 네트워크 설정을 확인하세요.",
+    "statusOnline": "✅ 연결됨",
+    "statusOffline": "❌ 연결 안 됨",
+    "tips": "💡 팁",
+    "tip1": "일부 캐시된 콘텐츠는 계속 볼 수 있습니다",
+    "tip2": "Wi-Fi 또는 모바일 데이터 설정을 확인하세요",
+    "tip3": "페이지를 새로 고침하여 재연결해 보세요",
+    "tip4": "비행기 모드를 켰다 끄면 연결을 재설정할 수 있습니다",
+    "retry": "🔄 재시도",
+    "goHome": "🏠 홈으로"
   }
 }

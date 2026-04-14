@@ -477,5 +477,20 @@
     "themeDark": "ダーク",
     "notificationsOn": "オン",
     "notificationsOff": "オフ"
+  },
+  "OfflinePage": {
+    "titleOnline": "🎉 接続が回復しました",
+    "titleOffline": "📡 オフラインモード",
+    "messageOnline": "ネットワーク接続が回復しました。リダイレクト中...",
+    "messageOffline": "ネットワークに接続できません。ネットワーク設定を確認してください。",
+    "statusOnline": "✅ 接続済み",
+    "statusOffline": "❌ 未接続",
+    "tips": "💡 ヒント",
+    "tip1": "キャッシュされたコンテンツは引き続き閲覧できます",
+    "tip2": "Wi-Fiまたはモバイルデータの設定を確認してください",
+    "tip3": "ページを更新して再接続してみてください",
+    "tip4": "機内モードをオン/オフして接続をリセットできます",
+    "retry": "🔄 再試行",
+    "goHome": "🏠 ホームへ"
   }
 }

@@ -527,5 +527,20 @@
     "themeDark": "深色",
     "notificationsOn": "开启",
     "notificationsOff": "关闭"
+  },
+  "OfflinePage": {
+    "titleOnline": "🎉 已恢复连接",
+    "titleOffline": "📡 离线模式",
+    "messageOnline": "网络连接已恢复，正在返回...",
+    "messageOffline": "当前无法连接到网络，请检查您的网络连接",
+    "statusOnline": "✅ 已连接",
+    "statusOffline": "❌ 未连接",
+    "tips": "💡 小贴士",
+    "tip1": "部分已缓存的内容仍可浏览",
+    "tip2": "检查 Wi-Fi 或移动数据设置",
+    "tip3": "尝试刷新页面重新连接",
+    "tip4": "开启飞行模式后关闭可快速重置网络",
+    "retry": "🔄 重试连接",
+    "goHome": "🏠 返回首页"
   }
 }

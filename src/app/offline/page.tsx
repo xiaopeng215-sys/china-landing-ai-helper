@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useClientI18n } from '@/lib/i18n/client';
 
 export default function OfflinePage() {
   const router = useRouter();
+  const { t } = useClientI18n();
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
@@ -65,14 +67,14 @@ export default function OfflinePage() {
 
         {/* Title */}
         <h1 className="text-3xl font-bold text-[#484848] mb-4 animate-slide-up">
-          {isOnline ? '🎉 已恢复连接' : '📡 离线模式'}
+          {isOnline ? t('OfflinePage.titleOnline') : t('OfflinePage.titleOffline')}
         </h1>
 
         {/* Message */}
         <p className="text-[#767676] text-lg mb-8 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          {isOnline 
-            ? '网络连接已恢复，正在返回...' 
-            : '当前无法连接到网络，请检查您的网络连接'}
+          {isOnline
+            ? t('OfflinePage.messageOnline')
+            : t('OfflinePage.messageOffline')}
         </p>
 
         {/* Status Indicator */}
@@ -86,7 +88,7 @@ export default function OfflinePage() {
               isOnline ? 'bg-green-500' : 'bg-red-500'
             } animate-pulse`} />
             <span className="text-base font-bold">
-              {isOnline ? '✅ 已连接' : '❌ 未连接'}
+              {isOnline ? t('OfflinePage.statusOnline') : t('OfflinePage.statusOffline')}
             </span>
           </div>
         </div>
@@ -94,25 +96,24 @@ export default function OfflinePage() {
         {/* Tips */}
         <div className="bg-white rounded-2xl shadow-md p-6 text-left animate-slide-up" style={{ animationDelay: '0.3s' }}>
           <h3 className="font-bold text-[#484848] mb-3 flex items-center gap-2">
-            <span className="text-xl">💡</span>
-            小贴士
+            {t('OfflinePage.tips')}
           </h3>
           <ul className="space-y-3 text-sm text-[#767676]">
             <li className="flex items-start gap-3 stagger-item">
               <span className="text-[#ff5a5f] font-bold">✓</span>
-              <span>部分已缓存的内容仍可浏览</span>
+              <span>{t('OfflinePage.tip1')}</span>
             </li>
             <li className="flex items-start gap-3 stagger-item">
               <span className="text-[#ff5a5f] font-bold">✓</span>
-              <span>检查 Wi-Fi 或移动数据设置</span>
+              <span>{t('OfflinePage.tip2')}</span>
             </li>
             <li className="flex items-start gap-3 stagger-item">
               <span className="text-[#ff5a5f] font-bold">✓</span>
-              <span>尝试刷新页面重新连接</span>
+              <span>{t('OfflinePage.tip3')}</span>
             </li>
             <li className="flex items-start gap-3 stagger-item">
               <span className="text-[#ff5a5f] font-bold">✓</span>
-              <span>开启飞行模式后关闭可快速重置网络</span>
+              <span>{t('OfflinePage.tip4')}</span>
             </li>
           </ul>
         </div>
@@ -123,7 +124,7 @@ export default function OfflinePage() {
             onClick={() => window.location.reload()}
             className="mt-6 px-8 py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover-lift tap-feedback animate-bounce-in"
           >
-            🔄 重试连接
+            {t('OfflinePage.retry')}
           </button>
         )}
 
@@ -132,7 +133,7 @@ export default function OfflinePage() {
           onClick={() => router.push('/')}
           className="mt-4 px-8 py-3 bg-gray-100 text-[#767676] rounded-xl font-semibold hover:bg-gray-200 transition-all hover-lift tap-feedback"
         >
-          🏠 返回首页
+          {t('OfflinePage.goHome')}
         </button>
       </div>
     </div>

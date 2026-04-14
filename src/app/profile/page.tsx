@@ -468,7 +468,7 @@ export default function ProfilePage() {
                   <span className="text-5xl">{currentTier.icon}</span>
                   <div>
                     <h2 className="text-2xl font-bold">{currentTier.name_zh}</h2>
-                    <p className="text-white/80">等级 {currentTier.level} · {userMembership?.status === 'active' ? t('ProfileRoutePage.membershipActive') : t('ProfileRoutePage.membershipExpired')}</p>
+                    <p className="text-white/80">{t('ProfileRoutePage.membershipLevel')} {currentTier.level} · {userMembership?.status === 'active' ? t('ProfileRoutePage.membershipActive') : t('ProfileRoutePage.membershipExpired')}</p>
                   </div>
                 </div>
                 

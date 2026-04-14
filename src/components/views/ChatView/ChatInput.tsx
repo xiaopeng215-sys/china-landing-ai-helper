@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Send, Mic } from 'lucide-react';
+import { useClientI18n } from '@/lib/i18n/client';
 
 interface ChatInputProps {
   inputValue: string;
@@ -12,6 +13,7 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ inputValue, isTyping, onSend, onChange, onSubmit }: ChatInputProps) {
+  const { t } = useClientI18n();
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();

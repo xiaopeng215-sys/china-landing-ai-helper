@@ -5,7 +5,6 @@ import { Calendar, DollarSign, Star } from 'lucide-react';
 import { useClientI18n } from '@/lib/i18n/client';
 import type { ItineraryRoute } from '@/lib/itineraries';
 import ActivityItem from './ActivityItem';
-import { useClientI18n } from '@/lib/i18n/client';
 
 interface TripDetailModalProps {
   trip: ItineraryRoute;
