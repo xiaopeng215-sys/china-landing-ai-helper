@@ -21,7 +21,7 @@ export default function ChatView() {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [showSessionList, setShowSessionList] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<AIModel>('qwen');
+  const [selectedModel, setSelectedModel] = useState<AIModel>('minimax');
   const [showModelSelector, setShowModelSelector] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -212,41 +212,55 @@ export default function ChatView() {
 
   const handleQuickQuestion = (question: string) => {
     setInputValue(question);
-    // slight delay so state updates before send
-    setTimeout(() => {
-      setInputValue('');
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        type: 'user',
-        role: 'user',
-        content: question,
-        timestamp: new Date().toISOString(),
-      };
-      setMessages(prev => [...prev, userMessage]);
-      setIsTyping(true);
-      fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: question, sessionId: currentSessionId, model: selectedModel }),
+    // Use a ref-based approach to avoid stale closure on inputValue
+    // We pass the question directly to avoid relying on state update timing
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      type: 'user',
+      role: 'user',
+      content: question,
+      timestamp: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsTyping(true);
+
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: question, sessionId: currentSessionId, model: selectedModel }),
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const err = errorData.error;
+          const errorMessage = typeof err === 'string' ? err : (err?.message || `Request failed (${response.status})`);
+          setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), type: 'ai', role: 'assistant', content: `⚠️ ${errorMessage}`, timestamp: new Date().toISOString() }]);
+          return;
+        }
+        const data = await response.json();
+        let content = typeof data.reply === 'string'
+          ? data.reply
+          : (data.reply?.text || data.reply?.content || "Sorry, I couldn't process your request.");
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(),
+          type: 'ai',
+          role: 'assistant',
+          content,
+          timestamp: new Date().toISOString(),
+          recommendations: data.recommendations || [],
+          actions: data.actions || [],
+          images: data.images || [],
+        }]);
+        if (data.sessionId && !currentSessionId) {
+          setCurrentSessionId(data.sessionId);
+          loadSessions();
+        }
       })
-        .then(async (response) => {
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            const err = errorData.error;
-            const errorMessage = typeof err === 'string' ? err : (err?.message || `Request failed (${response.status})`);
-            setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), type: 'ai', role: 'assistant', content: `⚠️ ${errorMessage}`, timestamp: new Date().toISOString() }]);
-            return;
-          }
-          const data = await response.json();
-          let content = typeof data.reply === 'string' ? data.reply : (data.reply?.text || data.reply?.content || "Sorry, I couldn't process your request.");
-          setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), type: 'ai', role: 'assistant', content, timestamp: new Date().toISOString(), recommendations: data.recommendations || [], actions: data.actions || [], images: data.images || [] }]);
-          if (data.sessionId && !currentSessionId) { setCurrentSessionId(data.sessionId); loadSessions(); }
-        })
-        .catch(() => {
-          setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), type: 'ai', role: 'assistant', content: '❌ Failed to send. Please check your connection.', timestamp: new Date().toISOString() }]);
-        })
-        .finally(() => setIsTyping(false));
-    }, 0);
+      .catch(() => {
+        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), type: 'ai', role: 'assistant', content: '❌ Failed to send. Please check your connection.', timestamp: new Date().toISOString() }]);
+      })
+      .finally(() => setIsTyping(false));
   };
 
   const { t } = useClientI18n();
