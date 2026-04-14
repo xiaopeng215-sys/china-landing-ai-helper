@@ -2,7 +2,7 @@
 import React from "react";
 import { useClientI18n } from "@/lib/i18n/client";
 
-type Tab = "chat" | "trips" | "food" | "transport" | "profile";
+type Tab = "chat" | "trips" | "food" | "transport" | "essentials" | "profile";
 
 interface BottomNavProps {
   activeTab: string;
@@ -20,6 +20,7 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
     { id: "trips", label: t("NavBar.trips", "Trips"), icon: "📅" },
     { id: "food", label: t("NavBar.food", "Food"), icon: "🍜" },
     { id: "transport", label: t("NavBar.transport", "Transport"), icon: "🚇" },
+    { id: "essentials", label: t("NavBar.essentials", "Essentials"), icon: "🛡️" },
     { id: "profile", label: t("NavBar.profile", "Profile"), icon: "👤" },
   ];
 
