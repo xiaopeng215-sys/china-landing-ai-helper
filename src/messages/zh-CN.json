@@ -104,7 +104,8 @@
     "emailSignInComingSoon": "邮件登录即将上线，请使用密码登录。",
     "magicLinkDesc": "我们将向您的邮箱发送登录链接",
     "signInWithFacebook": "使用 Facebook 登录",
-    "signInWithOpenAI": "使用 OpenAI 登录"
+    "signInWithOpenAI": "使用 OpenAI 登录",
+    "comingSoon": "即将推出"
   },
   "Common": {
     "loading": "加载中...",

@@ -106,7 +106,8 @@
     "emailSignInComingSoon": "이메일 로그인은 곧 제공됩니다. 비밀번호 로그인을 사용해주세요.",
     "magicLinkDesc": "이메일로 로그인 링크를 보내드립니다",
     "signInWithFacebook": "Facebook으로 로그인",
-    "signInWithOpenAI": "OpenAI로 로그인"
+    "signInWithOpenAI": "OpenAI로 로그인",
+    "comingSoon": "출시 예정"
   },
   "TripsPage": {
     "title": "내 여행",

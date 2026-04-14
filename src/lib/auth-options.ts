@@ -151,8 +151,8 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
     })] : []),
     
-    // OpenAI 登录（仅在配置了有效凭证时启用）
-    ...(isValidConfig(process.env.OPENAI_CLIENT_ID) && isValidConfig(process.env.OPENAI_CLIENT_SECRET) ? [OpenAIProvider] : []),
+    // OpenAI OAuth 暂不支持（OpenAI 未提供公开 OAuth 端点）
+    // ...(isValidConfig(process.env.OPENAI_CLIENT_ID) && isValidConfig(process.env.OPENAI_CLIENT_SECRET) ? [OpenAIProvider] : []),
   ],
   
   // 使用 JWT 模式（无数据库 session）

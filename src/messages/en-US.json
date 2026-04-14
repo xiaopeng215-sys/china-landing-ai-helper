@@ -106,7 +106,8 @@
     "emailSignInComingSoon": "Email sign-in is coming soon. Please use password sign-in.",
     "magicLinkDesc": "We'll send a sign-in link to your email",
     "signInWithFacebook": "Sign in with Facebook",
-    "signInWithOpenAI": "Sign in with OpenAI"
+    "signInWithOpenAI": "Sign in with OpenAI",
+    "comingSoon": "Coming Soon"
   },
   "Common": {
     "loading": "Loading...",

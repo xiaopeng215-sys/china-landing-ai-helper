@@ -106,7 +106,8 @@
     "emailSignInComingSoon": "メールサインインは近日公開予定です。パスワードサインインをご利用ください。",
     "magicLinkDesc": "メールにサインインリンクをお送りします",
     "signInWithFacebook": "Facebookでサインイン",
-    "signInWithOpenAI": "OpenAIでサインイン"
+    "signInWithOpenAI": "OpenAIでサインイン",
+    "comingSoon": "近日公開"
   },
   "TripsPage": {
     "title": "マイトリップ",
