@@ -86,17 +86,22 @@ export default async function middleware(request: NextRequest) {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     
     if (authRatelimit) {
-      const { success, reset } = await authRatelimit.limit(ip);
-      if (!success) {
-        return NextResponse.json(
-          { error: '请求过于频繁，请稍后再试' },
-          { 
-            status: 429,
-            headers: {
-              'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
-            },
-          }
-        );
+      try {
+        const { success, reset } = await authRatelimit.limit(ip);
+        if (!success) {
+          return NextResponse.json(
+            { error: '请求过于频繁，请稍后再试' },
+            { 
+              status: 429,
+              headers: {
+                'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
+              },
+            }
+          );
+        }
+      } catch (e) {
+        // Redis unavailable, skip rate limiting
+        console.warn('[Middleware] Auth rate limit check failed, skipping:', e);
       }
     }
   }
@@ -106,16 +111,21 @@ export default async function middleware(request: NextRequest) {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     
     if (globalRatelimit) {
-      const { success, limit, reset, remaining } = await globalRatelimit.limit(ip);
-      if (!success) {
-        const response = NextResponse.json(
-          { error: '请求过于频繁，请稍后再试' },
-          { status: 429 }
-        );
-        response.headers.set('X-RateLimit-Limit', limit.toString());
-        response.headers.set('X-RateLimit-Remaining', remaining.toString());
-        response.headers.set('X-RateLimit-Reset', reset.toString());
-        return response;
+      try {
+        const { success, limit, reset, remaining } = await globalRatelimit.limit(ip);
+        if (!success) {
+          const response = NextResponse.json(
+            { error: '请求过于频繁，请稍后再试' },
+            { status: 429 }
+          );
+          response.headers.set('X-RateLimit-Limit', limit.toString());
+          response.headers.set('X-RateLimit-Remaining', remaining.toString());
+          response.headers.set('X-RateLimit-Reset', reset.toString());
+          return response;
+        }
+      } catch (e) {
+        // Redis unavailable, skip rate limiting
+        console.warn('[Middleware] Global rate limit check failed, skipping:', e);
       }
     }
     

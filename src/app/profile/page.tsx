@@ -255,7 +255,13 @@ export default function ProfilePage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center animate-bounce-in">
           <div className="w-16 h-16 border-4 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#767676] font-medium">{t('ProfileRoutePage.loading')}</p>
+          <p className="text-[#767676] font-medium mb-4">{t('ProfileRoutePage.loading')}</p>
+          <button
+            onClick={() => router.push('/auth/signin?callbackUrl=/profile')}
+            className="px-6 py-2 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold text-sm hover:shadow-lg transition-all"
+          >
+            Sign In
+          </button>
         </div>
       </div>
     );
