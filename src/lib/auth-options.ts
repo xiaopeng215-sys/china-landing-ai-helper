@@ -1,6 +1,8 @@
 /**
  * NextAuth 配置选项
  * 单独导出以便在其他地方复用
+ *
+ * 注意：providers 列表在每次请求时动态构建，确保运行时环境变量生效
  */
 
 import { NextAuthOptions } from 'next-auth';
@@ -56,21 +58,22 @@ function isValidConfig(value: string | undefined): boolean {
 }
 
 /**
- * NextAuth 配置选项
+ * 动态构建 providers 列表（在请求时执行，确保运行时环境变量生效）
  */
-export const authOptions: NextAuthOptions = {
-  adapter: undefined,
-  
-  providers: [
-    // 邮箱登录（仅在 EMAIL_SERVER 配置了真实值时启用）
-    ...(isValidConfig(process.env.EMAIL_SERVER) && !process.env.EMAIL_SERVER?.includes('your-sendgrid') ? [EmailProvider({
+function buildProviders() {
+  const providers = [];
+
+  // 邮箱登录（仅在 EMAIL_SERVER 配置了真实值时启用）
+  if (isValidConfig(process.env.EMAIL_SERVER) && !process.env.EMAIL_SERVER?.includes('your-sendgrid')) {
+    providers.push(EmailProvider({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM || 'no-reply@travelerlocal.ai',
       maxAge: 24 * 60 * 60,
-    })] : []),
-    
-    // 账号密码登录
-    CredentialsProvider({
+    }));
+  }
+
+  // 账号密码登录（始终启用）
+  providers.push(CredentialsProvider({
       name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
@@ -127,10 +130,11 @@ export const authOptions: NextAuthOptions = {
           avatar: user.avatar,
         };
       },
-    }),
-    
-    // Google 登录（仅在配置了有效凭证时启用）
-    ...(isValidConfig(process.env.GOOGLE_CLIENT_ID) && isValidConfig(process.env.GOOGLE_CLIENT_SECRET) ? [GoogleProvider({
+    }));
+
+  // Google 登录（仅在配置了有效凭证时启用）
+  if (isValidConfig(process.env.GOOGLE_CLIENT_ID) && isValidConfig(process.env.GOOGLE_CLIENT_SECRET)) {
+    providers.push(GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
@@ -140,17 +144,32 @@ export const authOptions: NextAuthOptions = {
           response_type: 'code'
         }
       }
-    })] : []),
-    
-    // Facebook 登录（仅在配置了有效凭证时启用）
-    ...(isValidConfig(process.env.FACEBOOK_CLIENT_ID) && isValidConfig(process.env.FACEBOOK_CLIENT_SECRET) ? [FacebookProvider({
+    }));
+  }
+
+  // Facebook 登录（仅在配置了有效凭证时启用）
+  if (isValidConfig(process.env.FACEBOOK_CLIENT_ID) && isValidConfig(process.env.FACEBOOK_CLIENT_SECRET)) {
+    providers.push(FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-    })] : []),
-    
-    // OpenAI OAuth 暂不支持（OpenAI 未提供公开 OAuth 端点）
-    // ...(isValidConfig(process.env.OPENAI_CLIENT_ID) && isValidConfig(process.env.OPENAI_CLIENT_SECRET) ? [OpenAIProvider] : []),
-  ],
+    }));
+  }
+
+  // OpenAI OAuth 暂不支持（OpenAI 未提供公开 OAuth 端点）
+  // if (isValidConfig(process.env.OPENAI_CLIENT_ID) && isValidConfig(process.env.OPENAI_CLIENT_SECRET)) {
+  //   providers.push(OpenAIProvider);
+  // }
+
+  return providers;
+}
+
+/**
+ * 动态生成 NextAuth 配置选项（每次请求时调用，确保运行时环境变量生效）
+ */
+export function getAuthOptions(): NextAuthOptions {
+  return {
+  adapter: undefined,
+  providers: buildProviders(),
   
   // 使用 JWT 模式（无数据库 session）
   session: {
@@ -243,4 +262,9 @@ export const authOptions: NextAuthOptions = {
   
   // 调试模式 (开发环境启用)
   debug: process.env.NODE_ENV === 'development',
-};
+  };
+}
+
+// 向后兼容：保留 authOptions 导出（注意：这是构建时的快照，生产环境请使用 getAuthOptions()）
+export const authOptions: NextAuthOptions = getAuthOptions();
+

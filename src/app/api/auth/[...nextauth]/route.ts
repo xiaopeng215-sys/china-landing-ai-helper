@@ -6,13 +6,14 @@
  * - 触发 assertConfig 的 MissingAPIRoute 错误 (500)
  *
  * 解决方案：预先解析 params，注入到 req.query 中
+ *
+ * 注意：每次请求时调用 getAuthOptions() 动态构建配置，
+ * 确保运行时环境变量（如 GOOGLE_CLIENT_ID）生效，而非构建时快照。
  */
 
 import NextAuth from 'next-auth';
-import { authOptions } from '@/lib/auth-options';
+import { getAuthOptions } from '@/lib/auth-options';
 import { NextRequest } from 'next/server';
-
-const handler = NextAuth(authOptions);
 
 type RouteContext = {
   params: Promise<{ nextauth: string[] }> | { nextauth: string[] };
@@ -22,6 +23,9 @@ async function authHandler(req: NextRequest, context: RouteContext) {
   // 解析 params（Next.js 15 中 params 是 Promise）
   const params = await Promise.resolve(context.params);
   const nextauth = params?.nextauth;
+
+  // 每次请求动态生成 authOptions，确保运行时环境变量生效
+  const handler = NextAuth(getAuthOptions());
 
   // 将解析后的 nextauth 注入到请求对象
   const patchedReq = Object.assign(req, {
