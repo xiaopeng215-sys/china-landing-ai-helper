@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import HeroSection from "@/components/ui/HeroSection";
+import type { HeroFeature } from "@/components/ui/HeroSection";
 import { useClientI18n } from "@/lib/i18n/client";
 
 // 动态导入 - 按需加载，减少初始包体积
@@ -81,6 +82,12 @@ export default function Home() {
     setShowHero(false);
   };
 
+  const heroFeatures: HeroFeature[] = [
+    { label: "✨ AI Trip Planning", onClick: () => { setActiveTab("trips"); setShowHero(false); } },
+    { label: "🍜 Local Food", onClick: () => { setActiveTab("food"); setShowHero(false); } },
+    { label: "🚇 Transport Guide", onClick: () => { setActiveTab("transport"); setShowHero(false); } },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Hero Section - 仅在 Chat tab 显示 */}
@@ -91,6 +98,7 @@ export default function Home() {
           ctaText={t("HomePage.cta")}
           onCtaClick={handleHeroCtaClick}
           gradient="from-orange-600 to-amber-600"
+          features={heroFeatures}
         />
       )}
       

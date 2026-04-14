@@ -2,6 +2,11 @@
 
 import React from "react";
 
+export interface HeroFeature {
+  label: string;
+  onClick?: () => void;
+}
+
 interface HeroSectionProps {
   title?: string;
   subtitle?: string;
@@ -9,6 +14,7 @@ interface HeroSectionProps {
   onCtaClick?: () => void;
   backgroundImage?: string;
   gradient?: string;
+  features?: HeroFeature[];
 }
 
 /**
@@ -20,13 +26,20 @@ interface HeroSectionProps {
  * - 前端友好：使用 Tailwind CSS，便于实现和维护
  * - 可访问性：WCAG AA 对比度标准
  */
+const DEFAULT_FEATURES: HeroFeature[] = [
+  { label: "✨ AI Trip Planning" },
+  { label: "🍜 Local Food" },
+  { label: "🚇 Transport Guide" },
+];
+
 export default function HeroSection({
-  title = "你的中国旅行 AI 助手",
-  subtitle = "AI 驱动的智能行程规划 · 地道美食推荐 · 交通出行指南",
-  ctaText = "开始探索",
+  title = "Land in China, start from here",
+  subtitle = "AI-powered trip planning · Local food · Transport guide",
+  ctaText = "Start Now",
   onCtaClick,
   backgroundImage,
   gradient = "from-orange-600 to-amber-600",
+  features = DEFAULT_FEATURES,
 }: HeroSectionProps) {
   return (
     <section
@@ -102,17 +115,26 @@ export default function HeroSection({
           </span>
         </button>
 
-        {/* 特性标签 */}
+        {/* Feature tags */}
         <div className="mt-8 flex flex-wrap justify-center gap-3 animate-fade-in animation-delay-600">
-          <span className="px-4 py-2 bg-white/15 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium">
-            ✨ AI 智能规划
-          </span>
-          <span className="px-4 py-2 bg-white/15 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium">
-            🍜 地道美食
-          </span>
-          <span className="px-4 py-2 bg-white/15 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium">
-            🚇 交通指南
-          </span>
+          {features.map((feature, i) => (
+            feature.onClick ? (
+              <button
+                key={i}
+                onClick={feature.onClick}
+                className="px-4 py-2 bg-white/15 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium hover:bg-white/25 transition-colors cursor-pointer"
+              >
+                {feature.label}
+              </button>
+            ) : (
+              <span
+                key={i}
+                className="px-4 py-2 bg-white/15 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium"
+              >
+                {feature.label}
+              </span>
+            )
+          ))}
         </div>
       </div>
 

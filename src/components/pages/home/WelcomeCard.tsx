@@ -9,10 +9,10 @@ interface FeatureItem {
 }
 
 const FEATURES: FeatureItem[] = [
-  { icon: '✈️', text: '智能行程规划', sub: 'AI 定制路线' },
-  { icon: '🍜', text: '地道美食推荐', sub: '本地人最爱' },
-  { icon: '🚇', text: '交通出行指导', sub: '地铁 + 公交' },
-  { icon: '💳', text: '支付实名认证', sub: 'Alipay + WeChat' }
+  { icon: '✈️', text: 'AI Trip Planning', sub: 'Custom routes' },
+  { icon: '🍜', text: 'Local Food', sub: 'Locals\' favorites' },
+  { icon: '🚇', text: 'Transport Guide', sub: 'Metro + Bus' },
+  { icon: '💳', text: 'Payment & ID', sub: 'Alipay + WeChat' }
 ];
 
 export default function WelcomeCard() {
@@ -41,9 +41,9 @@ export default function WelcomeCard() {
             🤖
           </div>
           <div className="flex-1">
-            <h2 className="text-3xl font-bold mb-3 drop-shadow-lg">🇨🇳 欢迎来到中国！</h2>
+            <h2 className="text-3xl font-bold mb-3 drop-shadow-lg">🇨🇳 Welcome to China!</h2>
             <p className="text-white/95 text-lg mb-6 leading-relaxed drop-shadow">
-              我是你的 AI 旅行助手，帮你规划完美行程、发现地道美食、轻松出行
+              I'm your AI travel assistant — helping you plan trips, find local food, and get around with ease.
             </p>
             
             {/* 功能网格 */}
@@ -65,10 +65,10 @@ export default function WelcomeCard() {
             {/* CTA 按钮 */}
             <div className="mt-6 flex gap-3">
               <button className="flex-1 py-4 bg-white text-red-600 rounded-2xl font-bold shadow-lg hover:shadow-xl hover-lift btn-ripple transition-all">
-                🚀 开始规划行程
+                🚀 Start Planning
               </button>
               <button className="px-6 py-4 bg-white/20 glass-effect text-white rounded-2xl font-semibold border border-white/30 hover:bg-white/30 hover-lift btn-ripple transition-all">
-                ▶️ 观看教程
+                ▶️ Watch Tutorial
               </button>
             </div>
           </div>
