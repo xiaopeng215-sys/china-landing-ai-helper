@@ -58,7 +58,7 @@ function SignInForm() {
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-2xl flex items-center justify-center text-4xl shadow-lg mx-auto mb-4" aria-hidden="true">
+          <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center text-4xl shadow-lg mx-auto mb-4" aria-hidden="true">
             🇨🇳
           </div>
           <h1 className="text-2xl font-bold text-[#484848] mb-2">
@@ -77,7 +77,7 @@ function SignInForm() {
               onClick={() => setLoginMethod('password')}
               className={`flex-1 py-2 text-sm font-medium rounded-xl transition-all ${
                 loginMethod === 'password'
-                  ? 'bg-[#ff5a5f] text-white shadow-md'
+                  ? 'bg-teal-600 text-white shadow-md'
                   : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
               }`}
               aria-pressed={loginMethod === 'password'}
@@ -88,7 +88,7 @@ function SignInForm() {
               onClick={() => setLoginMethod('email')}
               className={`flex-1 py-2 text-sm font-medium rounded-xl transition-all ${
                 loginMethod === 'email'
-                  ? 'bg-[#ff5a5f] text-white shadow-md'
+                  ? 'bg-teal-600 text-white shadow-md'
                   : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
               }`}
               aria-pressed={loginMethod === 'email'}
@@ -110,7 +110,7 @@ function SignInForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   placeholder="your@email.com"
                   aria-required="true"
                 />
@@ -121,7 +121,7 @@ function SignInForm() {
                   <label htmlFor="signin-password" className="block text-sm font-medium text-[#484848]">
                     {t('AuthPage.password', 'Password')}
                   </label>
-                  <Link href="/auth/forgot-password" className="text-sm text-[#ff5a5f] hover:underline">
+                  <Link href="/auth/forgot-password" className="text-sm text-teal-600 hover:underline">
                     {t('AuthPage.forgotPassword', 'Forgot password?')}
                   </Link>
                 </div>
@@ -131,7 +131,7 @@ function SignInForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   placeholder="••••••••"
                   aria-required="true"
                 />
@@ -143,7 +143,7 @@ function SignInForm() {
                   id="rememberMe"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 text-[#ff5a5f] border-gray-300 rounded focus:ring-[#ff5a5f]"
+                  className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                 />
                 <label htmlFor="rememberMe" className="text-sm text-[#767676]">
                   {t('AuthPage.rememberMe', 'Remember me (7 days)')}
@@ -153,7 +153,7 @@ function SignInForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? t('Loading.processing', 'Signing in...') : t('AuthPage.signIn', 'Sign In')}
               </button>
@@ -173,7 +173,7 @@ function SignInForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   placeholder="your@email.com"
                   aria-required="true"
                 />
@@ -182,7 +182,7 @@ function SignInForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? t('Loading.processing', 'Sending...') : t('AuthPage.sendMagicLink', 'Send Magic Link')}
               </button>
@@ -243,7 +243,7 @@ function SignInForm() {
           {/* Sign up link */}
           <p className="text-center text-sm text-[#767676] mt-6">
             {t('AuthPage.noAccount', "Don't have an account?")}{' '}
-            <Link href="/auth/signup" className="text-[#ff5a5f] hover:underline font-medium">
+            <Link href="/auth/signup" className="text-teal-600 hover:underline font-medium">
               {t('AuthPage.signUp', 'Sign Up')}
             </Link>
           </p>
@@ -252,11 +252,11 @@ function SignInForm() {
         {/* Footer note */}
         <p className="text-center text-xs text-[#767676] mt-6">
           {t('AuthPage.agreeTerms', 'By signing in, you agree to our')}{' '}
-          <a href="/legal/terms" className="text-[#ff5a5f] hover:underline">
+          <a href="/legal/terms" className="text-teal-600 hover:underline">
             {t('AuthPage.termsOfService', 'Terms of Service')}
           </a>{' '}
           {t('AuthPage.and', 'and')}{' '}
-          <a href="/legal/privacy" className="text-[#ff5a5f] hover:underline">
+          <a href="/legal/privacy" className="text-teal-600 hover:underline">
             {t('AuthPage.privacyPolicy', 'Privacy Policy')}
           </a>
         </p>
@@ -267,7 +267,7 @@ function SignInForm() {
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin" /></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" /></div>}>
       <SignInForm />
     </Suspense>
   );

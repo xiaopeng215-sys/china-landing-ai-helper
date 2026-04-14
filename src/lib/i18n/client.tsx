@@ -53,12 +53,17 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     resolveLocale().then((detected) => {
       const valid = locales.includes(detected as Locale) ? (detected as Locale) : defaultLocale;
       setLocaleState(valid);
+      document.documentElement.dir = valid === 'ar-SA' ? 'rtl' : 'ltr';
+      document.documentElement.lang = valid;
     });
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     saveLocalePreference(newLocale);
+    // RTL support
+    document.documentElement.dir = newLocale === 'ar-SA' ? 'rtl' : 'ltr';
+    document.documentElement.lang = newLocale;
   }, []);
 
   return (

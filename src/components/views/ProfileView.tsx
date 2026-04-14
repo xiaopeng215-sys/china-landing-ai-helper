@@ -35,7 +35,7 @@ export default function ProfileView() {
       {/* Content */}
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
         {/* User Card */}
-        <div className="bg-gradient-to-br from-[#ff5a5f] to-[#ff3b3f] rounded-3xl shadow-xl p-6 text-white">
+        <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-3xl shadow-xl p-6 text-white">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-3xl">
               👤
@@ -46,7 +46,7 @@ export default function ProfileView() {
             </div>
             <button
               onClick={() => router.push('/auth/signin?callbackUrl=/profile')}
-              className="px-4 py-2 bg-white text-[#ff5a5f] rounded-xl font-semibold text-sm hover:bg-white/90 transition-all"
+              className="px-4 py-2 bg-white text-teal-600 rounded-xl font-semibold text-sm hover:bg-white/90 transition-all"
             >
               {t('ProfileViewPage.signIn')}
             </button>
