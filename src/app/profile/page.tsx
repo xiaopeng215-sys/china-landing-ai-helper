@@ -254,14 +254,8 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center animate-bounce-in">
-          <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#767676] font-medium">Loading...</p>
-          <button
-            onClick={() => router.push('/auth/signin?callbackUrl=/profile')}
-            className="mt-6 px-6 py-2 bg-orange-500 text-white rounded-xl font-semibold text-sm hover:bg-orange-600 transition-all"
-          >
-            Sign In
-          </button>
+          <div className="w-16 h-16 border-4 border-[#ff5a5f] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#767676] font-medium">{t('ProfileRoutePage.loading')}</p>
         </div>
       </div>
     );
