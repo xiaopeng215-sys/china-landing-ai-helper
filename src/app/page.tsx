@@ -9,6 +9,7 @@ import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import HeroSection from "@/components/ui/HeroSection";
 import type { HeroFeature } from "@/components/ui/HeroSection";
 import { useClientI18n } from "@/lib/i18n/client";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { ESSENTIALS_DATA } from "@/data/essentials";
 
 // 动态导入 - 按需加载，减少初始包体积
@@ -146,6 +147,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
+      {/* Language Switcher - fixed top-right */}
+      <div className="fixed top-3 right-3 z-50">
+        <LanguageSwitcher variant="compact" className="bg-white/90 backdrop-blur-sm shadow-sm rounded-lg" />
+      </div>
       {/* Hero Section - 仅在 Chat tab 显示 */}
       {showHero && activeTab === "chat" && (
         <>

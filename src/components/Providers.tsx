@@ -1,6 +1,7 @@
 'use client';
 
 import { SessionProvider } from 'next-auth/react';
+import { LocaleProvider } from '@/lib/i18n/client';
 import { useEffect } from 'react';
 import { initClientMonitoring, reportWebVitals } from '@/lib/monitoring';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
@@ -42,9 +43,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <SessionProvider>
-      <ErrorBoundary>
-        {children}
-      </ErrorBoundary>
+      <LocaleProvider>
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
+      </LocaleProvider>
     </SessionProvider>
   );
 }

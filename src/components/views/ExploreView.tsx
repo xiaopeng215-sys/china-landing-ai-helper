@@ -3,14 +3,25 @@
 import React from 'react';
 
 interface ExploreViewProps {
-  onNavigate: (tab: 'food-encyclopedia' | 'hotels' | 'transport') => void;
+  onNavigate: (tab: 'food-encyclopedia' | 'food' | 'hotels' | 'transport') => void;
 }
 
 const EXPLORE_CARDS = [
   {
+    id: 'food' as const,
+    icon: '🍽️',
+    title: 'Restaurant Guide',
+    subtitle: 'Best restaurants by city',
+    description: 'Curated restaurants in Beijing, Shanghai, Chengdu, Xi\'an, Guangzhou & Shenzhen',
+    gradient: 'from-red-400 to-orange-400',
+    bg: 'bg-red-50',
+    border: 'border-red-100',
+    tag: '6 cities',
+  },
+  {
     id: 'food-encyclopedia' as const,
     icon: '🍜',
-    title: 'Food Guide',
+    title: 'Food Encyclopedia',
     subtitle: 'Discover authentic Chinese cuisine',
     description: 'Regional dishes, must-try foods, ordering tips & dietary guides',
     gradient: 'from-orange-400 to-red-400',

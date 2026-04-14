@@ -19,6 +19,7 @@ import {
   MembershipPoints,
 } from '@/lib/database';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 interface HistoryItem {
   id: string;
@@ -58,7 +59,6 @@ export default function ProfilePage() {
   const [userStats, setUserStats] = useState({ itineraries: 0, favorites: 0, history: 0 });
   
   // Settings state
-  const [language, setLanguage] = useState('zh-CN');
   const [budget, setBudget] = useState('medium');
   const [theme, setTheme] = useState('light');
   const [notifications, setNotifications] = useState(true);
@@ -238,7 +238,6 @@ export default function ProfilePage() {
   };
 
   const handleSaveSettings = () => {
-    localStorage.setItem('china-ai-language', language);
     localStorage.setItem('china-ai-budget', budget);
     localStorage.setItem('china-ai-theme', theme);
     localStorage.setItem('china-ai-notifications', notifications.toString());
@@ -766,16 +765,7 @@ export default function ProfilePage() {
                 <label className="block text-sm font-medium text-[#767676] mb-2">
                   {t('ProfileRoutePage.settingsLanguage')}
                 </label>
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] tap-feedback"
-                >
-                  <option value="zh-CN">{t('ProfileRoutePage.langZhCN', '简体中文')}</option>
-                  <option value="en">English</option>
-                  <option value="ja">{t('ProfileRoutePage.langJa', '日本語')}</option>
-                  <option value="ko">한국어</option>
-                </select>
+                <LanguageSwitcher variant="full" className="w-full" />
               </div>
 
               <div className="stagger-item">
