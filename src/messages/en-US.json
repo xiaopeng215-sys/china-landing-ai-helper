@@ -196,7 +196,13 @@
     "vegetarianOk": "Veg-friendly",
     "cityLabel": "City",
     "cuisineLabel": "Cuisine",
-    "signatureDish": "Signature Dish"
+    "signatureDish": "Signature Dish",
+    "travelerFriendlyBadge": "Friendly",
+    "restaurantsFound": "{count} restaurants found",
+    "restaurantFound": "1 restaurant found",
+    "noResults": "No restaurants match your filters",
+    "noResultsHint": "Try adjusting your search or filters",
+    "dataSource": "Data sourced from local restaurants, traveler reviews & official tourism boards · Updated April 2026"
   },
   "TripsPage": {
     "title": "My Trips",

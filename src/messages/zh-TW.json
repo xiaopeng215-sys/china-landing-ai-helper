@@ -268,7 +268,13 @@
     "vegetarianOk": "有素食",
     "cityLabel": "城市",
     "cuisineLabel": "菜系",
-    "signatureDish": "招牌菜"
+    "signatureDish": "招牌菜",
+    "travelerFriendlyBadge": "友善",
+    "restaurantsFound": "找到 {count} 家餐廳",
+    "restaurantFound": "找到 1 家餐廳",
+    "noResults": "沒有符合條件的餐廳",
+    "noResultsHint": "試試調整搜尋條件或篩選器",
+    "dataSource": "資料來源：本地餐廳、旅行者評價及官方旅遊機構 · 更新於 2026 年 4 月"
   },
   "TripsPage": {
     "title": "我的行程",

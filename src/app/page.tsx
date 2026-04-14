@@ -85,7 +85,7 @@ type Tab = typeof TAB_VALUES[number];
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("chat");
   const [showHero, setShowHero] = useState(true);
-  const { t } = useClientI18n();
+  const { t, locale } = useClientI18n();
 
   // Random tip from essentials data
   const todaysTip = React.useMemo(() => {
@@ -105,7 +105,7 @@ export default function Home() {
     }
   }, []);
 
-  // 使用 useMemo 缓存渲染结果，避免不必要的重新渲染
+  // 使用 useMemo 缓存渲染结果，locale 变化时也需要重新渲染
   const renderView = React.useMemo(() => {
     switch (activeTab) {
       case "chat":
@@ -131,7 +131,7 @@ export default function Home() {
       default:
         return <ChatView />;
     }
-  }, [activeTab]);
+  }, [activeTab, locale]);
 
   // 处理 Hero CTA 点击 - 切换到 Chat tab
   const handleHeroCtaClick = () => {
@@ -168,8 +168,8 @@ export default function Home() {
               <span className="text-2xl flex-shrink-0">{todaysTip.icon}</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold text-teal-600 uppercase tracking-wide mb-0.5">Today&apos;s Tip</p>
-                <p className="text-sm font-semibold text-gray-800">{todaysTip.title}</p>
-                <p className="text-xs text-gray-500 mt-0.5 leading-relaxed line-clamp-2">{todaysTip.content}</p>
+                <p className="text-base font-semibold text-gray-800">{todaysTip.title}</p>
+                <p className="text-sm text-gray-500 mt-0.5 leading-relaxed line-clamp-2">{todaysTip.content}</p>
               </div>
             </div>
           )}
@@ -177,8 +177,8 @@ export default function Home() {
           {/* Quick Start Demo */}
           <div className="px-4 mb-4">
             <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-4 text-white">
-              <p className="text-sm font-medium mb-1">✈️ Try it now — no sign up needed</p>
-              <p className="text-xs opacity-90 mb-3">&ldquo;I&apos;m landing in Shanghai tomorrow, what should I do first?&rdquo;</p>
+              <p className="text-base font-medium mb-1">✈️ Try it now — no sign up needed</p>
+              <p className="text-sm opacity-90 mb-3">&ldquo;I&apos;m landing in Shanghai tomorrow, what should I do first?&rdquo;</p>
               <button
                 onClick={handleHeroCtaClick}
                 className="inline-block bg-amber-400 hover:bg-amber-500 text-white font-semibold text-sm px-4 py-2 rounded-xl transition-colors"
@@ -222,12 +222,12 @@ export default function Home() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-xl">{s.flag}</span>
-                      <span className="font-semibold text-gray-800 text-sm">{s.name}</span>
-                      <span className="text-gray-400 text-xs">· {s.city}</span>
+                      <span className="font-semibold text-gray-800 text-base">{s.name}</span>
+                      <span className="text-gray-400 text-sm">· {s.city}</span>
                     </div>
                     <span className="text-xs bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full">{s.tag}</span>
                   </div>
-                  <p className="text-sm text-gray-600 leading-relaxed">&ldquo;{s.story}&rdquo;</p>
+                  <p className="text-base text-gray-600 leading-relaxed">&ldquo;{s.story}&rdquo;</p>
                   <p className="text-xs text-gray-400 mt-2">{s.date}</p>
                 </div>
               ))}

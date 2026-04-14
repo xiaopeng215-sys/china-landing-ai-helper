@@ -70,14 +70,14 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
       {/* Header */}
       <div className="bg-gradient-to-r from-teal-600 to-teal-500 text-white px-4 pt-6 pb-8">
         <h1 className="text-2xl font-bold">{t('ExploreView.title')}</h1>
-        <p className="text-teal-100 text-sm mt-1">{t('ExploreView.subtitle')}</p>
+        <p className="text-teal-100 text-base mt-1">{t('ExploreView.subtitle')}</p>
       </div>
 
       {/* SIM Card / Data Plan Section */}
       <div className="px-4 -mt-4 mb-2">
         <section className="mb-6 bg-white rounded-2xl p-4 shadow-sm border border-teal-100">
           <h2 className="text-lg font-bold text-gray-800 mb-1">{t('ExploreView.stayConnected')}</h2>
-          <p className="text-sm text-gray-500 mb-3">{t('ExploreView.stayConnectedDesc')}</p>
+          <p className="text-base text-gray-500 mb-3">{t('ExploreView.stayConnectedDesc')}</p>
           <div className="grid grid-cols-2 gap-3">
             {[
               { name: 'eSIM (Recommended)', duration: '7 days', price: '¥69', badge: '⚡ Instant', popular: true },
@@ -96,8 +96,8 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
                   <span className="absolute -top-2 left-3 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">{t('ExploreView.mostPopular')}</span>
                 )}
                 <div className="text-xs text-gray-500 mb-1">{plan.badge}</div>
-                <div className="font-semibold text-gray-800 text-sm">{plan.name}</div>
-                <div className="text-xs text-gray-500">{plan.duration}</div>
+                <div className="font-semibold text-gray-800 text-base">{plan.name}</div>
+                <div className="text-sm text-gray-500">{plan.duration}</div>
                 <div className="text-teal-600 font-bold mt-1">{plan.price}</div>
               </a>
             ))}
@@ -158,8 +158,8 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
         <div className="flex gap-3 items-start">
           <span className="text-xl">💡</span>
           <div>
-            <p className="text-sm font-semibold text-gray-800">{t('ExploreView.proTip')}</p>
-            <p className="text-sm text-gray-500 mt-0.5">{t('ExploreView.proTipContent')}</p>
+            <p className="text-base font-semibold text-gray-800">{t('ExploreView.proTip')}</p>
+            <p className="text-base text-gray-500 mt-0.5">{t('ExploreView.proTipContent')}</p>
           </div>
         </div>
       </div>
@@ -167,17 +167,17 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
       {/* China Travel FAQ - Fear Busters */}
       <section className="px-4 mt-6 mb-6">
         <h2 className="text-lg font-bold text-gray-800 mb-1">{t('ExploreView.faqTitle')}</h2>
-        <p className="text-sm text-gray-500 mb-3">{t('ExploreView.faqSubtitle')}</p>
+        <p className="text-base text-gray-500 mb-3">{t('ExploreView.faqSubtitle')}</p>
         <div className="space-y-2">
           {FAQ_ITEMS.map((item) => (
             <details key={item.q} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
               <summary className="flex items-center gap-3 p-3 cursor-pointer list-none">
                 <span className="text-lg">{item.icon}</span>
-                <span className="text-sm font-medium text-gray-800 flex-1">{item.q}</span>
+                <span className="text-base font-medium text-gray-800 flex-1">{item.q}</span>
                 <span className="text-gray-400 text-xs">▼</span>
               </summary>
               <div className="px-4 pb-3 pt-1">
-                <p className="text-sm text-gray-600">{item.a}</p>
+                <p className="text-base text-gray-600">{item.a}</p>
               </div>
             </details>
           ))}

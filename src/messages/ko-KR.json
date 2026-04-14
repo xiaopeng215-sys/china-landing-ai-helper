@@ -320,7 +320,13 @@
     "vegetarianOk": "채식 가능",
     "cityLabel": "도시",
     "cuisineLabel": "요리",
-    "signatureDish": "대표 메뉴"
+    "signatureDish": "대표 메뉴",
+    "travelerFriendlyBadge": "친화적",
+    "restaurantsFound": "{count}개 레스토랑 발견",
+    "restaurantFound": "1개 레스토랑 발견",
+    "noResults": "조건에 맞는 레스토랑이 없습니다",
+    "noResultsHint": "검색 조건이나 필터를 조정해 보세요",
+    "dataSource": "데이터 출처: 현지 레스토랑, 여행자 리뷰 및 공식 관광청 · 2026년 4월 업데이트"
   },
   "ProfileViewPage": {
     "title": "프로필",

@@ -196,7 +196,13 @@
     "vegetarianOk": "مناسب للنباتيين",
     "cityLabel": "المدينة",
     "cuisineLabel": "المطبخ",
-    "signatureDish": "الطبق المميز"
+    "signatureDish": "الطبق المميز",
+    "travelerFriendlyBadge": "ودي",
+    "restaurantsFound": "تم العثور على {count} مطعم",
+    "restaurantFound": "تم العثور على مطعم واحد",
+    "noResults": "لا توجد مطاعم تطابق الفلاتر",
+    "noResultsHint": "حاول تعديل البحث أو الفلاتر",
+    "dataSource": "البيانات من المطاعم المحلية ومراجعات المسافرين والهيئات السياحية الرسمية · محدث أبريل 2026"
   },
   "TripsPage": {
     "title": "رحلاتي",

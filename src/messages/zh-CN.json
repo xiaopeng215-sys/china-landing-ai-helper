@@ -268,7 +268,13 @@
     "vegetarianOk": "有素食",
     "cityLabel": "城市",
     "cuisineLabel": "菜系",
-    "signatureDish": "招牌菜"
+    "signatureDish": "招牌菜",
+    "travelerFriendlyBadge": "友好",
+    "restaurantsFound": "找到 {count} 家餐厅",
+    "restaurantFound": "找到 1 家餐厅",
+    "noResults": "没有符合条件的餐厅",
+    "noResultsHint": "试试调整搜索条件或筛选器",
+    "dataSource": "数据来源：本地餐厅、旅行者评价及官方旅游机构 · 更新于 2026 年 4 月"
   },
   "TripsPage": {
     "title": "我的行程",

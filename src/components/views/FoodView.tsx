@@ -525,8 +525,8 @@ export default function FoodView() {
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <h1 className="text-2xl font-bold text-[#484848]">{t('FoodPage.title')}</h1>
-          <p className="text-sm text-[#767676]">{t('FoodPage.subtitle')}</p>
-          <p className="text-xs text-gray-400 mt-1">📊 Data sourced from local restaurants, traveler reviews & official tourism boards · Updated April 2026</p>
+          <p className="text-base text-[#767676]">{t('FoodPage.subtitle')}</p>
+          <p className="text-xs text-gray-400 mt-1">📊 {t('FoodPage.dataSource')}</p>
         </div>
       </header>
 
@@ -539,7 +539,7 @@ export default function FoodView() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('FoodPage.searchPlaceholder')}
-              className="flex-1 px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] transition-all text-sm"
+              className="flex-1 px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f] transition-all text-base"
             />
             {searchQuery && (
               <button
@@ -604,8 +604,8 @@ export default function FoodView() {
         </div>
 
         {/* Results count */}
-        <p className="text-sm text-[#767676]">
-          {filtered.length} {filtered.length === 1 ? 'restaurant' : 'restaurants'} found
+        <p className="text-base text-[#767676]">
+          {filtered.length === 1 ? t('FoodPage.restaurantFound') : t('FoodPage.restaurantsFound').replace('{count}', String(filtered.length))}
         </p>
 
         {/* Restaurant Cards */}
@@ -613,8 +613,8 @@ export default function FoodView() {
           {filtered.length === 0 ? (
             <div className="bg-white rounded-2xl shadow-md p-8 text-center border border-gray-100">
               <div className="text-5xl mb-3">🍽️</div>
-              <p className="text-[#484848] font-medium">No restaurants match your filters</p>
-              <p className="text-sm text-[#767676] mt-1">Try adjusting your search or filters</p>
+              <p className="text-[#484848] font-medium">{t('FoodPage.noResults')}</p>
+              <p className="text-sm text-[#767676] mt-1">{t('FoodPage.noResultsHint')}</p>
             </div>
           ) : (
             filtered.map((r) => (
@@ -631,30 +631,30 @@ export default function FoodView() {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-bold text-[#484848] text-sm leading-tight">{r.name}</h4>
+                      <h4 className="font-bold text-[#484848] text-base leading-tight">{r.name}</h4>
                       {r.travelerFriendly && (
                         <span className="flex-shrink-0 px-2 py-0.5 bg-teal-100 text-teal-700 text-xs rounded-full font-medium">
-                          🌍 Friendly
+                          🌍 {t('FoodPage.travelerFriendlyBadge')}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-[#767676] mt-0.5">{r.cuisine}</p>
+                    <p className="text-sm text-[#767676] mt-0.5">{r.cuisine}</p>
 
                     {/* Signature dish */}
-                    <p className="text-xs text-[#484848] mt-1">
+                    <p className="text-sm text-[#484848] mt-1">
                       <span className="text-[#767676]">{t('FoodPage.signatureDish')}: </span>
                       {r.signatureDish}
                     </p>
 
                     {/* Stats row */}
                     <div className="flex items-center gap-3 mt-2">
-                      <span className="text-xs font-semibold text-[#34a853]">⭐ {r.rating}</span>
-                      <span className="text-xs text-[#767676]">{PRICE_ICONS[r.priceLevel]}</span>
+                      <span className="text-sm font-semibold text-[#34a853]">⭐ {r.rating}</span>
+                      <span className="text-sm text-[#767676]">{PRICE_ICONS[r.priceLevel]}</span>
                       {r.englishMenu && (
-                        <span className="text-xs text-teal-600">🇬🇧 EN</span>
+                        <span className="text-sm text-teal-600">🇬🇧 EN</span>
                       )}
                       {r.spicy && (
-                        <span className="text-xs text-red-500">🌶️</span>
+                        <span className="text-sm text-red-500">🌶️</span>
                       )}
                     </div>
 
@@ -680,10 +680,10 @@ export default function FoodView() {
         <div className="bg-gradient-to-br from-[#34a853] to-[#2d8e47] rounded-3xl shadow-xl p-6 text-white text-center">
           <div className="text-5xl mb-4">🗺️</div>
           <h3 className="text-xl font-bold mb-2">{t('FoodPage.aiCta')}</h3>
-          <p className="text-white/90 mb-4 text-sm">{t('FoodPage.aiCtaDesc')}</p>
+          <p className="text-white/90 mb-4 text-base">{t('FoodPage.aiCtaDesc')}</p>
           <button
             onClick={() => { window.location.href = '/?tab=chat'; }}
-            className="px-6 py-3 bg-white text-[#34a853] rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all text-sm"
+            className="px-6 py-3 bg-white text-[#34a853] rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all text-base"
           >
             {t('FoodPage.askAI')}
           </button>

@@ -320,7 +320,13 @@
     "vegetarianOk": "ベジ対応",
     "cityLabel": "都市",
     "cuisineLabel": "料理",
-    "signatureDish": "看板メニュー"
+    "signatureDish": "看板メニュー",
+    "travelerFriendlyBadge": "フレンドリー",
+    "restaurantsFound": "{count}件のレストランが見つかりました",
+    "restaurantFound": "1件のレストランが見つかりました",
+    "noResults": "条件に合うレストランがありません",
+    "noResultsHint": "検索条件やフィルターを調整してみてください",
+    "dataSource": "データ出典：地元レストラン、旅行者レビュー、公式観光局 · 2026年4月更新"
   },
   "ProfileViewPage": {
     "title": "プロフィール",

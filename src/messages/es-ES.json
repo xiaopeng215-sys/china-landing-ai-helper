@@ -196,7 +196,13 @@
     "vegetarianOk": "Apto para vegetarianos",
     "cityLabel": "Ciudad",
     "cuisineLabel": "Cocina",
-    "signatureDish": "Plato estrella"
+    "signatureDish": "Plato estrella",
+    "travelerFriendlyBadge": "Amigable",
+    "restaurantsFound": "{count} restaurantes encontrados",
+    "restaurantFound": "1 restaurante encontrado",
+    "noResults": "No hay restaurantes que coincidan con tus filtros",
+    "noResultsHint": "Intenta ajustar tu búsqueda o filtros",
+    "dataSource": "Datos de restaurantes locales, reseñas de viajeros y organismos oficiales de turismo · Actualizado abril 2026"
   },
   "TripsPage": {
     "title": "Mis viajes",

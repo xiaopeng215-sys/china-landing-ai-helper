@@ -196,7 +196,13 @@
     "vegetarianOk": "Opções vegetarianas",
     "cityLabel": "Cidade",
     "cuisineLabel": "Culinária",
-    "signatureDish": "Prato especial"
+    "signatureDish": "Prato especial",
+    "travelerFriendlyBadge": "Amigável",
+    "restaurantsFound": "{count} restaurantes encontrados",
+    "restaurantFound": "1 restaurante encontrado",
+    "noResults": "Nenhum restaurante corresponde aos seus filtros",
+    "noResultsHint": "Tente ajustar sua pesquisa ou filtros",
+    "dataSource": "Dados de restaurantes locais, avaliações de viajantes e órgãos oficiais de turismo · Atualizado em abril de 2026"
   },
   "TripsPage": {
     "title": "Minhas viagens",
