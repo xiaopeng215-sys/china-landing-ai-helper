@@ -12,12 +12,19 @@ export const shanghai4Days: ItineraryRoute = {
   country: '中国',
   days: 4,
   title: '上海 4 天深度游',
+  titleEn: 'Shanghai 4-Day Deep Dive',
   subtitle: '魔都魅力 · 美食探索 · 骑行体验',
+  subtitleEn: 'Magic City · Food Exploration · Cycling Experience',
   theme: ['美食', '骑行', '历史文化', '现代都市'],
+  themeEn: ['Food', 'Cycling', 'History & Culture', 'Modern City'],
   budget: '¥3500',
   bestSeason: '3 月 -5 月 / 9 月 -11 月',
+  bestSeasonEn: 'Mar–May / Sep–Nov',
   highlights: ['外滩夜景', '豫园城隍庙', '田子坊', '苏州河骑行', '武康路历史建筑'],
+  highlightsEn: ['Bund Night View', 'Yu Garden & Temple', 'Tianzifang', 'Suzhou Creek Cycling', 'Wukang Road Architecture'],
   description: '深入体验上海的历史与摩登，从百年外滩到法租界老洋房，从弄堂美食到国际大餐，感受这座永远在前的城市。',
+  descriptionEn: 'Dive deep into Shanghai\'s history and modernity — from the century-old Bund to French Concession mansions, from alley snacks to international dining.',
+
   practicalInfo: {
     transport: '地铁 + 共享单车为主，打车用 Didi，中文地址给司机看即可',
     weather: '春秋最佳，夏季闷热多雨，冬季阴冷',
@@ -28,7 +35,10 @@ export const shanghai4Days: ItineraryRoute = {
     {
       day: 1,
       title: '浦西经典之旅',
+      titleEn: 'Puxi Classic Tour',
       theme: '历史建筑 · 经典地标',
+      themeEn: 'Historic Architecture · Iconic Landmarks',
+
       activities: [
         {
           time: '09:00',
@@ -103,7 +113,8 @@ export const shanghai4Days: ItineraryRoute = {
         {
           time: '19:30',
           name: '外滩观景台',
-          nameEn: 'Bund 夜景',
+          nameEn: 'Bund Night View',
+
           type: 'attraction',
           duration: '1 小时',
           description: '夜幕降临后，外滩建筑灯火通明，与浦东陆家嘴隔江相望。',
@@ -119,12 +130,20 @@ export const shanghai4Days: ItineraryRoute = {
         '今日步行较多，穿舒适鞋子',
         '外滩至豫园可以步行约 15 分钟，沿途有上海老城厢风貌',
         '豫园出来往东走 10 分钟就是外滩'
+      ],
+      tipsEn: [
+        'Lots of walking today — wear comfortable shoes',
+        'The Bund to Yu Garden is about 15 min on foot through the old city',
+        'Exit Yu Garden and walk east 10 min to reach the Bund'
       ]
     },
     {
       day: 2,
       title: '法租界骑行日',
+      titleEn: 'French Concession Cycling Day',
       theme: '梧桐树下 · 老洋房 · 文艺咖啡',
+      themeEn: 'Plane Trees · Old Mansions · Artsy Cafés',
+
       activities: [
         {
           time: '09:00',
@@ -201,12 +220,20 @@ export const shanghai4Days: ItineraryRoute = {
         '骑行路线建议：淮海路→武康路→湖南路→复兴路→思南路，全程约 8 公里',
         '共享单车用微信/支付宝扫一扫即可，哈啰、美团、青桔都可以',
         '武康路周末人多，建议工作日去'
+      ],
+      tipsEn: [
+        'Suggested cycling route: Huaihai Rd → Wukang Rd → Hunan Rd → Fuxing Rd → Sinan Rd (~8 km)',
+        'Scan a shared bike with WeChat or Alipay — Hello Bike, Meituan, or Qingju all work',
+        'Wukang Road gets crowded on weekends; weekdays are better'
       ]
     },
     {
       day: 3,
       title: '浦东摩登之旅',
+      titleEn: 'Pudong Modern Tour',
       theme: '陆家嘴 · 摩天大楼 · 艺术展览',
+      themeEn: 'Lujiazui · Skyscrapers · Art Exhibitions',
+
       activities: [
         {
           time: '09:00',
@@ -283,12 +310,20 @@ export const shanghai4Days: ItineraryRoute = {
         '浦东建议地铁 2 号线到陆家嘴站，不要开车，停车很贵',
         '三件套最佳观景点：环形天桥、对外滩观景平台',
         '艺术博物馆在黄浦滨江，可以骑共享单车过去'
+      ],
+      tipsEn: [
+        'Take Metro Line 2 to Lujiazui — driving is expensive and slow',
+        'Best viewpoints for the three towers: the Loop bridge and the Bund promenade',
+        'The art museum is on the Huangpu riverside — a shared bike ride away'
       ]
     },
     {
       day: 4,
       title: '水乡古镇 + 返程',
+      titleEn: 'Water Town & Departure',
       theme: '朱家角 · 江南水乡 · 告别上海',
+      themeEn: 'Zhujiajiao · Jiangnan Water Town · Farewell Shanghai',
+
       activities: [
         {
           time: '08:30',
@@ -337,6 +372,11 @@ export const shanghai4Days: ItineraryRoute = {
         '如果航班在晚上，可以把行李存放在虹桥站或市区的酒店',
         '朱家角回程在地铁 17 号线朱家角站乘至虹桥火车站，约 50 分钟',
         '如果不想去古镇，可以换成 M50 创意园或 1933 老场坊'
+      ],
+      tipsEn: [
+        'If your flight is in the evening, store luggage at Hongqiao Station or your hotel',
+        'Return from Zhujiajiao on Metro Line 17 to Hongqiao Railway Station (~50 min)',
+        'Skip the water town? Swap for M50 Creative Park or 1933 Old Millfun instead'
       ]
     }
   ]

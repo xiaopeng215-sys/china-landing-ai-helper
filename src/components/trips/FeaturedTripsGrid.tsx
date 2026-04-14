@@ -43,12 +43,12 @@ export default function FeaturedTripsGrid({ trips, onTripSelect }: FeaturedTrips
             <div className="text-3xl mb-2">
               {cityEmojis[trip.cityEn] ?? '📍'}
             </div>
-            <h3 className="font-bold text-gray-900">{trip.city}</h3>
+            <h3 className="font-bold text-gray-900">{trip.cityEn}</h3>
             <p className="text-xs text-gray-500">{trip.days} days · {trip.budget}</p>
             <div className="flex flex-wrap gap-1 mt-2">
-              {trip.theme.slice(0, 2).map(t => (
-                <span key={t} className="text-xs px-2 py-0.5 bg-orange-50 text-orange-600 rounded-full">
-                  {t}
+              {(trip.themeEn ?? trip.theme).slice(0, 2).map(tag => (
+                <span key={tag} className="text-xs px-2 py-0.5 bg-orange-50 text-orange-600 rounded-full">
+                  {tag}
                 </span>
               ))}
             </div>

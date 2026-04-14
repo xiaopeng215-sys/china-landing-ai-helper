@@ -9,6 +9,7 @@ import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import HeroSection from "@/components/ui/HeroSection";
 import type { HeroFeature } from "@/components/ui/HeroSection";
 import { useClientI18n } from "@/lib/i18n/client";
+import { ESSENTIALS_DATA } from "@/data/essentials";
 
 // 动态导入 - 按需加载，减少初始包体积
 const ChatView = dynamic(() => import("@/components/views/ChatView/index"), {
@@ -68,14 +69,30 @@ const TimelineView = dynamic(
   },
 );
 
+const ExploreView = dynamic(
+  () => import("@/components/views/ExploreView"),
+  {
+    loading: () => <LoadingSkeleton type="food" />,
+    ssr: false,
+  },
+);
+
 // 使用 const assertions 定义 Tab 值，提高类型安全性
-const TAB_VALUES = ["chat", "trips", "food", "food-encyclopedia", "transport", "essentials", "hotels", "timeline", "profile"] as const;
+const TAB_VALUES = ["chat", "trips", "food", "food-encyclopedia", "transport", "essentials", "hotels", "timeline", "profile", "explore"] as const;
 type Tab = typeof TAB_VALUES[number];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("chat");
   const [showHero, setShowHero] = useState(true);
   const { t } = useClientI18n();
+
+  // Random tip from essentials data
+  const todaysTip = React.useMemo(() => {
+    const allTips = Object.values(ESSENTIALS_DATA).flatMap((section) =>
+      section.tips.map((tip) => ({ ...tip, sectionIcon: section.icon }))
+    );
+    return allTips[Math.floor(Math.random() * allTips.length)];
+  }, []);
 
   // Support ?tab= query param for redirects from /chat, /food, /trips
   useEffect(() => {
@@ -106,6 +123,8 @@ export default function Home() {
         return <HotelView />;
       case "timeline":
         return <TimelineView />;
+      case "explore":
+        return <ExploreView onNavigate={(tab) => setActiveTab(tab)} />;
       case "profile":
         return <ProfileView />;
       default:
@@ -129,14 +148,27 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Hero Section - 仅在 Chat tab 显示 */}
       {showHero && activeTab === "chat" && (
-        <HeroSection
-          title={t("HomePage.title")}
-          subtitle={t("HomePage.subtitle")}
-          ctaText={t("HomePage.cta")}
-          onCtaClick={handleHeroCtaClick}
-          gradient="from-orange-600 to-amber-600"
-          features={heroFeatures}
-        />
+        <>
+          <HeroSection
+            title={t("HomePage.title")}
+            subtitle={t("HomePage.subtitle")}
+            ctaText={t("HomePage.cta")}
+            onCtaClick={handleHeroCtaClick}
+            gradient="from-orange-600 to-amber-600"
+            features={heroFeatures}
+          />
+          {/* Today's Tip */}
+          {todaysTip && (
+            <div className="mx-4 -mt-3 mb-2 bg-white rounded-xl shadow-md border border-orange-100 p-4 flex gap-3 items-start z-10 relative">
+              <span className="text-2xl flex-shrink-0">{todaysTip.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-orange-500 uppercase tracking-wide mb-0.5">Today&apos;s Tip</p>
+                <p className="text-sm font-semibold text-gray-800">{todaysTip.title}</p>
+                <p className="text-xs text-gray-500 mt-0.5 leading-relaxed line-clamp-2">{todaysTip.content}</p>
+              </div>
+            </div>
+          )}
+        </>
       )}
       
       <main role="main">

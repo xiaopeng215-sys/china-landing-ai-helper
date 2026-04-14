@@ -2,7 +2,7 @@
 import React from "react";
 import { useClientI18n } from "@/lib/i18n/client";
 
-type Tab = "chat" | "trips" | "food" | "food-encyclopedia" | "transport" | "essentials" | "hotels" | "timeline" | "profile";
+export type Tab = "chat" | "trips" | "food" | "food-encyclopedia" | "transport" | "essentials" | "hotels" | "timeline" | "profile" | "explore";
 
 interface BottomNavProps {
   activeTab: string;
@@ -15,14 +15,16 @@ interface BottomNavProps {
  */
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const { t } = useClientI18n();
-  const navItems: { id: Tab; label: string; icon: string }[] = [
-    { id: "chat", label: t("NavBar.chat", "Chat"), icon: "💬" },
-    { id: "trips", label: t("NavBar.trips", "Trips"), icon: "📅" },
-    { id: "food-encyclopedia", label: t("NavBar.foodGuide", "Food Guide"), icon: "🍜" },
-    { id: "transport", label: t("NavBar.transport", "Transport"), icon: "🚇" },
-    { id: "essentials", label: t("NavBar.essentials", "Essentials"), icon: "🛡️" },
-    { id: "hotels", label: t("NavBar.hotels", "Hotels"), icon: "🏨" },
+
+  // Explore tab is active when any of its sub-tabs are active
+  const exploreSubTabs = ["food-encyclopedia", "hotels", "transport", "explore"];
+  const isExploreActive = exploreSubTabs.includes(activeTab);
+
+  const navItems: { id: Tab; label: string; icon: string; isActive?: boolean }[] = [
+    { id: "chat", label: t("NavBar.chat", "Home"), icon: "🏠" },
     { id: "timeline", label: t("NavBar.timeline", "Timeline"), icon: "🗓️" },
+    { id: "explore", label: t("NavBar.explore", "Explore"), icon: "🔍", isActive: isExploreActive },
+    { id: "essentials", label: t("NavBar.essentials", "Essentials"), icon: "🛡️" },
     { id: "profile", label: t("NavBar.profile", "Profile"), icon: "👤" },
   ];
 
@@ -30,7 +32,7 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 safe-area-bottom" role="navigation" aria-label={t('NavBar.navigation', 'Navigation')}>
       <div className="flex items-center justify-around py-2 max-w-lg mx-auto safe-area-bottom">
         {navItems.map((item) => {
-          const isActive = activeTab === item.id;
+          const isActive = item.isActive !== undefined ? item.isActive : activeTab === item.id;
           return (
             <button
               key={item.id}

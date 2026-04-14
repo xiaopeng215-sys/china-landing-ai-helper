@@ -32,8 +32,8 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
       >
         <div className="flex items-start justify-between">
           <div className="text-white">
-            <h3 className="text-xl font-bold">{trip.city}</h3>
-            <p className="text-white/80 text-sm">{trip.subtitle}</p>
+            <h3 className="text-xl font-bold">{trip.cityEn}</h3>
+            <p className="text-white/80 text-sm">{trip.subtitleEn ?? trip.subtitle}</p>
           </div>
           <div className="text-right text-white/90">
             <p className="text-2xl font-bold">{trip.days}</p>
@@ -43,7 +43,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
         
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-3">
-          {trip.theme.map(tag => (
+          {(trip.themeEn ?? trip.theme).map((tag, i) => (
             <span key={tag} className="px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-xs text-white">
               {tag}
             </span>
@@ -59,7 +59,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
         </span>
         <span className="flex items-center gap-1">
           <MapPin className="w-4 h-4 text-orange-500" />
-          {trip.highlights.slice(0, 2).join(' · ')}
+          {(trip.highlightsEn ?? trip.highlights).slice(0, 2).join(' · ')}
         </span>
       </div>
 
@@ -72,7 +72,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
               <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">
                 Day {day.day}
               </span>
-              <span className="text-sm text-gray-700 truncate">{day.title}</span>
+              <span className="text-sm text-gray-700 truncate">{day.titleEn ?? day.title}</span>
             </div>
           ))}
           {trip.dayPlans.length > 2 && (

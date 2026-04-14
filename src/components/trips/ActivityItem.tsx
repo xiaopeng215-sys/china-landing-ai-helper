@@ -38,15 +38,15 @@ export default function ActivityItem({ activity, index }: ActivityItemProps) {
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
-          <span className="font-semibold text-gray-800 text-sm truncate">{activity.name}</span>
+          <span className="font-semibold text-gray-800 text-sm truncate">{activity.nameEn || activity.name}</span>
         </div>
-        <p className="text-xs text-gray-500 truncate">{activity.description}</p>
+        <p className="text-xs text-gray-500 truncate">{activity.descriptionEn ?? activity.description}</p>
         <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
           <span className="flex items-center gap-1">
-            <span className="text-xs">⏱️</span> {activity.duration}
+            <span className="text-xs">⏱️</span> {activity.durationEn ?? activity.duration}
           </span>
           <span className="flex items-center gap-1">
-            <DollarSign className="w-3 h-3" /> {activity.price}
+            <DollarSign className="w-3 h-3" /> {activity.priceEn ?? activity.price}
           </span>
         </div>
       </div>
