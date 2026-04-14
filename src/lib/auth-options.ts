@@ -50,12 +50,9 @@ function getSupabaseClient() {
   return createClient(supabaseUrl, supabaseKey);
 }
 
-// 辅助函数：检查配置是否为有效值（非占位符）
+// 辅助函数：检查配置是否为有效值（存在且非空即可）
 function isValidConfig(value: string | undefined): boolean {
-  return !!value && 
-         !value.includes('your-') && 
-         value !== 'dummy-value' &&
-         value.length > 10;
+  return !!(value && value.length > 0);
 }
 
 /**
