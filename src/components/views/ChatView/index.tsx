@@ -202,6 +202,53 @@ export default function ChatView() {
     handleSendMessage();
   };
 
+  const QUICK_QUESTIONS = [
+    'How to pay in China?',
+    'Which SIM card should I get?',
+    'How to use Didi?',
+    'Emergency numbers?',
+    'Best food in Beijing?',
+  ];
+
+  const handleQuickQuestion = (question: string) => {
+    setInputValue(question);
+    // slight delay so state updates before send
+    setTimeout(() => {
+      setInputValue('');
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        type: 'user',
+        role: 'user',
+        content: question,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, userMessage]);
+      setIsTyping(true);
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: question, sessionId: currentSessionId, model: selectedModel }),
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            const err = errorData.error;
+            const errorMessage = typeof err === 'string' ? err : (err?.message || `Request failed (${response.status})`);
+            setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), type: 'ai', role: 'assistant', content: `⚠️ ${errorMessage}`, timestamp: new Date().toISOString() }]);
+            return;
+          }
+          const data = await response.json();
+          let content = typeof data.reply === 'string' ? data.reply : (data.reply?.text || data.reply?.content || "Sorry, I couldn't process your request.");
+          setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), type: 'ai', role: 'assistant', content, timestamp: new Date().toISOString(), recommendations: data.recommendations || [], actions: data.actions || [], images: data.images || [] }]);
+          if (data.sessionId && !currentSessionId) { setCurrentSessionId(data.sessionId); loadSessions(); }
+        })
+        .catch(() => {
+          setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), type: 'ai', role: 'assistant', content: '❌ Failed to send. Please check your connection.', timestamp: new Date().toISOString() }]);
+        })
+        .finally(() => setIsTyping(false));
+    }, 0);
+  };
+
   const { t } = useClientI18n();
 
   return (
@@ -228,6 +275,25 @@ export default function ChatView() {
 
       {/* Messages */}
       <MessageList messages={messages} messagesEndRef={messagesEndRef} />
+
+      {/* Quick Questions - shown when chat is empty */}
+      {messages.length === 0 && !isTyping && (
+        <div className="px-4 py-3 bg-white border-t border-gray-100">
+          <p className="text-xs text-[#767676] mb-2">Quick questions:</p>
+          <div className="flex flex-wrap gap-2">
+            {QUICK_QUESTIONS.map((q) => (
+              <button
+                key={q}
+                onClick={() => handleQuickQuestion(q)}
+                className="text-xs px-3 py-1.5 rounded-full border border-[#ff5a5f] text-[#ff5a5f]
+                           hover:bg-[#ff5a5f] hover:text-white transition-colors whitespace-nowrap"
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Typing Indicator */}
       {isTyping && (
