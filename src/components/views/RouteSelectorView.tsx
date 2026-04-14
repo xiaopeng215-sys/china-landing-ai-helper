@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useClientI18n } from '@/lib/i18n/client';
 
 interface RouteOption {
   id: string;
@@ -31,6 +32,7 @@ export default function RouteSelectorView({
   onSelectRoute,
 }: RouteSelectorViewProps) {
   const router = useRouter();
+  const { t } = useClientI18n();
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'fastest' | 'scenic' | 'easy'>('all');
 
@@ -111,9 +113,9 @@ export default function RouteSelectorView({
 
   const getDifficultyLabel = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'Easy';
-      case 'medium': return 'Moderate';
-      case 'hard': return 'Challenging';
+      case 'easy': return t('RouteSelectorView.difficultyEasy');
+      case 'medium': return t('RouteSelectorView.difficultyMedium');
+      case 'hard': return t('RouteSelectorView.difficultyHard');
       default: return difficulty;
     }
   };
@@ -129,7 +131,7 @@ export default function RouteSelectorView({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h1 className="text-xl font-bold text-gray-900">Choose a Cycling Route</h1>
+            <h1 className="text-xl font-bold text-gray-900">{t('RouteSelectorView.title')}</h1>
           </div>
 
           {/* Route Summary */}
@@ -146,7 +148,7 @@ export default function RouteSelectorView({
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-xs text-gray-500">Total distance</p>
+                <p className="text-xs text-gray-500">{t('RouteSelectorView.totalDistance')}</p>
                 <p className="text-lg font-bold text-gray-900">4.5–8.5 km</p>
               </div>
             </div>
@@ -159,10 +161,10 @@ export default function RouteSelectorView({
         <div className="max-w-3xl mx-auto px-4">
           <div className="flex gap-2 overflow-x-auto pb-2">
             {[
-              { id: 'all', label: 'All Routes', icon: '🗺️' },
-              { id: 'fastest', label: 'Fastest', icon: '⚡' },
-              { id: 'scenic', label: 'Most Scenic', icon: '🌸' },
-              { id: 'easy', label: 'Easiest', icon: '😊' },
+                        { id: 'all', label: t('RouteSelectorView.filterAll'), icon: '🗺️' },
+              { id: 'fastest', label: t('RouteSelectorView.filterFastest'), icon: '⚡' },
+              { id: 'scenic', label: t('RouteSelectorView.filterScenic'), icon: '🌸' },
+              { id: 'easy', label: t('RouteSelectorView.filterEasy'), icon: '😊' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -207,14 +209,14 @@ export default function RouteSelectorView({
 
               {/* Badges */}
               <div className="absolute top-3 left-3 flex gap-2">
-                {route.recommended && (
+                                {route.recommended && (
                   <span className="px-3 py-1 bg-orange-500 text-white text-xs font-bold rounded-full shadow-lg">
-                    ⭐ Recommended
+                    {t('RouteSelectorView.badgeRecommended')}
                   </span>
                 )}
                 {route.popular && (
                   <span className="px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full shadow-lg">
-                    🔥 Popular
+                    {t('RouteSelectorView.badgePopular')}
                   </span>
                 )}
               </div>
@@ -230,35 +232,35 @@ export default function RouteSelectorView({
             <div className="p-4">
               {/* Quick Stats */}
               <div className="grid grid-cols-4 gap-3 mb-4">
-                <div className="text-center">
-                  <p className="text-xs text-gray-500 mb-1">⏱️ Time</p>
+                                <div className="text-center">
+                  <p className="text-xs text-gray-500 mb-1">{t('RouteSelectorView.statTime')}</p>
                   <p className="font-bold text-gray-900">{route.duration}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-500 mb-1">📏 Distance</p>
+                  <p className="text-xs text-gray-500 mb-1">{t('RouteSelectorView.statDistance')}</p>
                   <p className="font-bold text-gray-900">{route.distance}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-500 mb-1">🔥 Calories</p>
+                  <p className="text-xs text-gray-500 mb-1">{t('RouteSelectorView.statCalories')}</p>
                   <p className="font-bold text-gray-900">{route.calories}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-500 mb-1">🌱 CO₂ saved</p>
+                  <p className="text-xs text-gray-500 mb-1">{t('RouteSelectorView.statCO2')}</p>
                   <p className="font-bold text-orange-600">{route.carbonSaved}kg</p>
                 </div>
               </div>
 
               {/* Difficulty & Elevation */}
               <div className="flex items-center gap-3 mb-3">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(route.difficulty)}`}>
+                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(route.difficulty)}`}>
                   {getDifficultyLabel(route.difficulty)}
                 </span>
                 <span className="text-sm text-gray-600">🏔️ {route.elevation}</span>
               </div>
 
               {/* Highlights */}
-              <div className="mb-4">
-                <p className="text-xs text-gray-500 mb-2">✨ Highlights:</p>
+                            <div className="mb-4">
+                <p className="text-xs text-gray-500 mb-2">{t('RouteSelectorView.highlights')}</p>
                 <div className="flex flex-wrap gap-2">
                   {route.highlights.map((highlight, i) => (
                     <span key={i} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-lg">
@@ -276,7 +278,7 @@ export default function RouteSelectorView({
                     : 'bg-orange-50 text-orange-600 hover:bg-orange-100'
                 }`}
               >
-                {selectedRoute === route.id ? '✓ Selected' : 'Choose this route'}
+                                {selectedRoute === route.id ? t('RouteSelectorView.selectedRoute') : t('RouteSelectorView.selectRoute')}
               </button>
             </div>
           </div>
@@ -285,16 +287,16 @@ export default function RouteSelectorView({
         {/* Map Preview */}
         <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-gray-900">🗺️ Map Preview</h3>
+                        <h3 className="font-bold text-gray-900">{t('RouteSelectorView.mapPreview')}</h3>
             <button className="text-sm text-orange-600 font-medium hover:text-orange-700" onClick={() => window.open('https://amap.com', '_blank', 'noopener,noreferrer')}>
-              Open in Amap →
+              {t('RouteSelectorView.openInAmap')}
             </button>
           </div>
           <div className="bg-gray-100 rounded-xl h-48 flex items-center justify-center">
             <div className="text-center text-gray-500">
               <p className="text-4xl mb-2">🗺️</p>
-              <p className="text-sm">Loading map...</p>
-              <p className="text-xs mt-1">Amap / Google Maps integration</p>
+                            <p className="text-sm">{t('RouteSelectorView.mapLoading')}</p>
+              <p className="text-xs mt-1">{t('RouteSelectorView.mapIntegration')}</p>
             </div>
           </div>
         </div>
@@ -304,12 +306,12 @@ export default function RouteSelectorView({
           <div className="flex items-start gap-3">
             <div className="text-2xl">⚠️</div>
             <div className="flex-1">
-              <h4 className="font-bold text-amber-800 mb-2">Safety Tips</h4>
+                            <h4 className="font-bold text-amber-800 mb-2">{t('RouteSelectorView.safetyTitle')}</h4>
               <ul className="text-sm text-amber-700 space-y-1">
-                <li>• Wear a helmet and follow traffic rules</li>
-                <li>• Use bike lanes and watch for pedestrians</li>
-                <li>• Ride carefully on wet roads</li>
-                <li>• Use lights when cycling at night</li>
+                <li>• {t('RouteSelectorView.safety1')}</li>
+                <li>• {t('RouteSelectorView.safety2')}</li>
+                <li>• {t('RouteSelectorView.safety3')}</li>
+                <li>• {t('RouteSelectorView.safety4')}</li>
               </ul>
             </div>
           </div>

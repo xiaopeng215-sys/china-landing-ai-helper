@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ESSENTIALS_DATA, ESSENTIALS_TABS, EMERGENCY_DATA, type EssentialsTab } from '@/data/essentials';
+import { useClientI18n } from '@/lib/i18n/client';
 
 // ─── Emergency Tab ────────────────────────────────────────────────────────────
 
@@ -167,6 +168,7 @@ function EmergencyView() {
 // ─── Main View ────────────────────────────────────────────────────────────────
 
 export default function EssentialsView() {
+  const { t } = useClientI18n();
   const [activeTab, setActiveTab] = useState<EssentialsTab>('payment');
   const section = ESSENTIALS_DATA[activeTab];
 
@@ -174,8 +176,8 @@ export default function EssentialsView() {
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
       <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 pt-6 pb-4">
-        <h1 className="text-2xl font-bold">🛡️ Essentials</h1>
-        <p className="text-orange-100 text-sm mt-1">Everything you need before & during your trip</p>
+        <h1 className="text-2xl font-bold">{t('EssentialsView.title')}</h1>
+        <p className="text-orange-100 text-sm mt-1">{t('EssentialsView.subtitle')}</p>
       </div>
 
       {/* Tab Bar */}
@@ -222,7 +224,7 @@ export default function EssentialsView() {
             {section.steps && section.steps.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="px-4 py-3 bg-orange-50 border-b border-orange-100">
-                  <h3 className="text-sm font-semibold text-orange-700">Step-by-Step Guide</h3>
+                  <h3 className="text-sm font-semibold text-orange-700">{t('EssentialsView.stepByStep')}</h3>
                 </div>
                 <div className="divide-y divide-gray-100">
                   {section.steps.map((s) => (

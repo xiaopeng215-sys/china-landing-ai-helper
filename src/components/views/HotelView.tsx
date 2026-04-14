@@ -3,15 +3,9 @@
 import React, { useState, useMemo } from "react";
 import { hotels, CITIES } from "@/data/hotels";
 import type { CityKey } from "@/data/hotels";
+import { useClientI18n } from "@/lib/i18n/client";
 
 type PriceFilter = 'all' | 'budget' | 'mid-range' | 'luxury';
-
-const PRICE_FILTERS: { key: PriceFilter; label: string; emoji: string }[] = [
-  { key: 'all', label: 'All', emoji: '🏨' },
-  { key: 'budget', label: 'Budget', emoji: '💰' },
-  { key: 'mid-range', label: 'Mid-range', emoji: '⭐' },
-  { key: 'luxury', label: 'Luxury', emoji: '👑' },
-];
 
 function StarRating({ stars }: { stars: number }) {
   return (
@@ -22,8 +16,16 @@ function StarRating({ stars }: { stars: number }) {
 }
 
 export default function HotelView() {
+  const { t } = useClientI18n();
   const [activeCity, setActiveCity] = useState<CityKey>('beijing');
   const [priceFilter, setPriceFilter] = useState<PriceFilter>('all');
+
+  const PRICE_FILTERS: { key: PriceFilter; label: string; emoji: string }[] = [
+    { key: 'all', label: t('HotelView.filterAll'), emoji: '🏨' },
+    { key: 'budget', label: t('HotelView.filterBudget'), emoji: '💰' },
+    { key: 'mid-range', label: t('HotelView.filterMidRange'), emoji: '⭐' },
+    { key: 'luxury', label: t('HotelView.filterLuxury'), emoji: '👑' },
+  ];
 
   const filtered = useMemo(() => {
     return hotels.filter(
@@ -33,14 +35,19 @@ export default function HotelView() {
     );
   }, [activeCity, priceFilter]);
 
+  const getPriceLabel = (priceRange: string) => {
+    if (priceRange === 'budget') return t('HotelView.priceBudget');
+    if (priceRange === 'mid-range') return t('HotelView.priceMidRange');
+    if (priceRange === 'luxury') return t('HotelView.priceLuxury');
+    return priceRange;
+  };
+
   return (
     <div className="pb-20 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-4 pt-6 pb-4">
-        <h1 className="text-white text-2xl font-bold">🏨 Hotel Booking</h1>
-        <p className="text-orange-100 text-sm mt-1">
-          Foreign-friendly hotels · Book via Trip.com
-        </p>
+        <h1 className="text-white text-2xl font-bold">{t('HotelView.title')}</h1>
+        <p className="text-orange-100 text-sm mt-1">{t('HotelView.subtitle')}</p>
       </div>
 
       {/* City Tabs */}
@@ -85,7 +92,7 @@ export default function HotelView() {
         {filtered.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
             <div className="text-4xl mb-2">🏨</div>
-            <p>No hotels found for this filter.</p>
+            <p>{t('HotelView.noHotels')}</p>
           </div>
         ) : (
           filtered.map((hotel) => (
@@ -112,7 +119,7 @@ export default function HotelView() {
                       : 'bg-green-100 text-green-700'
                   }`}
                 >
-                  {hotel.priceRange === 'mid-range' ? 'Mid-range' : hotel.priceRange.charAt(0).toUpperCase() + hotel.priceRange.slice(1)}
+                  {getPriceLabel(hotel.priceRange)}
                 </span>
               </div>
 
@@ -123,7 +130,7 @@ export default function HotelView() {
                   <span className="text-orange-600 font-bold text-lg">
                     {hotel.pricePerNight}
                   </span>
-                  <span className="text-gray-400 text-sm">/ night</span>
+                  <span className="text-gray-400 text-sm">{t('HotelView.perNight')}</span>
                 </div>
 
                 {/* Highlights */}
@@ -145,7 +152,7 @@ export default function HotelView() {
                   rel="noopener noreferrer"
                   className="block w-full text-center bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
                 >
-                  Book Now on Trip.com →
+                  {t('HotelView.bookNow')}
                 </a>
               </div>
             </div>
@@ -155,7 +162,7 @@ export default function HotelView() {
 
       {/* Affiliate Disclosure */}
       <p className="text-center text-xs text-gray-400 px-4 pb-4">
-        Booking links are affiliate links. Prices are approximate.
+        {t('HotelView.affiliateNote')}
       </p>
     </div>
   );
