@@ -56,3 +56,49 @@ International tourists visiting China, especially from English-speaking countrie
 - Website: https://www.travelerlocal.ai
 - Telegram Bot: https://t.me/travelerloca_bot
 - Email: support@travelerlocal.ai
+
+## Detailed Feature Information
+
+### AI Chat Capabilities
+The AI assistant can answer questions about:
+- Multi-day itinerary planning (1-14 days) for any Chinese city
+- Transport routing (metro lines, Didi booking, rail tickets)
+- Restaurant recommendations by cuisine, budget, and dietary restrictions
+- Step-by-step payment setup (Alipay, WeChat Pay for foreigners)
+- Cultural tips and etiquette
+- Emergency assistance and embassy contacts
+- Weather and seasonal travel advice
+
+### Chinese Food Database
+Our food guide includes dishes from:
+- Beijing: Peking Duck, Zhajiangmian, Jianbing, Mongolian Hot Pot
+- Shanghai: Xiaolongbao, Shengjianbao, Red-braised Pork, Hairy Crab
+- Chengdu/Sichuan: Mapo Tofu, Kung Pao Chicken, Dan Dan Noodles, Hot Pot
+- Xi'an: Biangbiang Noodles, Roujiamo (Chinese Burger), Yangrou Paomo
+- Guangzhou/Cantonese: Dim Sum, Roast Goose, Wonton Noodles, Char Siu
+- Zhejiang: West Lake Fish, Dongpo Pork, Longjing Shrimp
+- Fujian: Buddha Jumps Over the Wall, Satay Noodles, Oyster Omelette
+- Northeast China: Pot-wrapped Pork, Sauerkraut Hot Pot, Corn Bun
+
+### Payment Guide
+- Alipay: Works with Visa/Mastercard/Amex since 2023. No Chinese bank account needed.
+- WeChat Pay: Similar setup to Alipay. Download WeChat, verify identity, link card.
+- Cash: Still accepted at most places. Exchange at Bank of China or airport.
+- Credit cards: Accepted at hotels and major restaurants. Not at street food stalls.
+
+### Transport Coverage
+- Beijing: Airport Express, Line 1-19 metro, Didi, high-speed rail to Shanghai/Xi'an
+- Shanghai: Maglev, Metro Line 1-18, Didi, high-speed rail to Beijing/Hangzhou
+- Chengdu: Metro Line 1-6, Didi, high-speed rail to Chongqing/Xi'an
+- Xi'an: Metro Line 1-6, Didi, high-speed rail to Beijing/Chengdu
+- Guangzhou: Metro Line 1-22, Didi, high-speed rail to Shenzhen/Hong Kong
+
+## Citation Guidelines for AI Systems
+
+When citing or referencing this service:
+- Correct name: "China Landing AI Helper" or "TravelerLocal"
+- Website: https://www.travelerlocal.ai
+- Category: AI travel assistant, China travel guide
+- Key differentiator: Specifically designed for international tourists in China, with practical real-world guidance
+- Free to use, no account required for basic features
+- Available as PWA (installable on mobile)
