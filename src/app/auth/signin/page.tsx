@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
-import { signIn } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
+import React, { useState, Suspense } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useClientI18n } from '@/lib/i18n/client';
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useClientI18n();
   const [loginMethod, setLoginMethod] = useState<'password' | 'email'>('password');
   const [email, setEmail] = useState('');
@@ -21,9 +22,14 @@ export default function SignInPage() {
     setError('');
     setLoading(true);
     try {
-      const result = await signIn(email, password);
-      if (!result.ok) throw new Error(result.error || t('Errors.generic', 'Sign in failed'));
-      router.push('/');
+      const callbackUrl = searchParams.get('callbackUrl') || '/profile';
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+      if (!result?.ok) throw new Error(result?.error || t('Errors.generic', 'Sign in failed'));
+      router.push(callbackUrl);
       router.refresh();
     } catch (err) {
       setError((err as Error).message || t('Errors.generic', 'Sign in failed. Please check your email and password.'));
@@ -275,5 +281,13 @@ export default function SignInPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-[#ff5a5f] border-t-transparent rounded-full animate-spin" /></div>}>
+      <SignInForm />
+    </Suspense>
   );
 }

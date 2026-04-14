@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/auth/signin');
+      router.push('/auth/signin?callbackUrl=/profile');
     }
   }, [status, router]);
 
