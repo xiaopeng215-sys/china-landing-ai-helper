@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface RouteOption {
   id: string;
@@ -29,6 +30,7 @@ export default function RouteSelectorView({
   to = 'Destination',
   onSelectRoute,
 }: RouteSelectorViewProps) {
+  const router = useRouter();
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'fastest' | 'scenic' | 'easy'>('all');
 
@@ -122,7 +124,7 @@ export default function RouteSelectorView({
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center gap-2 mb-2">
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors" onClick={() => router.back()}>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
@@ -284,7 +286,7 @@ export default function RouteSelectorView({
         <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-gray-900">🗺️ Map Preview</h3>
-            <button className="text-sm text-orange-600 font-medium hover:text-orange-700">
+            <button className="text-sm text-orange-600 font-medium hover:text-orange-700" onClick={() => window.open('https://amap.com', '_blank', 'noopener,noreferrer')}>
               Open in Amap →
             </button>
           </div>

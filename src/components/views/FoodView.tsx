@@ -681,7 +681,10 @@ export default function FoodView() {
           <div className="text-5xl mb-4">🗺️</div>
           <h3 className="text-xl font-bold mb-2">{t('FoodPage.aiCta')}</h3>
           <p className="text-white/90 mb-4 text-sm">{t('FoodPage.aiCtaDesc')}</p>
-          <button className="px-6 py-3 bg-white text-[#34a853] rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all text-sm">
+          <button
+            onClick={() => { window.location.href = '/?tab=chat'; }}
+            className="px-6 py-3 bg-white text-[#34a853] rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all text-sm"
+          >
             {t('FoodPage.askAI')}
           </button>
         </div>
