@@ -168,7 +168,31 @@ const CITIES: { id: City; label: string; flag: string }[] = [
   { id: 'guangzhou', label: 'Guangzhou', flag: '🌸' },
 ];
 
-type Section = 'airport' | 'metro' | 'didi' | 'rail';
+type Section = 'airport' | 'metro' | 'didi' | 'rail' | 'flights' | 'trains';
+
+const TRIP_AFFILIATE = 'https://www.trip.com/t/gBO6LQDOIU2';
+
+const FLIGHT_CITIES = [
+  { value: 'SHA', label: 'Shanghai (SHA)' },
+  { value: 'PEK', label: 'Beijing (PEK)' },
+  { value: 'CTU', label: 'Chengdu (CTU)' },
+  { value: 'CAN', label: 'Guangzhou (CAN)' },
+  { value: 'XIY', label: "Xi'an (XIY)" },
+  { value: 'HGH', label: 'Hangzhou (HGH)' },
+  { value: 'SZX', label: 'Shenzhen (SZX)' },
+];
+
+const POPULAR_FLIGHTS = [
+  { from: 'SHA', to: 'PEK', label: 'Shanghai → Beijing' },
+  { from: 'PEK', to: 'CTU', label: 'Beijing → Chengdu' },
+  { from: 'CAN', to: 'SHA', label: 'Guangzhou → Shanghai' },
+];
+
+const POPULAR_TRAINS = [
+  { from: 'Beijing', to: 'Shanghai', label: 'Beijing → Shanghai' },
+  { from: 'Chengdu', to: "Xi'an", label: "Chengdu → Xi'an" },
+  { from: 'Shanghai', to: 'Hangzhou', label: 'Shanghai → Hangzhou' },
+];
 
 export default function TransportView() {
   const { t } = useClientI18n();
@@ -177,6 +201,34 @@ export default function TransportView() {
   const [fromInput, setFromInput] = useState('');
   const [toInput, setToInput] = useState('');
 
+  // Flights state
+  const [flightFrom, setFlightFrom] = useState('SHA');
+  const [flightTo, setFlightTo] = useState('PEK');
+  const [flightDate, setFlightDate] = useState('');
+  const [flightPassengers, setFlightPassengers] = useState(1);
+
+  // Trains state
+  const [trainFrom, setTrainFrom] = useState('Beijing');
+  const [trainTo, setTrainTo] = useState('Shanghai');
+  const [trainDate, setTrainDate] = useState('');
+
+  const handleFlightSearch = () => {
+    const url = new URL(TRIP_AFFILIATE);
+    url.searchParams.set('dcity', flightFrom);
+    url.searchParams.set('acity', flightTo);
+    if (flightDate) url.searchParams.set('ddate', flightDate);
+    url.searchParams.set('adult', String(flightPassengers));
+    window.open(url.toString(), '_blank', 'noopener,noreferrer');
+  };
+
+  const handleTrainSearch = () => {
+    const url = new URL(TRIP_AFFILIATE);
+    url.searchParams.set('from', trainFrom);
+    url.searchParams.set('to', trainTo);
+    if (trainDate) url.searchParams.set('date', trainDate);
+    window.open(url.toString(), '_blank', 'noopener,noreferrer');
+  };
+
   const cityData = CITY_DATA[selectedCity];
 
   const sections: { id: Section; label: string; icon: string }[] = [
@@ -184,6 +236,8 @@ export default function TransportView() {
     { id: 'metro', label: t('TransportPage.sectionMetro'), icon: '🚇' },
     { id: 'didi', label: t('TransportPage.sectionDidi'), icon: '🚕' },
     { id: 'rail', label: t('TransportPage.sectionRail'), icon: '🚄' },
+    { id: 'flights', label: 'Flights', icon: '🛫' },
+    { id: 'trains', label: 'Trains', icon: '🚅' },
   ];
 
   return (
@@ -256,7 +310,7 @@ export default function TransportView() {
         </div>
 
         {/* Section Tabs */}
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {sections.map((s) => (
             <button
               key={s.id}
@@ -357,6 +411,152 @@ export default function TransportView() {
             <div className="bg-yellow-50 rounded-2xl p-4 border border-yellow-200">
               <p className="text-sm font-semibold text-yellow-800 mb-1">⚠️ Heads up</p>
               <p className="text-xs text-yellow-700">DiDi requires a Chinese phone number or international number with country code. Some features may need VPN outside China.</p>
+            </div>
+          </div>
+        )}
+
+        {/* Flights Section */}
+        {activeSection === 'flights' && (
+          <div className="space-y-4">
+            <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
+              <h3 className="font-bold text-[#484848] mb-4">🛫 Book Flights</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-xs text-[#767676] mb-1 block">From</label>
+                  <select
+                    value={flightFrom}
+                    onChange={(e) => setFlightFrom(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
+                  >
+                    {FLIGHT_CITIES.map((c) => (
+                      <option key={c.value} value={c.value}>{c.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-[#767676] mb-1 block">To</label>
+                  <select
+                    value={flightTo}
+                    onChange={(e) => setFlightTo(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
+                  >
+                    {FLIGHT_CITIES.map((c) => (
+                      <option key={c.value} value={c.value}>{c.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-[#767676] mb-1 block">Date</label>
+                    <input
+                      type="date"
+                      value={flightDate}
+                      onChange={(e) => setFlightDate(e.target.value)}
+                      className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#767676] mb-1 block">Passengers</label>
+                    <select
+                      value={flightPassengers}
+                      onChange={(e) => setFlightPassengers(Number(e.target.value))}
+                      className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
+                    >
+                      {[1,2,3,4,5,6].map((n) => (
+                        <option key={n} value={n}>{n} {n === 1 ? 'Adult' : 'Adults'}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <button
+                  onClick={handleFlightSearch}
+                  className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all"
+                >
+                  Search Flights on Trip.com →
+                </button>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
+              <h4 className="font-semibold text-sm text-[#484848] mb-3">✈️ Popular Routes</h4>
+              <div className="space-y-2">
+                {POPULAR_FLIGHTS.map((route) => (
+                  <button
+                    key={route.label}
+                    onClick={() => {
+                      setFlightFrom(route.from);
+                      setFlightTo(route.to);
+                    }}
+                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl hover:bg-orange-50 hover:border-orange-200 border border-transparent transition-all text-sm"
+                  >
+                    <span className="font-medium text-[#484848]">{route.label}</span>
+                    <span className="text-[#ff5a5f] text-xs">Select →</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Trains Section */}
+        {activeSection === 'trains' && (
+          <div className="space-y-4">
+            <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
+              <h3 className="font-bold text-[#484848] mb-4">🚅 Book Train Tickets</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-xs text-[#767676] mb-1 block">From</label>
+                  <input
+                    type="text"
+                    value={trainFrom}
+                    onChange={(e) => setTrainFrom(e.target.value)}
+                    placeholder="e.g. Beijing"
+                    className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-[#767676] mb-1 block">To</label>
+                  <input
+                    type="text"
+                    value={trainTo}
+                    onChange={(e) => setTrainTo(e.target.value)}
+                    placeholder="e.g. Shanghai"
+                    className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-[#767676] mb-1 block">Date</label>
+                  <input
+                    type="date"
+                    value={trainDate}
+                    onChange={(e) => setTrainDate(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
+                  />
+                </div>
+                <button
+                  onClick={handleTrainSearch}
+                  className="w-full py-3 bg-gradient-to-r from-[#1a73e8] to-[#174ea6] text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all"
+                >
+                  Search Trains on Trip.com →
+                </button>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
+              <h4 className="font-semibold text-sm text-[#484848] mb-3">🚄 Popular Routes</h4>
+              <div className="space-y-2">
+                {POPULAR_TRAINS.map((route) => (
+                  <button
+                    key={route.label}
+                    onClick={() => {
+                      setTrainFrom(route.from);
+                      setTrainTo(route.to);
+                    }}
+                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl hover:bg-blue-50 hover:border-blue-200 border border-transparent transition-all text-sm"
+                  >
+                    <span className="font-medium text-[#484848]">{route.label}</span>
+                    <span className="text-[#1a73e8] text-xs">Select →</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}

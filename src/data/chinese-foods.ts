@@ -10,6 +10,8 @@ export interface ChineseFood {
   priceRange: string;
   whereToFind: string;
   emoji: string;
+  isHot?: boolean;
+  category?: 'street_food' | 'restaurant' | 'breakfast' | 'dessert' | 'drink';
 }
 
 export const REGIONS = [
@@ -21,6 +23,11 @@ export const REGIONS = [
   { id: "yunnan", label: "Yunnan", labelCn: "云南" },
   { id: "shaanxi", label: "Shaanxi", labelCn: "陕西" },
   { id: "hunan", label: "Hunan", labelCn: "湖南" },
+  { id: "zhejiang", label: "Zhejiang", labelCn: "浙江" },
+  { id: "fujian", label: "Fujian", labelCn: "福建" },
+  { id: "jiangsu", label: "Jiangsu", labelCn: "江苏" },
+  { id: "shandong", label: "Shandong", labelCn: "山东" },
+  { id: "northeast", label: "Northeast", labelCn: "东北" },
 ] as const;
 
 export const chineseFoods: ChineseFood[] = [
@@ -37,6 +44,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥100–300 per person",
     whereToFind: "Quanjude, Dadong, or any Peking Duck restaurant",
     emoji: "🦆",
+    isHot: true,
+    category: 'restaurant',
   },
   {
     id: "zhajiang-noodles",
@@ -50,6 +59,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥15–35",
     whereToFind: "Local noodle shops and hutong restaurants",
     emoji: "🍜",
+    isHot: false,
+    category: 'restaurant',
   },
   {
     id: "bean-juice",
@@ -63,6 +74,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥5–15",
     whereToFind: "Traditional Beijing snack shops and morning markets",
     emoji: "🥛",
+    isHot: false,
+    category: 'drink',
   },
   {
     id: "donkey-roll",
@@ -76,6 +89,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥10–25",
     whereToFind: "Wangfujing Snack Street, traditional pastry shops",
     emoji: "🍡",
+    isHot: false,
+    category: 'dessert',
   },
   {
     id: "jianbing",
@@ -89,6 +104,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥8–15",
     whereToFind: "Street vendors, especially in the morning",
     emoji: "🥞",
+    isHot: true,
+    category: 'street_food',
   },
   {
     id: "mongolian-hot-pot",
@@ -102,6 +119,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥80–200 per person",
     whereToFind: "Donglaishun and traditional hot pot restaurants",
     emoji: "🍲",
+    isHot: false,
+    category: 'restaurant',
   },
   {
     id: "tanghulu",
@@ -115,6 +134,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥5–15",
     whereToFind: "Street vendors, Wangfujing Snack Street, hutong areas",
     emoji: "🍡",
+    isHot: true,
+    category: 'street_food',
   },
   {
     id: "baozi-breakfast",
@@ -128,6 +149,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥2–5 each",
     whereToFind: "Street stalls and breakfast shops, especially in the morning",
     emoji: "🥟",
+    isHot: false,
+    category: 'breakfast',
   },
 
   // ── Shanghai ─────────────────────────────────────────────
@@ -143,6 +166,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥20–60 per basket",
     whereToFind: "Din Tai Fung, Nanxiang Steamed Bun Restaurant, local dim sum shops",
     emoji: "🥟",
+    isHot: true,
+    category: 'restaurant',
   },
   {
     id: "shengjianbao",
@@ -156,6 +181,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥10–25",
     whereToFind: "Yang's Fry-Dumpling, local breakfast stalls",
     emoji: "🥟",
+    isHot: true,
+    category: 'street_food',
   },
   {
     id: "red-braised-pork",
@@ -169,6 +196,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥30–60",
     whereToFind: "Shanghai home-style restaurants and local eateries",
     emoji: "🥩",
+    isHot: false,
+    category: 'restaurant',
   },
   {
     id: "scallion-oil-noodles",
@@ -182,6 +211,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥12–25",
     whereToFind: "Noodle shops throughout Shanghai",
     emoji: "🍝",
+    isHot: false,
+    category: 'restaurant',
   },
   {
     id: "hairy-crab",
@@ -195,6 +226,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥80–300 per crab",
     whereToFind: "Seafood restaurants, especially Oct–Nov season",
     emoji: "🦀",
+    isHot: true,
+    category: 'restaurant',
   },
   {
     id: "lions-head-meatball",
@@ -208,6 +241,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥35–70",
     whereToFind: "Shanghainese restaurants and home-style eateries",
     emoji: "🍖",
+    isHot: false,
+    category: 'restaurant',
   },
   {
     id: "cong-you-bing",
@@ -221,6 +256,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥5–12",
     whereToFind: "Street stalls and breakfast shops throughout Shanghai",
     emoji: "🥞",
+    isHot: false,
+    category: 'breakfast',
   },
   {
     id: "shanghai-egg-tart",
@@ -234,6 +271,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥5–12",
     whereToFind: "Bakeries and dim sum shops throughout Shanghai",
     emoji: "🥚",
+    isHot: false,
+    category: 'dessert',
   },
 
   // ── Sichuan ──────────────────────────────────────────────
@@ -249,6 +288,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥20–45",
     whereToFind: "Sichuan restaurants everywhere in China",
     emoji: "🌶️",
+    isHot: true,
+    category: 'restaurant',
   },
   {
     id: "dan-dan-noodles",
@@ -262,6 +303,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥15–30",
     whereToFind: "Sichuan noodle shops and street stalls",
     emoji: "🍜",
+    isHot: false,
+    category: 'street_food',
   },
   {
     id: "sichuan-hot-pot",
@@ -275,6 +318,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥80–200 per person",
     whereToFind: "Haidilao, local hot pot restaurants",
     emoji: "🫕",
+    isHot: true,
+    category: 'restaurant',
   },
   {
     id: "husband-wife-beef",
@@ -288,6 +333,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥25–50",
     whereToFind: "Sichuan restaurants and cold dish counters",
     emoji: "🥩",
+    isHot: false,
+    category: 'restaurant',
   },
   {
     id: "kung-pao-chicken",
@@ -301,6 +348,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥25–55",
     whereToFind: "Sichuan restaurants and most Chinese restaurants",
     emoji: "🍗",
+    isHot: true,
+    category: 'restaurant',
   },
   {
     id: "twice-cooked-pork",
@@ -314,6 +363,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥25–50",
     whereToFind: "Sichuan restaurants and home-style eateries",
     emoji: "🥓",
+    isHot: false,
+    category: 'restaurant',
   },
   {
     id: "sichuan-cold-noodles",
@@ -327,6 +378,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥10–25",
     whereToFind: "Sichuan noodle stalls and street vendors",
     emoji: "🍜",
+    isHot: false,
+    category: 'street_food',
   },
   {
     id: "sichuan-sweet-water-noodles",
@@ -340,6 +393,8 @@ export const chineseFoods: ChineseFood[] = [
     priceRange: "¥8–18",
     whereToFind: "Chengdu street stalls and snack shops",
     emoji: "🍝",
+    isHot: false,
+    category: 'street_food',
   },
 
   // ── Guangdong ────────────────────────────────────────────
