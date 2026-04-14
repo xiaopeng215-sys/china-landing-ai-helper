@@ -147,15 +147,15 @@ export default function PWAInstallPrompt() {
         <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-3 gap-2">
           <div className="text-center">
             <div className="text-lg mb-1">⚡</div>
-            <div className="text-[10px] text-gray-500">快速启动</div>
+            <div className="text-[12px] text-gray-500">快速启动</div>
           </div>
           <div className="text-center">
             <div className="text-lg mb-1">📶</div>
-            <div className="text-[10px] text-gray-500">离线使用</div>
+            <div className="text-[12px] text-gray-500">离线使用</div>
           </div>
           <div className="text-center">
             <div className="text-lg mb-1">💾</div>
-            <div className="text-[10px] text-gray-500">节省空间</div>
+            <div className="text-[12px] text-gray-500">节省空间</div>
           </div>
         </div>
       </div>

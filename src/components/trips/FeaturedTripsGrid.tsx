@@ -38,7 +38,7 @@ export default function FeaturedTripsGrid({ trips, onTripSelect }: FeaturedTrips
           <button
             key={trip.id}
             onClick={() => handleTripClick(trip)}
-            className="bg-white rounded-2xl p-4 text-left shadow-md hover:shadow-lg transition-all active:scale-[0.98] border border-gray-100 touch-manipulation"
+            className="bg-white rounded-2xl p-4 text-left rtl:text-right shadow-md hover:shadow-lg transition-all active:scale-[0.98] border border-gray-100 touch-manipulation"
           >
             <div className="text-3xl mb-2">
               {cityEmojis[trip.cityEn] ?? '📍'}

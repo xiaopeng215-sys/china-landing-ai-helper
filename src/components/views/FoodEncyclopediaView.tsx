@@ -27,15 +27,15 @@ function FoodCard({ food, t }: { food: ChineseFood; t: (key: string) => string }
         {/* Tags row */}
         <div className="flex flex-wrap gap-1 mt-2">
           {food.spiceLevel > 0 && (
-            <span className="text-[10px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded-full">
+            <span className="text-[12px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded-full">
               {SPICE_ICONS[food.spiceLevel]}
             </span>
           )}
           {food.isVegetarian && (
-            <span className="text-[10px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded-full">🌱</span>
+            <span className="text-[12px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded-full">🌱</span>
           )}
           {!food.containsPork && !food.isVegetarian && (
-            <span className="text-[10px] bg-teal-50 text-teal-700 px-1.5 py-0.5 rounded-full">🕌</span>
+            <span className="text-[12px] bg-teal-50 text-teal-700 px-1.5 py-0.5 rounded-full">🕌</span>
           )}
         </div>
       </div>

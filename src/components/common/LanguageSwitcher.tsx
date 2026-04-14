@@ -119,7 +119,7 @@ export default function LanguageSwitcher({
             <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
             
             {/* 语言列表 */}
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="absolute right-0 rtl:right-auto rtl:left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
               <div className="px-3 py-2 border-b border-gray-100 bg-gray-50">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                   选择语言 / Select Language

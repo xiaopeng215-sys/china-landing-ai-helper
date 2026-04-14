@@ -81,11 +81,11 @@ export default function ProfileView() {
                 className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 active:bg-gray-100 transition-all cursor-pointer"
               >
                 <div className="text-2xl">{item.icon}</div>
-                <div className="flex-1 text-left">
+                <div className="flex-1 text-left rtl:text-right">
                   <p className="font-medium text-[#484848]">{t(item.labelKey)}</p>
                   {item.valueKey && <p className="text-sm text-[#767676]">{t(item.valueKey)}</p>}
                 </div>
-                {item.showArrow && <div className="text-[#767676]">→</div>}
+                {item.showArrow && <div className="text-[#767676] rtl:rotate-180">→</div>}
               </button>
             ))}
           </div>
@@ -109,10 +109,10 @@ export default function ProfileView() {
                 className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 active:bg-gray-100 transition-all cursor-pointer"
               >
                 <div className="text-2xl">{item.icon}</div>
-                <div className="flex-1 text-left">
+                <div className="flex-1 text-left rtl:text-right">
                   <p className="font-medium text-[#484848]">{t(item.labelKey)}</p>
                 </div>
-                {item.showArrow && <div className="text-[#767676]">→</div>}
+                {item.showArrow && <div className="text-[#767676] rtl:rotate-180">→</div>}
               </button>
             ))}
           </div>

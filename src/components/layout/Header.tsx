@@ -39,7 +39,7 @@ export default function Header({
               className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
               aria-label="Go back"
             >
-              <span className="text-xl" aria-hidden="true">←</span>
+              <span className="text-xl rtl:rotate-180 inline-block" aria-hidden="true">←</span>
             </button>
           )}
           <h1 className="text-xl font-bold text-gray-900">{title}</h1>
@@ -70,7 +70,7 @@ export default function Header({
                     className="fixed inset-0 z-40" 
                     onClick={() => setShowMenu(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+                  <div className="absolute right-0 rtl:right-auto rtl:left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
                     <div className="px-4 py-3 border-b border-gray-100">
                       <p className="text-sm font-semibold text-[#484848] truncate">
                         {session.user?.name || 'User'}

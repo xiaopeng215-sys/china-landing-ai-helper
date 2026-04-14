@@ -49,7 +49,7 @@ function TransportBookingCard({ card }: { card: TransportCardData }) {
       </div>
       <div className="flex items-center gap-2 text-sm font-medium text-[#484848] mb-1">
         <span>{card.from}</span>
-        <span className="text-[#767676]">→</span>
+        <span className="text-[#767676] rtl:rotate-180 inline-block">→</span>
         <span>{card.to}</span>
         {card.date && (
           <span className="text-xs text-[#767676] ml-auto">{card.date}</span>
