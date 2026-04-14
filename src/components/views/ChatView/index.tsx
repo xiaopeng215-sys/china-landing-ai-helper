@@ -290,21 +290,41 @@ export default function ChatView() {
       {/* Messages */}
       <MessageList messages={messages} messagesEndRef={messagesEndRef} />
 
-      {/* Quick Questions - shown when chat is empty */}
+      {/* Welcome screen - shown when chat is empty */}
       {messages.length === 0 && !isTyping && (
-        <div className="px-4 py-3 bg-white border-t border-gray-100">
-          <p className="text-xs text-[#767676] mb-2">Quick questions:</p>
-          <div className="flex flex-wrap gap-2">
-            {QUICK_QUESTIONS.map((q) => (
-              <button
-                key={q}
-                onClick={() => handleQuickQuestion(q)}
-                className="text-xs px-3 py-1.5 rounded-full border border-[#ff5a5f] text-[#ff5a5f]
-                           hover:bg-[#ff5a5f] hover:text-white transition-colors whitespace-nowrap"
-              >
-                {q}
-              </button>
-            ))}
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex flex-col items-center px-4 pt-8 pb-4">
+            {/* Avatar + greeting */}
+            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+              <span className="text-3xl">🤖</span>
+            </div>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Hi, I&apos;m your China Travel AI</h2>
+            <p className="text-sm text-gray-500 text-center mb-6 max-w-xs">
+              Ask me anything about traveling in China — itineraries, food, transport, payments, and more.
+            </p>
+
+            {/* Suggestion buttons */}
+            <div className="w-full max-w-sm space-y-2">
+              <p className="text-xs text-gray-400 text-center mb-3">Try asking:</p>
+              {[
+                { emoji: '🗺️', text: 'Plan a 3-day Beijing itinerary' },
+                { emoji: '🍜', text: 'Best street food in Shanghai' },
+                { emoji: '🚇', text: 'How to get from airport to city?' },
+                { emoji: '💳', text: 'How to set up Alipay as a foreigner?' },
+                { emoji: '📶', text: 'Best SIM card for China travel' },
+                { emoji: '🏨', text: 'Budget hotels in Chengdu' },
+              ].map((q) => (
+                <button
+                  key={q.text}
+                  onClick={() => handleQuickQuestion(q.text)}
+                  className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl text-left hover:border-orange-300 hover:bg-orange-50 transition-colors"
+                >
+                  <span className="text-lg">{q.emoji}</span>
+                  <span className="text-sm text-gray-700">{q.text}</span>
+                  <span className="ml-auto text-gray-400">→</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}

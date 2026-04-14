@@ -356,10 +356,10 @@ async function sendToGrok(
       messages: finalMessages,
       temperature: 0.7,
       max_tokens: 1500,
-      stream: false,
+      stream: true,
     };
 
-    console.log('🤖 发送请求到 Grok API...');
+    console.log('🤖 发送请求到 Grok API (stream)...');
 
     const response = await fetch(GROK_API_URL, {
       method: 'POST',
@@ -377,16 +377,37 @@ async function sendToGrok(
       throw new Error(`Grok API 错误：${response.status} - ${errorText}`);
     }
 
-    const data = await response.json();
-    const rawContent = data.choices[0].message.content;
+    // 读取流式响应，拼接完整内容
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+    let rawContent = '';
+    let usageData: any = undefined;
 
-    console.log('✅ Grok API 响应成功');
+    if (reader) {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split('\n')) {
+          if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+            try {
+              const parsed = JSON.parse(line.slice(6));
+              const delta = parsed.choices?.[0]?.delta?.content;
+              if (delta) rawContent += delta;
+              if (parsed.usage) usageData = parsed.usage;
+            } catch {}
+          }
+        }
+      }
+    }
+
+    console.log('✅ Grok API 流式响应完成');
 
     const structured = parseAIResponse(rawContent);
     if (structured.recommendations?.length || structured.actions?.length) {
-      return { content: JSON.stringify(structured), usage: data.usage };
+      return { content: JSON.stringify(structured), usage: usageData };
     }
-    return { content: rawContent, usage: data.usage };
+    return { content: rawContent, usage: usageData };
   } catch (error) {
     console.error('❌ sendToGrok 错误:', error);
     throw error;
