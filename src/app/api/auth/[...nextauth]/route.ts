@@ -19,13 +19,13 @@ type RouteContext = {
   params: Promise<{ nextauth: string[] }> | { nextauth: string[] };
 };
 
+// 在模块级别初始化 handler，避免每次请求重新创建导致 Google OAuth 失败
+const handler = NextAuth(getAuthOptions());
+
 async function authHandler(req: NextRequest, context: RouteContext) {
   // 解析 params（Next.js 15 中 params 是 Promise）
   const params = await Promise.resolve(context.params);
   const nextauth = params?.nextauth;
-
-  // 每次请求动态生成 authOptions，确保运行时环境变量生效
-  const handler = NextAuth(getAuthOptions());
 
   // 将解析后的 nextauth 注入到请求对象
   const patchedReq = Object.assign(req, {
