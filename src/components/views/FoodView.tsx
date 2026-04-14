@@ -420,8 +420,8 @@ export default function FoodView() {
             onClick={() => setFilterFriendly(!filterFriendly)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
               filterFriendly
-                ? 'bg-emerald-500 text-white border-emerald-500'
-                : 'bg-white text-[#484848] border-gray-200 hover:border-emerald-400'
+                ? 'bg-orange-500 text-white border-orange-500'
+                : 'bg-white text-[#484848] border-gray-200 hover:border-orange-400'
             }`}
           >
             🌍 {t('FoodPage.travelerFriendly')}
@@ -430,8 +430,8 @@ export default function FoodView() {
             onClick={() => setFilterEnglish(!filterEnglish)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
               filterEnglish
-                ? 'bg-blue-500 text-white border-blue-500'
-                : 'bg-white text-[#484848] border-gray-200 hover:border-blue-400'
+                ? 'bg-orange-500 text-white border-orange-500'
+                : 'bg-white text-[#484848] border-gray-200 hover:border-orange-400'
             }`}
           >
             🇬🇧 {t('FoodPage.englishMenu')}
@@ -478,7 +478,7 @@ export default function FoodView() {
                     <div className="flex items-start justify-between gap-2">
                       <h4 className="font-bold text-[#484848] text-sm leading-tight">{r.name}</h4>
                       {r.travelerFriendly && (
-                        <span className="flex-shrink-0 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs rounded-full font-medium">
+                        <span className="flex-shrink-0 px-2 py-0.5 bg-orange-100 text-orange-700 text-xs rounded-full font-medium">
                           🌍 Friendly
                         </span>
                       )}
@@ -496,7 +496,7 @@ export default function FoodView() {
                       <span className="text-xs font-semibold text-[#34a853]">⭐ {r.rating}</span>
                       <span className="text-xs text-[#767676]">{PRICE_ICONS[r.priceLevel]}</span>
                       {r.englishMenu && (
-                        <span className="text-xs text-blue-600">🇬🇧 EN</span>
+                        <span className="text-xs text-orange-600">🇬🇧 EN</span>
                       )}
                       {r.spicy && (
                         <span className="text-xs text-red-500">🌶️</span>

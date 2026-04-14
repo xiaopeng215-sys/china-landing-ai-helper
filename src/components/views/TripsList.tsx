@@ -32,7 +32,7 @@ export default function TripsList({ trips, selectedCity, onTripSelect }: TripsLi
           <p className="text-sm text-[#767676] mt-1 mb-4">{t('TripsPage.emptyDesc')}</p>
           <button
             onClick={() => window.location.href = '/?tab=chat'}
-            className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all"
+            className="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all"
           >
             {t('TripsPage.emptyAction')} →
           </button>

@@ -133,7 +133,7 @@ export function RealtimeStatus({
                   {!wsConnected && isOnline && (
                     <button
                       onClick={onReconnectWS}
-                      className="ml-1 text-xs text-blue-600 hover:underline"
+                      className="ml-1 text-xs text-orange-600 hover:underline"
                     >
                       重连
                     </button>
@@ -158,7 +158,7 @@ export function RealtimeStatus({
                   {!sseConnected && isOnline && (
                     <button
                       onClick={onReconnectSSE}
-                      className="ml-1 text-xs text-blue-600 hover:underline"
+                      className="ml-1 text-xs text-orange-600 hover:underline"
                     >
                       重连
                     </button>
@@ -189,7 +189,7 @@ export function RealtimeStatus({
               <button
                 onClick={handleSyncClick}
                 disabled={!isOnline || isSyncing}
-                className="w-full py-1 px-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="w-full py-1 px-2 text-xs bg-orange-600 text-white rounded hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 {isSyncing ? '同步中...' : '立即同步'}
               </button>

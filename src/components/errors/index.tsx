@@ -44,9 +44,9 @@ export function ErrorBanner({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       ),
-      bg: 'bg-blue-50',
-      text: 'text-blue-800',
-      border: 'border-blue-200',
+      bg: 'bg-amber-50',
+      text: 'text-amber-800',
+      border: 'border-amber-200',
     },
     generic: {
       icon: (
@@ -195,7 +195,7 @@ export function ErrorState({
           {action && (
             <button
               onClick={action.onClick}
-              className="px-6 py-3 bg-blue-50 text-blue-600 rounded-xl font-semibold hover:bg-blue-100 transition-all"
+              className="px-6 py-3 bg-amber-50 text-amber-600 rounded-xl font-semibold hover:bg-amber-100 transition-all"
             >
               {action.label}
             </button>

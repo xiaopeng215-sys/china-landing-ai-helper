@@ -100,7 +100,7 @@ export default function RouteSelectorView({
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-emerald-100 text-emerald-700';
+      case 'easy': return 'bg-orange-100 text-orange-700';
       case 'medium': return 'bg-amber-100 text-amber-700';
       case 'hard': return 'bg-red-100 text-red-700';
       default: return 'bg-gray-100 text-gray-700';
@@ -131,15 +131,15 @@ export default function RouteSelectorView({
           </div>
 
           {/* Route Summary */}
-          <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl p-4 border border-emerald-100">
+          <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-4 border border-orange-100">
             <div className="flex items-center gap-3 mb-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                  <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
                   {from}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
                   {to}
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function RouteSelectorView({
                 onClick={() => setFilter(tab.id as 'all' | 'fastest' | 'scenic' | 'easy')}
                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                   filter === tab.id
-                    ? 'bg-emerald-500 text-white shadow-md'
+                    ? 'bg-orange-500 text-white shadow-md'
                     : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
                 }`}
               >
@@ -190,8 +190,8 @@ export default function RouteSelectorView({
             }}
             className={`bg-white rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
               selectedRoute === route.id
-                ? 'border-emerald-500 shadow-lg ring-2 ring-emerald-200'
-                : 'border-gray-100 shadow-md hover:shadow-lg hover:border-emerald-200'
+                ? 'border-orange-500 shadow-lg ring-2 ring-orange-200'
+                : 'border-gray-100 shadow-md hover:shadow-lg hover:border-orange-200'
             }`}
           >
             {/* Hero Image */}
@@ -206,12 +206,12 @@ export default function RouteSelectorView({
               {/* Badges */}
               <div className="absolute top-3 left-3 flex gap-2">
                 {route.recommended && (
-                  <span className="px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full shadow-lg">
+                  <span className="px-3 py-1 bg-orange-500 text-white text-xs font-bold rounded-full shadow-lg">
                     ⭐ Recommended
                   </span>
                 )}
                 {route.popular && (
-                  <span className="px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full shadow-lg">
+                  <span className="px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full shadow-lg">
                     🔥 Popular
                   </span>
                 )}
@@ -242,7 +242,7 @@ export default function RouteSelectorView({
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-gray-500 mb-1">🌱 CO₂ saved</p>
-                  <p className="font-bold text-emerald-600">{route.carbonSaved}kg</p>
+                  <p className="font-bold text-orange-600">{route.carbonSaved}kg</p>
                 </div>
               </div>
 
@@ -270,8 +270,8 @@ export default function RouteSelectorView({
               <button
                 className={`w-full py-3 rounded-xl font-semibold transition-all ${
                   selectedRoute === route.id
-                    ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                    : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
+                    ? 'bg-orange-500 text-white hover:bg-orange-600'
+                    : 'bg-orange-50 text-orange-600 hover:bg-orange-100'
                 }`}
               >
                 {selectedRoute === route.id ? '✓ Selected' : 'Choose this route'}
@@ -284,7 +284,7 @@ export default function RouteSelectorView({
         <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-gray-900">🗺️ Map Preview</h3>
-            <button className="text-sm text-emerald-600 font-medium hover:text-emerald-700">
+            <button className="text-sm text-orange-600 font-medium hover:text-orange-700">
               Open in Amap →
             </button>
           </div>

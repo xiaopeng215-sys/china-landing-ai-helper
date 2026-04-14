@@ -19,7 +19,7 @@ const STAGE_MESSAGES = {
 } as const;
 
 const STAGE_COLORS = {
-  preparing: 'bg-blue-500',
+  preparing: 'bg-orange-500',
   processing: 'bg-indigo-500',
   finalizing: 'bg-purple-500',
   complete: 'bg-green-500',

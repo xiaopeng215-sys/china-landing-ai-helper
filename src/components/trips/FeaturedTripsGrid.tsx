@@ -47,7 +47,7 @@ export default function FeaturedTripsGrid({ trips, onTripSelect }: FeaturedTrips
             <p className="text-xs text-gray-500">{trip.days} days · {trip.budget}</p>
             <div className="flex flex-wrap gap-1 mt-2">
               {trip.theme.slice(0, 2).map(t => (
-                <span key={t} className="text-xs px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">
+                <span key={t} className="text-xs px-2 py-0.5 bg-orange-50 text-orange-600 rounded-full">
                   {t}
                 </span>
               ))}
@@ -58,7 +58,7 @@ export default function FeaturedTripsGrid({ trips, onTripSelect }: FeaturedTrips
       {isLoading && (
         <div className="fixed inset-0 z-50 bg-white/80 backdrop-blur-sm flex items-center justify-center">
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
+            <div className="w-12 h-12 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-600">{t('TripsPage.loading')}</p>
           </div>
         </div>

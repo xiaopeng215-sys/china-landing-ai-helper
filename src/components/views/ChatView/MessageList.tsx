@@ -103,7 +103,7 @@ function RecommendationCard({ recommendation }: { recommendation: Recommendation
   };
 
   const typeColors = {
-    attraction: 'bg-blue-50 border-blue-200',
+    attraction: 'bg-orange-50 border-orange-200',
     restaurant: 'bg-orange-50 border-orange-200',
     hotel: 'bg-purple-50 border-purple-200',
     transport: 'bg-green-50 border-green-200',

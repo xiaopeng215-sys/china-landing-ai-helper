@@ -305,7 +305,7 @@ export default function TransportView() {
           <div className="space-y-4">
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
               <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-blue-50 rounded-xl p-3">
+                <div className="bg-amber-50 rounded-xl p-3">
                   <p className="text-xs text-[#767676]">Network</p>
                   <p className="font-semibold text-sm text-[#484848]">{cityData.metro.lines}</p>
                 </div>
@@ -378,9 +378,9 @@ export default function TransportView() {
                 ))}
               </div>
             </div>
-            <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
-              <p className="text-sm font-semibold text-blue-800 mb-1">💡 Best booking apps</p>
-              <p className="text-xs text-blue-700">Trip.com (English) or Ctrip — both support international passports and credit cards. Book 2–4 weeks ahead for popular routes.</p>
+            <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+              <p className="text-sm font-semibold text-amber-800 mb-1">💡 Best booking apps</p>
+              <p className="text-xs text-amber-700">Trip.com (English) or Ctrip — both support international passports and credit cards. Book 2–4 weeks ahead for popular routes.</p>
             </div>
           </div>
         )}
@@ -402,7 +402,7 @@ export default function TransportView() {
                     <p className="font-semibold text-sm text-[#484848]">{app.name}</p>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${
                       app.badge === 'Must Have' ? 'bg-red-100 text-red-600' :
-                      app.badge === 'Recommended' ? 'bg-blue-100 text-blue-600' :
+                      app.badge === 'Recommended' ? 'bg-amber-100 text-amber-600' :
                       'bg-gray-200 text-gray-600'
                     }`}>{app.badge}</span>
                   </div>

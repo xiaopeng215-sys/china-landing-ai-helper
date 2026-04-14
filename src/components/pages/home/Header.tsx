@@ -35,7 +35,7 @@ export default function PremiumHeader({ onTripClick, onFoodClick }: HeaderProps)
           <div className="flex gap-2">
             <button 
               onClick={onTripClick}
-              className="px-4 py-2 text-xs font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-md hover:shadow-lg hover-lift btn-ripple transition-all"
+              className="px-4 py-2 text-xs font-medium bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full shadow-md hover:shadow-lg hover-lift btn-ripple transition-all"
             >
               📅 行程
             </button>

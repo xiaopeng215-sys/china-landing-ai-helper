@@ -14,7 +14,7 @@ export default function HomePageEnglish() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50">
       {/* International Header - Airbnb Style */}
       <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/90 border-b border-gray-200/50 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-4">

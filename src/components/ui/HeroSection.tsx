@@ -26,7 +26,7 @@ export default function HeroSection({
   ctaText = "开始探索",
   onCtaClick,
   backgroundImage,
-  gradient = "from-emerald-600 to-teal-700",
+  gradient = "from-orange-600 to-amber-600",
 }: HeroSectionProps) {
   return (
     <section
@@ -52,7 +52,7 @@ export default function HeroSection({
         aria-hidden="true"
       />
       <div
-        className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-cyan-400/10 rounded-full blur-2xl"
+        className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-amber-400/10 rounded-full blur-2xl"
         aria-hidden="true"
       />
 
@@ -80,7 +80,7 @@ export default function HeroSection({
         {/* CTA 按钮 */}
         <button
           onClick={onCtaClick}
-          className="group relative px-8 py-4 bg-white text-emerald-700 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-out transform hover:scale-105 active:scale-95 animate-fade-in animation-delay-400"
+          className="group relative px-8 py-4 bg-white text-orange-700 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-out transform hover:scale-105 active:scale-95 animate-fade-in animation-delay-400"
           aria-label={ctaText}
         >
           <span className="flex items-center gap-2">

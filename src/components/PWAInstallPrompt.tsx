@@ -90,7 +90,7 @@ export default function PWAInstallPrompt() {
       <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 animate-slide-up">
         <div className="flex items-start gap-3">
           {/* Icon */}
-          <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
             <span className="text-2xl">📲</span>
           </div>
 
@@ -105,7 +105,7 @@ export default function PWAInstallPrompt() {
             <div className="flex gap-2">
               <button
                 onClick={handleInstall}
-                className="flex-1 px-3 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-bold rounded-lg shadow-md hover:shadow-lg transition-all tap-feedback"
+                className="flex-1 px-3 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold rounded-lg shadow-md hover:shadow-lg transition-all tap-feedback"
                 type="button"
               >
                 立即安装

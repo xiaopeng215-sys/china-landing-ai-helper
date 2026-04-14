@@ -141,31 +141,31 @@ export default function TermsOfServicePage() {
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mb-4">AI 使用声明</h2>
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
-              <p className="text-blue-800 font-semibold">
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
+              <p className="text-amber-800 font-semibold">
                 🤖 本服务使用人工智能技术
               </p>
-              <ul className="space-y-3 text-blue-900">
+              <ul className="space-y-3 text-amber-900">
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 mt-1">○</span>
+                  <span className="text-amber-600 mt-1">○</span>
                   <div>
                     <strong>AI 生成内容</strong>：行程建议、餐厅推荐、交通路线等由 AI 生成
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 mt-1">○</span>
+                  <span className="text-amber-600 mt-1">○</span>
                   <div>
                     <strong>人工审核</strong>：关键信息经过人工审核，但仍可能存在误差
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 mt-1">○</span>
+                  <span className="text-amber-600 mt-1">○</span>
                   <div>
                     <strong>持续学习</strong>：AI 会根据用户反馈不断优化
                   </div>
                 </li>
               </ul>
-              <p className="text-blue-900 pt-2 border-t border-blue-200">
+              <p className="text-amber-900 pt-2 border-t border-amber-200">
                 <strong>重要提示：</strong>AI 建议仅供参考，请结合实际情况判断。
                 对于重要决策（如医疗、法律、财务），请咨询专业人士。
               </p>

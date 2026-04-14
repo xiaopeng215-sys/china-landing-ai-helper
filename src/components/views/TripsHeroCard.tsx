@@ -20,14 +20,14 @@ export default function TripsHeroCard({ onPlanTrip }: TripsHeroCardProps) {
       icon: '💬',
       title: t('TripsPage.onboardingStep1'),
       desc: t('TripsPage.onboardingStep1Desc'),
-      color: 'bg-blue-100 text-blue-700',
+      color: 'bg-orange-100 text-orange-700',
     },
     {
       num: '2',
       icon: '📋',
       title: t('TripsPage.onboardingStep2'),
       desc: t('TripsPage.onboardingStep2Desc'),
-      color: 'bg-emerald-100 text-emerald-700',
+      color: 'bg-orange-100 text-orange-700',
     },
     {
       num: '3',
@@ -42,7 +42,7 @@ export default function TripsHeroCard({ onPlanTrip }: TripsHeroCardProps) {
     <div className="space-y-3">
       {/* Main CTA Card */}
       <div
-        className="bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl shadow-xl p-6 text-white cursor-pointer active:scale-[0.98] transition-transform"
+        className="bg-gradient-to-br from-orange-500 via-amber-500 to-amber-400 rounded-3xl shadow-xl p-6 text-white cursor-pointer active:scale-[0.98] transition-transform"
         onClick={onPlanTrip}
       >
         <div className="flex items-center justify-between">

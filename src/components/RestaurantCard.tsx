@@ -137,7 +137,7 @@ export default function RestaurantCard({
           <div className="flex gap-2 mt-2">
             <button
               onClick={onNavigate}
-              className="flex-1 px-2 py-1.5 bg-emerald-500 text-white text-xs font-medium rounded-lg hover:bg-emerald-600 transition-colors"
+              className="flex-1 px-2 py-1.5 bg-orange-500 text-white text-xs font-medium rounded-lg hover:bg-orange-600 transition-colors"
             >
               导航
             </button>

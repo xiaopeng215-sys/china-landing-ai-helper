@@ -27,7 +27,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
     <article className="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 touch-manipulation">
       {/* Trip Header */}
       <div 
-        className="bg-gradient-to-r from-emerald-500 to-teal-500 p-5 cursor-pointer active:brightness-95"
+        className="bg-gradient-to-r from-orange-500 to-amber-500 p-5 cursor-pointer active:brightness-95"
         onClick={() => onViewDetails(trip)}
       >
         <div className="flex items-start justify-between">
@@ -54,11 +54,11 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
       {/* Quick Info */}
       <div className="px-5 py-4 flex items-center gap-4 text-sm text-gray-600 border-b border-gray-100">
         <span className="flex items-center gap-1">
-          <DollarSign className="w-4 h-4 text-emerald-500" />
+          <DollarSign className="w-4 h-4 text-orange-500" />
           {trip.budget}
         </span>
         <span className="flex items-center gap-1">
-          <MapPin className="w-4 h-4 text-emerald-500" />
+          <MapPin className="w-4 h-4 text-orange-500" />
           {trip.highlights.slice(0, 2).join(' · ')}
         </span>
       </div>
@@ -69,7 +69,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
         <div className="space-y-2">
           {trip.dayPlans.slice(0, 2).map(day => (
             <div key={day.day} className="flex items-center gap-3">
-              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+              <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">
                 Day {day.day}
               </span>
               <span className="text-sm text-gray-700 truncate">{day.title}</span>
@@ -85,7 +85,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
       <div className="px-5 pb-5 flex gap-3">
         <button 
           onClick={() => onViewDetails(trip)}
-          className="flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-2xl shadow-md active:scale-[0.98] transition-transform touch-manipulation"
+          className="flex-1 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold rounded-2xl shadow-md active:scale-[0.98] transition-transform touch-manipulation"
         >
           {t('TripsPage.viewDetails')}
         </button>

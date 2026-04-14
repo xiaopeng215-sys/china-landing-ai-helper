@@ -69,7 +69,7 @@ export default function AttractionCard({
         {tags.map((tag) => (
           <span
             key={tag}
-            className="px-2 py-1 bg-emerald-50 text-emerald-700 text-xs rounded-full"
+            className="px-2 py-1 bg-orange-50 text-orange-700 text-xs rounded-full"
           >
             {tag}
           </span>

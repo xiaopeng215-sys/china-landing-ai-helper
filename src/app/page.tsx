@@ -90,7 +90,7 @@ export default function Home() {
           subtitle={t("HomePage.subtitle")}
           ctaText={t("HomePage.cta")}
           onCtaClick={handleHeroCtaClick}
-          gradient="from-emerald-600 to-teal-700"
+          gradient="from-orange-600 to-amber-600"
         />
       )}
       

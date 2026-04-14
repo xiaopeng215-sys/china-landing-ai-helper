@@ -48,7 +48,7 @@ export default function TransportCard({
       onClick={onClick}
       className={`p-4 rounded-xl border transition-all cursor-pointer ${
         recommended
-          ? 'bg-emerald-50 border-emerald-200 shadow-sm'
+          ? 'bg-orange-50 border-orange-200 shadow-sm'
           : 'bg-white border-gray-200 hover:shadow-md'
       }`}
     >
@@ -67,9 +67,9 @@ export default function TransportCard({
         </div>
         
         <div className="text-right">
-          <div className="font-bold text-emerald-600">{price}</div>
+          <div className="font-bold text-orange-600">{price}</div>
           {recommended && (
-            <div className="text-xs text-emerald-600 mt-1">推荐</div>
+            <div className="text-xs text-orange-600 mt-1">推荐</div>
           )}
         </div>
       </div>

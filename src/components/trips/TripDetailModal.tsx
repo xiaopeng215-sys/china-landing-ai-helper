@@ -41,7 +41,7 @@ export default function TripDetailModal({ trip, onClose }: TripDetailModalProps)
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mt-3">
             {trip.theme.map(tag => (
-              <span key={tag} className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">
+              <span key={tag} className="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-medium rounded-full">
                 {tag}
               </span>
             ))}
@@ -51,17 +51,17 @@ export default function TripDetailModal({ trip, onClose }: TripDetailModalProps)
         {/* Quick Stats */}
         <div className="px-4 py-3 grid grid-cols-3 gap-3">
           <div className="bg-gray-50 rounded-2xl p-3 text-center">
-            <Calendar className="w-5 h-5 mx-auto mb-1 text-emerald-600" />
+            <Calendar className="w-5 h-5 mx-auto mb-1 text-orange-600" />
             <p className="text-xs text-gray-500">{t('TripsPage.duration')}</p>
             <p className="font-bold text-gray-900">{trip.days} {t('TripsPage.days')}</p>
           </div>
           <div className="bg-gray-50 rounded-2xl p-3 text-center">
-            <DollarSign className="w-5 h-5 mx-auto mb-1 text-emerald-600" />
+            <DollarSign className="w-5 h-5 mx-auto mb-1 text-orange-600" />
             <p className="text-xs text-gray-500">{t('TripsPage.budget')}</p>
             <p className="font-bold text-gray-900">{trip.budget}</p>
           </div>
           <div className="bg-gray-50 rounded-2xl p-3 text-center">
-            <Star className="w-5 h-5 mx-auto mb-1 text-emerald-600" />
+            <Star className="w-5 h-5 mx-auto mb-1 text-orange-600" />
             <p className="text-xs text-gray-500">{t('TripsPage.best')}</p>
             <p className="font-bold text-gray-900">{trip.bestSeason.split('/')[0]}</p>
           </div>
@@ -78,7 +78,7 @@ export default function TripDetailModal({ trip, onClose }: TripDetailModalProps)
             <div key={dayPlan.day}>
               <div className="sticky top-[73px] bg-gray-50 -mx-4 px-4 py-2 z-[5]">
                 <h3 className="font-bold text-gray-900">
-                  {t('TripsPage.day')} {dayPlan.day}: <span className="text-emerald-600">{dayPlan.title}</span>
+                  {t('TripsPage.day')} {dayPlan.day}: <span className="text-orange-600">{dayPlan.title}</span>
                 </h3>
                 <p className="text-xs text-gray-500">{dayPlan.theme}</p>
               </div>
@@ -104,7 +104,7 @@ export default function TripDetailModal({ trip, onClose }: TripDetailModalProps)
 
         {/* Bottom Action */}
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t safe-area-bottom">
-          <button className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-2xl shadow-lg active:scale-[0.98] transition-transform">
+          <button className="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold rounded-2xl shadow-lg active:scale-[0.98] transition-transform">
             {t('TripsPage.planWithAI')}
           </button>
         </div>

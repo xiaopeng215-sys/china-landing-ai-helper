@@ -22,7 +22,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-2xl mx-auto px-4 py-4">
@@ -32,7 +32,7 @@ export default function HomePage() {
               <p className="text-sm text-gray-600">你的中国旅行智能助手</p>
             </div>
             <div className="flex gap-2">
-              <button className="px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200">
+              <button className="px-3 py-1.5 text-sm bg-orange-100 text-orange-700 rounded-full hover:bg-orange-200">
                 行程
               </button>
               <button className="px-3 py-1.5 text-sm bg-green-100 text-green-700 rounded-full hover:bg-green-200">
@@ -49,7 +49,7 @@ export default function HomePage() {
         {/* Welcome Card */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
               🤖
             </div>
             <div className="flex-1">
@@ -120,7 +120,7 @@ export default function HomePage() {
               { time: '18:00', icon: '🌃', title: '外滩夜景', desc: '灯光秀，免费' }
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="text-sm font-medium text-blue-600 w-12 flex-shrink-0">
+                <div className="text-sm font-medium text-orange-600 w-12 flex-shrink-0">
                   {item.time}
                 </div>
                 <div className="text-xl flex-shrink-0">{item.icon}</div>
@@ -131,7 +131,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          <button className="mt-4 w-full py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors">
+          <button className="mt-4 w-full py-3 bg-orange-600 text-white rounded-xl font-medium hover:bg-orange-700 transition-colors">
             查看完整行程 →
           </button>
         </div>
@@ -150,7 +150,7 @@ export default function HomePage() {
               />
               <button
                 onClick={handleSendMessage}
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
+                className="px-6 py-3 bg-orange-600 text-white rounded-xl font-medium hover:bg-orange-700 transition-colors"
               >
                 发送
               </button>
