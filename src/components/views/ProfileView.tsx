@@ -9,10 +9,10 @@ export default function ProfileView() {
   const router = useRouter();
 
   const settings = [
-    { icon: '👤', labelKey: 'ProfileViewPage.account', valueKey: 'ProfileViewPage.notLoggedIn', showArrow: true },
-    { icon: '🌐', labelKey: 'ProfileViewPage.language', valueKey: 'ProfileViewPage.language', showArrow: true },
-    { icon: '🔔', labelKey: 'ProfileViewPage.notifications', valueKey: 'ProfileViewPage.notificationsOn', showArrow: true },
-    { icon: '🎨', labelKey: 'ProfileViewPage.theme', valueKey: 'ProfileViewPage.themeLight', showArrow: true },
+    { icon: '👤', labelKey: 'ProfileViewPage.account', valueKey: 'ProfileViewPage.notLoggedIn', showArrow: true, onClick: () => router.push('/auth/signin?callbackUrl=/profile') },
+    { icon: '🌐', labelKey: 'ProfileViewPage.language', valueKey: 'ProfileViewPage.language', showArrow: true, onClick: () => {} },
+    { icon: '🔔', labelKey: 'ProfileViewPage.notifications', valueKey: 'ProfileViewPage.notificationsOn', showArrow: true, onClick: () => {} },
+    { icon: '🎨', labelKey: 'ProfileViewPage.theme', valueKey: 'ProfileViewPage.themeLight', showArrow: true, onClick: () => {} },
   ];
 
   const support = [
@@ -77,7 +77,8 @@ export default function ProfileView() {
             {settings.map((item) => (
               <button
                 key={item.labelKey}
-                className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-all"
+                onClick={item.onClick}
+                className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 active:bg-gray-100 transition-all cursor-pointer"
               >
                 <div className="text-2xl">{item.icon}</div>
                 <div className="flex-1 text-left">
@@ -99,7 +100,11 @@ export default function ProfileView() {
             {support.map((item) => (
               <button
                 key={item.labelKey}
-                className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-all"
+                onClick={() => {
+                  if (item.labelKey === 'ProfileViewPage.privacyPolicy') router.push('/privacy');
+                  else if (item.labelKey === 'ProfileViewPage.contactUs') window.open('mailto:support@travelerlocal.ai');
+                }}
+                className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 active:bg-gray-100 transition-all cursor-pointer"
               >
                 <div className="text-2xl">{item.icon}</div>
                 <div className="flex-1 text-left">

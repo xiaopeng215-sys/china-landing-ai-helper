@@ -6,16 +6,24 @@ import { resolveLocale, saveLocalePreference } from './detect-locale';
 
 import enUS from '@/messages/en-US.json';
 import zhCN from '@/messages/zh-CN.json';
+import zhTW from '@/messages/zh-TW.json';
 import koKR from '@/messages/ko-KR.json';
 import jaJP from '@/messages/ja-JP.json';
+import esES from '@/messages/es-ES.json';
+import ptBR from '@/messages/pt-BR.json';
+import arSA from '@/messages/ar-SA.json';
 
 type MessageTree = Record<string, unknown>;
 
-const messagesMap: Record<Locale, MessageTree> = {
+const messagesMap: Record<string, MessageTree> = {
   'en-US': enUS as MessageTree,
   'zh-CN': zhCN as MessageTree,
+  'zh-TW': zhTW as MessageTree,
   'ko-KR': koKR as MessageTree,
   'ja-JP': jaJP as MessageTree,
+  'es-ES': esES as MessageTree,
+  'pt-BR': ptBR as MessageTree,
+  'ar-SA': arSA as MessageTree,
 };
 
 function getByPath(obj: MessageTree, key: string): unknown {
