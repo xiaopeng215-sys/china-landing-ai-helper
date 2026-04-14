@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { timelineSteps } from "@/data/timeline";
+import { useClientI18n } from "@/lib/i18n/client";
 
 export default function TimelineView() {
+  const { t } = useClientI18n();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
 
@@ -18,18 +20,20 @@ export default function TimelineView() {
 
   const completedCount = Object.values(completed).filter(Boolean).length;
 
+  const progressText = t('TimelineView.progressDone')
+    .replace('{count}', String(completedCount))
+    .replace('{total}', String(timelineSteps.length));
+
   return (
     <div className="pb-20 px-4 pt-4 max-w-lg mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Landing Day Guide</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Your first hours in China, step by step
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900">{t('TimelineView.title')}</h1>
+        <p className="text-sm text-gray-500 mt-1">{t('TimelineView.subtitle')}</p>
         {/* Progress bar */}
         <div className="mt-3">
           <div className="flex justify-between text-xs text-gray-500 mb-1">
-            <span>{completedCount} of {timelineSteps.length} done</span>
+            <span>{progressText}</span>
             <span>{Math.round((completedCount / timelineSteps.length) * 100)}%</span>
           </div>
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -116,7 +120,7 @@ export default function TimelineView() {
                     <div className="px-4 pb-4 border-t border-gray-100">
                       {/* Steps */}
                       <div className="mt-3">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Steps</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{t('TimelineView.stepsLabel')}</p>
                         <ol className="space-y-2">
                           {step.steps.map((s, i) => (
                             <li key={i} className="flex gap-2 text-sm text-gray-700">
@@ -131,7 +135,7 @@ export default function TimelineView() {
 
                       {/* Tips */}
                       <div className="mt-4">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Tips</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{t('TimelineView.tipsLabel')}</p>
                         <ul className="space-y-1.5">
                           {step.tips.map((tip, i) => (
                             <li key={i} className="flex gap-2 text-sm text-gray-600">
@@ -154,8 +158,8 @@ export default function TimelineView() {
       {completedCount === timelineSteps.length && (
         <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-xl text-center">
           <p className="text-2xl mb-1">🎉</p>
-          <p className="font-semibold text-orange-700">You&apos;re all set!</p>
-          <p className="text-sm text-orange-600 mt-1">Welcome to China. Go explore!</p>
+          <p className="font-semibold text-orange-700">{t('TimelineView.allDoneTitle')}</p>
+          <p className="text-sm text-orange-600 mt-1">{t('TimelineView.allDoneSubtitle')}</p>
         </div>
       )}
     </div>
