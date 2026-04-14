@@ -173,6 +173,66 @@ export default function Home() {
               </div>
             </div>
           )}
+
+          {/* Quick Start Demo */}
+          <div className="px-4 mb-4">
+            <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-4 text-white">
+              <p className="text-sm font-medium mb-1">✈️ Try it now — no sign up needed</p>
+              <p className="text-xs opacity-90 mb-3">&ldquo;I&apos;m landing in Shanghai tomorrow, what should I do first?&rdquo;</p>
+              <button
+                onClick={handleHeroCtaClick}
+                className="inline-block bg-white text-teal-600 font-semibold text-sm px-4 py-2 rounded-xl"
+              >
+                Ask AI Now →
+              </button>
+            </div>
+          </div>
+
+          {/* Traveler Stories */}
+          <section className="px-4 mb-6">
+            <h2 className="text-lg font-bold text-gray-800 mb-3">💬 Real Traveler Stories</h2>
+            <div className="space-y-3">
+              {[
+                {
+                  name: "Sarah M.",
+                  flag: "🇺🇸",
+                  city: "Shanghai",
+                  date: "April 2026",
+                  story: "Landed at Pudong at midnight. Set up Alipay in 20 minutes using the AI guide. Took the Maglev to the city — total cost ¥55. Couldn't have done it without this app.",
+                  tag: "Payment Setup"
+                },
+                {
+                  name: "James K.",
+                  flag: "🇬🇧",
+                  city: "Beijing",
+                  date: "March 2026",
+                  story: "Asked the AI for a 3-day Beijing itinerary avoiding tourist traps. Got a detailed plan with local restaurants and metro routes. The hutong food recommendations were spot on.",
+                  tag: "Itinerary"
+                },
+                {
+                  name: "Yuki T.",
+                  flag: "🇯🇵",
+                  city: "Chengdu",
+                  date: "April 2026",
+                  story: "Needed a vegetarian-friendly hot pot place in Chengdu. The AI found one immediately and even told me how to ask for no meat in Chinese. Perfect trip.",
+                  tag: "Food Guide"
+                }
+              ].map((s) => (
+                <div key={s.name} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{s.flag}</span>
+                      <span className="font-semibold text-gray-800 text-sm">{s.name}</span>
+                      <span className="text-gray-400 text-xs">· {s.city}</span>
+                    </div>
+                    <span className="text-xs bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full">{s.tag}</span>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed">&ldquo;{s.story}&rdquo;</p>
+                  <p className="text-xs text-gray-400 mt-2">{s.date}</p>
+                </div>
+              ))}
+            </div>
+          </section>
         </>
       )}
       

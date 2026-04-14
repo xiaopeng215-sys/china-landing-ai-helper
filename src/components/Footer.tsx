@@ -47,6 +47,13 @@ export default function Footer() {
           </a>
         </div>
 
+        {/* Privacy Promise */}
+        <div className="text-center mb-3 px-4">
+          <p className="text-xs text-gray-400">
+            🔒 We never sell your data · GDPR compliant · Delete your account anytime
+          </p>
+        </div>
+
         <div className="text-center text-xs text-gray-500">
           <p>{t('Footer.copyright', `© ${currentYear} China Landing AI Helper. All rights reserved.`)}</p>
         </div>

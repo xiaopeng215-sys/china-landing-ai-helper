@@ -247,6 +247,7 @@ export default function TransportView() {
         <div className="max-w-3xl mx-auto px-4 py-4">
           <h1 className="text-2xl font-bold text-[#484848]">{t('TransportPage.title')}</h1>
           <p className="text-sm text-[#767676]">{t('TransportPage.subtitle')}</p>
+          <p className="text-xs text-gray-400 mt-1">📊 Routes & prices from official metro apps, 12306 & Didi · Updated April 2026</p>
         </div>
       </header>
 

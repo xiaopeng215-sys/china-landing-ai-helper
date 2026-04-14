@@ -154,6 +154,32 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
           </div>
         </div>
       </div>
+
+      {/* China Travel FAQ - Fear Busters */}
+      <section className="px-4 mt-6 mb-6">
+        <h2 className="text-lg font-bold text-gray-800 mb-1">🛡️ Common Concerns, Solved</h2>
+        <p className="text-sm text-gray-500 mb-3">Everything foreigners worry about — answered</p>
+        <div className="space-y-2">
+          {[
+            { q: "Can I pay without a Chinese bank account?", a: "Yes! Since 2023, Alipay & WeChat Pay accept international Visa/Mastercard. Setup takes 5 minutes.", icon: "💳" },
+            { q: "Do I need a VPN?", a: "Yes, for Google/WhatsApp/Instagram. Download ExpressVPN or NordVPN BEFORE arriving in China.", icon: "🔐" },
+            { q: "Is it safe to travel alone in China?", a: "China is one of the safest countries for solo travel. Low crime, excellent public transport, and locals are helpful.", icon: "✅" },
+            { q: "What if I get sick or have an emergency?", a: "Dial 120 (ambulance) or 110 (police). Our SOS page has embassy contacts for 20+ countries.", icon: "🆘" },
+            { q: "How do I get a SIM card at the airport?", a: "China Unicom/Mobile booths are in arrivals. Bring passport. Or buy an eSIM before departure — instant activation.", icon: "📦" },
+          ].map((item) => (
+            <details key={item.q} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+              <summary className="flex items-center gap-3 p-3 cursor-pointer list-none">
+                <span className="text-lg">{item.icon}</span>
+                <span className="text-sm font-medium text-gray-800 flex-1">{item.q}</span>
+                <span className="text-gray-400 text-xs">▼</span>
+              </summary>
+              <div className="px-4 pb-3 pt-1">
+                <p className="text-sm text-gray-600">{item.a}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

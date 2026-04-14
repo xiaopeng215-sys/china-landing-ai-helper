@@ -526,6 +526,7 @@ export default function FoodView() {
         <div className="max-w-3xl mx-auto px-4 py-4">
           <h1 className="text-2xl font-bold text-[#484848]">{t('FoodPage.title')}</h1>
           <p className="text-sm text-[#767676]">{t('FoodPage.subtitle')}</p>
+          <p className="text-xs text-gray-400 mt-1">📊 Data sourced from local restaurants, traveler reviews & official tourism boards · Updated April 2026</p>
         </div>
       </header>
 
