@@ -62,8 +62,48 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
         <p className="text-orange-100 text-sm mt-1">Food, hotels & getting around China</p>
       </div>
 
+      {/* SIM Card / Data Plan Section */}
+      <div className="px-4 -mt-4 mb-2">
+        <section className="mb-6 bg-white rounded-2xl p-4 shadow-sm border border-orange-100">
+          <h2 className="text-lg font-bold text-gray-800 mb-1">📶 Stay Connected</h2>
+          <p className="text-sm text-gray-500 mb-3">Get a local SIM or data plan before you explore</p>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { name: 'eSIM (Recommended)', duration: '7 days', price: '¥69', badge: '⚡ Instant', popular: true },
+              { name: 'China Unicom SIM', duration: '30 days', price: '¥199', badge: '📦 Physical', popular: false },
+              { name: 'HK SIM Card', duration: '7 days', price: '¥79', badge: '🇭🇰 HK Based', popular: false },
+              { name: 'China Mobile', duration: '30 days', price: '¥179', badge: '📱 Local', popular: false },
+            ].map((plan) => (
+              <a
+                key={plan.name}
+                href="https://www.trip.com/t/gBO6LQDOIU2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`relative p-3 rounded-xl border-2 ${plan.popular ? 'border-orange-400 bg-orange-50' : 'border-gray-200 bg-white'} block`}
+              >
+                {plan.popular && (
+                  <span className="absolute -top-2 left-3 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">Most Popular</span>
+                )}
+                <div className="text-xs text-gray-500 mb-1">{plan.badge}</div>
+                <div className="font-semibold text-gray-800 text-sm">{plan.name}</div>
+                <div className="text-xs text-gray-500">{plan.duration}</div>
+                <div className="text-orange-600 font-bold mt-1">{plan.price}</div>
+              </a>
+            ))}
+          </div>
+          <a
+            href="https://www.trip.com/t/gBO6LQDOIU2"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 w-full flex items-center justify-center gap-2 bg-orange-500 text-white py-3 rounded-xl font-semibold text-sm"
+          >
+            Browse All Plans on Trip.com →
+          </a>
+        </section>
+      </div>
+
       {/* Cards */}
-      <div className="px-4 -mt-4 space-y-4">
+      <div className="px-4 space-y-4">
         {EXPLORE_CARDS.map((card) => (
           <button
             key={card.id}
