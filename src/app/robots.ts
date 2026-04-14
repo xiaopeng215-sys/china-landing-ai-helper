@@ -1,11 +1,4 @@
-import { MetadataRoute } from 'next';
-
-/**
- * China Landing AI Helper - Robots.txt 动态生成
- * 最后更新：2026-04-12
- */
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://china-ai-helper.com';
+import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -13,73 +6,17 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: [
-          '/admin/',
-          '/_next/',
-          '/api/auth/',
-          '/api/health/',
-          '/*.sql$',
-          '/*.log$',
-          '/*.env$',
-          '/private/',
-        ],
+        disallow: ['/api/', '/auth/'],
       },
-      {
-        userAgent: 'Googlebot',
-        allow: '/',
-        disallow: '/admin/',
-      },
-      {
-        userAgent: 'Baiduspider',
-        allow: '/',
-        disallow: '/admin/',
-      },
-      {
-        userAgent: 'Bingbot',
-        allow: '/',
-        disallow: '/admin/',
-      },
-      {
-        userAgent: '360Spider',
-        allow: '/',
-        disallow: '/admin/',
-      },
-      {
-        userAgent: 'Sogou web spider',
-        allow: '/',
-        disallow: '/admin/',
-      },
-      // 社交媒体爬虫
-      {
-        userAgent: 'Twitterbot',
-        allow: '/',
-      },
-      {
-        userAgent: 'facebookexternalhit',
-        allow: '/',
-      },
-      {
-        userAgent: 'LinkedInBot',
-        allow: '/',
-      },
-      // 阻止 SEO 工具爬虫
-      {
-        userAgent: 'AhrefsBot',
-        disallow: '/',
-      },
-      {
-        userAgent: 'SemrushBot',
-        disallow: '/',
-      },
-      {
-        userAgent: 'MJ12bot',
-        disallow: '/',
-      },
-      {
-        userAgent: 'DotBot',
-        disallow: '/',
-      },
+      { userAgent: 'GPTBot', allow: '/' },
+      { userAgent: 'ChatGPT-User', allow: '/' },
+      { userAgent: 'Google-Extended', allow: '/' },
+      { userAgent: 'PerplexityBot', allow: '/' },
+      { userAgent: 'ClaudeBot', allow: '/' },
+      { userAgent: 'anthropic-ai', allow: '/' },
+      { userAgent: 'Applebot-Extended', allow: '/' },
+      { userAgent: 'Bytespider', allow: '/' },
     ],
-    sitemap: `${BASE_URL}/sitemap.xml`,
-  };
+    sitemap: 'https://www.travelerlocal.ai/sitemap.xml',
+  }
 }

@@ -1,0 +1,58 @@
+# China Landing AI Helper
+
+> AI-powered travel assistant for international visitors to China
+
+China Landing AI Helper (travelerlocal.ai) is a free AI travel assistant designed specifically for international tourists visiting China. It provides real-time guidance on navigation, payments, food, transport, and cultural tips.
+
+## What We Do
+
+- **AI Travel Chat**: Ask any question about traveling in China and get instant, accurate answers powered by xAI Grok
+- **Itinerary Planning**: Generate personalized day-by-day travel plans for Beijing, Shanghai, Chengdu, Xi'an, Guangzhou, and more
+- **Transport Guide**: Metro, Didi (ride-hailing), high-speed rail, and airport transfer instructions for 5 major cities
+- **Food Guide**: 150+ authentic Chinese dishes with descriptions, price ranges, and where to find them across 8 regions
+- **Payment Setup**: Step-by-step guide for setting up Alipay and WeChat Pay as a foreigner (works with international cards since 2023)
+- **SIM Cards & eSIM**: Recommendations for staying connected in China (eSIM from ¥69, physical SIM from ¥79)
+- **Hotel Booking**: Curated hotel recommendations via Trip.com affiliate
+- **Emergency Contacts**: Embassy contacts and emergency hotlines for Beijing, Shanghai, Chengdu, Guangzhou
+- **8 Languages**: English, 中文, 繁體中文, 한국어, 日本語, Español, Português, العربية
+
+## Key Facts
+
+- Free to use, no registration required
+- Available as a Progressive Web App (PWA) — installable on iOS and Android home screen
+- AI powered by xAI Grok (grok-3-fast), with MiniMax fallback
+- Covers 6 major cities: Beijing, Shanghai, Chengdu, Xi'an, Guangzhou, Shenzhen
+- Telegram bot: @travelerloca_bot
+- Launched: 2026
+
+## Target Users
+
+International tourists visiting China, especially from English-speaking countries, Korea, Japan, Southeast Asia, Middle East, and Latin America. Designed for travelers who need practical, actionable help navigating China's unique digital and physical environment.
+
+## Common Questions We Answer
+
+- How to get a SIM card or eSIM in China
+- How to set up Alipay or WeChat Pay as a foreigner
+- How to get from the airport to the city center
+- Best food to try in each Chinese city
+- Do I need a VPN in China, and which one
+- How to book hotels and transport in China
+- Emergency contacts and embassy information
+- China travel itinerary planning (1-14 days)
+
+## Pages
+
+- / — Home page with quick access to all features
+- /chat — AI travel assistant chat (main feature)
+- /food — Chinese food guide with 150+ dishes, filterable by city and cuisine
+- /transport — Transport guide for 5 major cities (metro, Didi, rail, airport)
+- /trips — Trip planning and featured itineraries
+- /explore — Discover China: SIM cards, cities, hotels, food
+- /privacy — Privacy policy (GDPR compliant, 8 languages)
+- /terms — Terms of service (8 languages)
+
+## Contact
+
+- Website: https://www.travelerlocal.ai
+- Telegram Bot: https://t.me/travelerloca_bot
+- Email: support@travelerlocal.ai

@@ -20,19 +20,13 @@ export const metadata: Metadata = {
   },
   description: 'AI-powered travel assistant for visiting China — smart itinerary planning, authentic food recommendations, and transportation guides for Beijing, Shanghai, Xi\'an, Chengdu, Guilin, and Hangzhou.',
   keywords: [
-    'China travel',
-    'AI travel assistant',
-    'itinerary planning',
-    'food recommendations',
-    'transportation guide',
-    'Beijing travel',
-    'Shanghai travel',
-    'Xian travel',
-    'Chengdu travel',
-    'Guilin travel',
-    'Hangzhou travel',
-    'China tourism',
-    'travel planning',
+    'China travel', 'China travel guide', 'AI travel assistant', 'visit China',
+    'China itinerary', 'China tourism', 'Beijing travel', 'Shanghai travel',
+    'Chengdu travel', 'Xian travel', 'Guangzhou travel', 'Shenzhen travel',
+    'Alipay guide', 'WeChat Pay foreigner', 'China SIM card', 'eSIM China',
+    'China food guide', 'Chinese food', 'China transport guide', 'Didi China',
+    'China metro guide', 'high speed rail China', 'China airport transfer',
+    'travel China tips', 'China travel app',
   ],
   authors: [
     { name: 'China Landing AI Helper', url: SITE_URL },
@@ -43,11 +37,28 @@ export const metadata: Metadata = {
   // 规范 URL
   metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: '/',
+    canonical: 'https://www.travelerlocal.ai',
     languages: {
-      'zh-CN': '/zh-CN',
-      'en-US': '/en-US',
-      'ko-KR': '/ko-KR',
+      'en-US': 'https://www.travelerlocal.ai',
+      'zh-CN': 'https://www.travelerlocal.ai',
+      'zh-TW': 'https://www.travelerlocal.ai',
+      'ko-KR': 'https://www.travelerlocal.ai',
+      'ja-JP': 'https://www.travelerlocal.ai',
+      'es-ES': 'https://www.travelerlocal.ai',
+      'pt-BR': 'https://www.travelerlocal.ai',
+      'ar-SA': 'https://www.travelerlocal.ai',
+    },
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   
@@ -147,6 +158,70 @@ export default function RootLayout({
         <meta name="application-name" content="China AI Helper" />
       </head>
       <body className={`${inter.className} antialiased bg-gray-50 min-h-screen`}>
+        {/* Schema.org JSON-LD - SEO/GEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": "https://www.travelerlocal.ai/#website",
+                  "url": "https://www.travelerlocal.ai",
+                  "name": "China Landing AI Helper",
+                  "description": "AI-powered travel assistant for international visitors to China",
+                  "inLanguage": ["en-US","zh-CN","zh-TW","ko-KR","ja-JP","es-ES","pt-BR","ar-SA"],
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": { "@type": "EntryPoint", "urlTemplate": "https://www.travelerlocal.ai/chat?q={search_term_string}" },
+                    "query-input": "required name=search_term_string"
+                  }
+                },
+                {
+                  "@type": "SoftwareApplication",
+                  "@id": "https://www.travelerlocal.ai/#app",
+                  "name": "China Landing AI Helper",
+                  "applicationCategory": "TravelApplication",
+                  "operatingSystem": "Web, iOS, Android",
+                  "description": "AI travel assistant for international visitors to China. Get help with itineraries, transport, food, payments, SIM cards, and emergency contacts.",
+                  "url": "https://www.travelerlocal.ai",
+                  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+                  "featureList": [
+                    "AI-powered travel itinerary planning",
+                    "China transport guide (metro, Didi, high-speed rail)",
+                    "Chinese food guide with 150+ dishes",
+                    "Payment setup guide (Alipay, WeChat Pay)",
+                    "SIM card and eSIM recommendations",
+                    "Emergency contacts and embassy information",
+                    "Hotel booking via Trip.com",
+                    "8 language support"
+                  ],
+                  "availableLanguage": ["English","Chinese","Korean","Japanese","Spanish","Portuguese","Arabic"]
+                },
+                {
+                  "@type": "Organization",
+                  "@id": "https://www.travelerlocal.ai/#organization",
+                  "name": "TravelerLocal",
+                  "url": "https://www.travelerlocal.ai",
+                  "logo": { "@type": "ImageObject", "url": "https://www.travelerlocal.ai/icons/icon-512x512.png" },
+                  "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "email": "support@travelerlocal.ai", "availableLanguage": ["English","Chinese"] }
+                },
+                {
+                  "@type": "FAQPage",
+                  "@id": "https://www.travelerlocal.ai/#faq",
+                  "mainEntity": [
+                    { "@type": "Question", "name": "How do I get a SIM card in China as a foreigner?", "acceptedAnswer": { "@type": "Answer", "text": "You can get a local SIM card at the airport from China Unicom, China Mobile, or China Telecom. Bring your passport. Alternatively, buy an eSIM before arrival for instant connectivity. Prices range from ¥69-199 for 7-30 day plans." } },
+                    { "@type": "Question", "name": "How do I set up Alipay as a foreigner in China?", "acceptedAnswer": { "@type": "Answer", "text": "Download Alipay, register with your phone number, then link an international Visa/Mastercard. Since 2023, foreigners can use Alipay without a Chinese bank account. You can also use WeChat Pay the same way." } },
+                    { "@type": "Question", "name": "What is the best way to get from the airport to the city in China?", "acceptedAnswer": { "@type": "Answer", "text": "Most major Chinese cities have airport express trains (fastest, ¥25-35). Metro is cheapest (¥5-10). Didi (Chinese Uber) is convenient if you have the app set up. Avoid unlicensed taxis at the airport." } },
+                    { "@type": "Question", "name": "Do I need a VPN in China?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, Google, Facebook, Instagram, WhatsApp, and most Western apps are blocked in China. Download a VPN before arriving. Popular options include ExpressVPN, NordVPN, and Astrill. Set it up before you land." } },
+                    { "@type": "Question", "name": "What are the must-try foods in China?", "acceptedAnswer": { "@type": "Answer", "text": "Must-try dishes include Peking Duck (Beijing), Xiaolongbao soup dumplings (Shanghai), Mapo Tofu and Hot Pot (Chengdu), Biangbiang Noodles (Xi'an), and Dim Sum (Guangzhou). Our food guide covers 150+ dishes across 8 regions." } }
+                  ]
+                }
+              ]
+            })
+          }}
+        />
         <Providers>
           <NetworkStatus />
           {/* 结构化数据 - Schema.org JSON-LD */}
