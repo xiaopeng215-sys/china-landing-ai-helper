@@ -132,7 +132,7 @@ export default function LanguageSwitcher({
                     key={locale}
                     onClick={() => handleLocaleChange(locale)}
                     className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors ${
-                      currentLocale === locale ? 'bg-orange-50 text-orange-600' : 'text-gray-700'
+                      currentLocale === locale ? 'bg-teal-50 text-teal-600' : 'text-gray-700'
                     }`}
                     role="menuitem"
                     aria-selected={currentLocale === locale}
@@ -148,7 +148,7 @@ export default function LanguageSwitcher({
                       <p className="text-xs text-gray-500">{locale}</p>
                     </div>
                     {currentLocale === locale && (
-                      <span className="text-orange-600" aria-label="selected">
+                      <span className="text-teal-600" aria-label="selected">
                         ✓
                       </span>
                     )}

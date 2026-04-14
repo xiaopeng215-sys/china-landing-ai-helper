@@ -11,18 +11,25 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // Brand colors - Klook/TripAdvisor style (orange-amber travel theme)
+        // Brand colors - Teal primary theme
+        brand: {
+          primary: '#0D9488',       // teal-600
+          'primary-dark': '#0F766E', // teal-700
+          'primary-light': '#CCFBF1', // teal-100
+          accent: '#F97316',         // orange-500（保留CTA用）
+          'accent-dark': '#EA580C',  // orange-600
+        },
         primary: {
-          50: "#fff7ed",
-          100: "#ffedd5",
-          200: "#fed7aa",
-          300: "#fdba74",
-          400: "#fb923c",
-          500: "#f97316", // orange-500
-          600: "#ea580c", // orange-600
-          700: "#c2410c",
-          800: "#9a3412",
-          900: "#7c2d12",
+          50: "#f0fdfa",
+          100: "#ccfbf1",
+          200: "#99f6e4",
+          300: "#5eead4",
+          400: "#2dd4bf",
+          500: "#14b8a6", // teal-500
+          600: "#0d9488", // teal-600
+          700: "#0f766e", // teal-700
+          800: "#115e59",
+          900: "#134e4a",
         },
         secondary: {
           400: "#fbbf24", // amber-400

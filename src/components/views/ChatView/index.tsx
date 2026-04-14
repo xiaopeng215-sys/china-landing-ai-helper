@@ -295,7 +295,7 @@ export default function ChatView() {
         <div className="flex-1 overflow-y-auto">
           <div className="flex flex-col items-center px-4 pt-8 pb-4">
             {/* Avatar + greeting */}
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-4">
               <span className="text-3xl">🤖</span>
             </div>
             <h2 className="text-xl font-bold text-gray-800 mb-2">Hi, I&apos;m your China Travel AI</h2>
@@ -317,7 +317,7 @@ export default function ChatView() {
                 <button
                   key={q.text}
                   onClick={() => handleQuickQuestion(q.text)}
-                  className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl text-left hover:border-orange-300 hover:bg-orange-50 transition-colors"
+                  className="w-full flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl text-left hover:border-teal-300 hover:bg-teal-50 transition-colors"
                 >
                   <span className="text-lg">{q.emoji}</span>
                   <span className="text-sm text-gray-700">{q.text}</span>

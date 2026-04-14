@@ -74,7 +74,7 @@ export function LocaleSwitcher() {
                 onClick={() => handleLocaleChange(loc)}
                 className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                   locale === loc
-                    ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 font-medium'
+                    ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 font-medium'
                     : 'text-gray-700 dark:text-gray-300'
                 }`}
               >

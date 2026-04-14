@@ -487,7 +487,7 @@ export default function TransportView() {
                       setFlightFrom(route.from);
                       setFlightTo(route.to);
                     }}
-                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl hover:bg-orange-50 hover:border-orange-200 border border-transparent transition-all text-sm"
+                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl hover:bg-teal-50 hover:border-teal-200 border border-transparent transition-all text-sm"
                   >
                     <span className="font-medium text-[#484848]">{route.label}</span>
                     <span className="text-[#ff5a5f] text-xs">Select →</span>

@@ -38,7 +38,7 @@ export default function TimelineView() {
           </div>
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-orange-500 rounded-full transition-all duration-500"
+              className="h-full bg-teal-600 rounded-full transition-all duration-500"
               style={{ width: `${(completedCount / timelineSteps.length) * 100}%` }}
             />
           </div>
@@ -48,7 +48,7 @@ export default function TimelineView() {
       {/* Timeline */}
       <div className="relative">
         {/* Vertical line */}
-        <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-orange-200" aria-hidden="true" />
+        <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-teal-200" aria-hidden="true" />
 
         <div className="space-y-4">
           {timelineSteps.map((step, index) => {
@@ -62,7 +62,7 @@ export default function TimelineView() {
                   className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                     isDone
                       ? "bg-gray-300 text-gray-500"
-                      : "bg-orange-500 text-white"
+                      : "bg-teal-600 text-white"
                   }`}
                 >
                   {isDone ? "✓" : index + 1}
@@ -73,7 +73,7 @@ export default function TimelineView() {
                   className={`flex-1 rounded-xl border transition-all ${
                     isDone
                       ? "bg-gray-50 border-gray-200 opacity-60"
-                      : "bg-white border-orange-100 shadow-sm"
+                      : "bg-white border-teal-100 shadow-sm"
                   }`}
                 >
                   {/* Card header — always visible, clickable to expand */}
@@ -89,7 +89,7 @@ export default function TimelineView() {
                           <p className={`font-semibold text-sm leading-tight ${isDone ? "line-through text-gray-400" : "text-gray-900"}`}>
                             {step.title}
                           </p>
-                          <p className="text-xs text-orange-500 mt-0.5">⏱ {step.duration}</p>
+                          <p className="text-xs text-teal-500 mt-0.5">⏱ {step.duration}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
@@ -102,7 +102,7 @@ export default function TimelineView() {
                           className={`w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-colors ${
                             isDone
                               ? "bg-gray-400 border-gray-400 text-white"
-                              : "border-orange-400 hover:border-orange-600"
+                              : "border-teal-400 hover:border-teal-600"
                           }`}
                         >
                           {isDone && <span className="text-xs leading-none">✓</span>}
@@ -124,7 +124,7 @@ export default function TimelineView() {
                         <ol className="space-y-2">
                           {step.steps.map((s, i) => (
                             <li key={i} className="flex gap-2 text-sm text-gray-700">
-                              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-orange-100 text-orange-600 text-xs flex items-center justify-center font-medium">
+                              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-100 text-teal-600 text-xs flex items-center justify-center font-medium">
                                 {i + 1}
                               </span>
                               <span className="leading-snug">{s}</span>
@@ -139,7 +139,7 @@ export default function TimelineView() {
                         <ul className="space-y-1.5">
                           {step.tips.map((tip, i) => (
                             <li key={i} className="flex gap-2 text-sm text-gray-600">
-                              <span className="flex-shrink-0 text-orange-400">💡</span>
+                              <span className="flex-shrink-0 text-teal-400">💡</span>
                               <span className="leading-snug">{tip}</span>
                             </li>
                           ))}
@@ -156,10 +156,10 @@ export default function TimelineView() {
 
       {/* All done banner */}
       {completedCount === timelineSteps.length && (
-        <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-xl text-center">
+        <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-xl text-center">
           <p className="text-2xl mb-1">🎉</p>
-          <p className="font-semibold text-orange-700">{t('TimelineView.allDoneTitle')}</p>
-          <p className="text-sm text-orange-600 mt-1">{t('TimelineView.allDoneSubtitle')}</p>
+          <p className="font-semibold text-teal-700">{t('TimelineView.allDoneTitle')}</p>
+          <p className="text-sm text-teal-600 mt-1">{t('TimelineView.allDoneSubtitle')}</p>
         </div>
       )}
     </div>

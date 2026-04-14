@@ -78,7 +78,7 @@ function AuthErrorContent() {
   const errorInfo = getErrorMessage(error);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 flex items-center justify-center px-4 py-12" role="main">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-teal-50 flex items-center justify-center px-4 py-12" role="main">
       <div className="max-w-md w-full text-center">
         <div className="w-20 h-20 bg-gradient-to-br from-red-400 to-red-500 rounded-3xl flex items-center justify-center text-5xl shadow-lg mx-auto mb-6" aria-hidden="true">
           {errorInfo.icon}

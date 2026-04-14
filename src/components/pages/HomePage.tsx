@@ -22,7 +22,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-teal-50 to-white">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-2xl mx-auto px-4 py-4">
@@ -32,7 +32,7 @@ export default function HomePage() {
               <p className="text-sm text-gray-600">你的中国旅行智能助手</p>
             </div>
             <div className="flex gap-2">
-              <button className="px-3 py-1.5 text-sm bg-orange-100 text-orange-700 rounded-full hover:bg-orange-200">
+              <button className="px-3 py-1.5 text-sm bg-teal-100 text-teal-700 rounded-full hover:bg-teal-200">
                 行程
               </button>
               <button className="px-3 py-1.5 text-sm bg-green-100 text-green-700 rounded-full hover:bg-green-200">
@@ -49,7 +49,7 @@ export default function HomePage() {
         {/* Welcome Card */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+            <div className="w-12 h-12 bg-gradient-to-br from-teal-600 to-teal-700 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
               🤖
             </div>
             <div className="flex-1">
@@ -120,7 +120,7 @@ export default function HomePage() {
               { time: '18:00', icon: '🌃', title: '外滩夜景', desc: '灯光秀，免费' }
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="text-sm font-medium text-orange-600 w-12 flex-shrink-0">
+                <div className="text-sm font-medium text-teal-600 w-12 flex-shrink-0">
                   {item.time}
                 </div>
                 <div className="text-xl flex-shrink-0">{item.icon}</div>

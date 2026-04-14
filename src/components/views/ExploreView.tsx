@@ -17,7 +17,7 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
       title: t('ExploreView.cardFoodTitle'),
       subtitle: t('ExploreView.cardFoodSubtitle'),
       description: t('ExploreView.cardFoodDesc'),
-      gradient: 'from-red-400 to-orange-400',
+      gradient: 'from-red-400 to-teal-400',
       bg: 'bg-red-50',
       border: 'border-red-100',
       tag: t('ExploreView.cardFoodTag'),
@@ -28,9 +28,9 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
       title: t('ExploreView.cardEncyclopediaTitle'),
       subtitle: t('ExploreView.cardEncyclopediaSubtitle'),
       description: t('ExploreView.cardEncyclopediaDesc'),
-      gradient: 'from-orange-400 to-red-400',
-      bg: 'bg-orange-50',
-      border: 'border-orange-100',
+      gradient: 'from-teal-400 to-red-400',
+      bg: 'bg-teal-50',
+      border: 'border-teal-100',
       tag: t('ExploreView.cardEncyclopediaTag'),
     },
     {
@@ -39,7 +39,7 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
       title: t('ExploreView.cardHotelsTitle'),
       subtitle: t('ExploreView.cardHotelsSubtitle'),
       description: t('ExploreView.cardHotelsDesc'),
-      gradient: 'from-amber-400 to-orange-400',
+      gradient: 'from-amber-400 to-teal-400',
       bg: 'bg-amber-50',
       border: 'border-amber-100',
       tag: t('ExploreView.cardHotelsTag'),
@@ -50,9 +50,9 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
       title: t('ExploreView.cardTransportTitle'),
       subtitle: t('ExploreView.cardTransportSubtitle'),
       description: t('ExploreView.cardTransportDesc'),
-      gradient: 'from-orange-500 to-amber-500',
-      bg: 'bg-orange-50',
-      border: 'border-orange-100',
+      gradient: 'from-teal-500 to-teal-400',
+      bg: 'bg-teal-50',
+      border: 'border-teal-100',
       tag: t('ExploreView.cardTransportTag'),
     },
   ];
@@ -68,14 +68,14 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 pt-6 pb-8">
+      <div className="bg-gradient-to-r from-teal-600 to-teal-500 text-white px-4 pt-6 pb-8">
         <h1 className="text-2xl font-bold">{t('ExploreView.title')}</h1>
-        <p className="text-orange-100 text-sm mt-1">{t('ExploreView.subtitle')}</p>
+        <p className="text-teal-100 text-sm mt-1">{t('ExploreView.subtitle')}</p>
       </div>
 
       {/* SIM Card / Data Plan Section */}
       <div className="px-4 -mt-4 mb-2">
-        <section className="mb-6 bg-white rounded-2xl p-4 shadow-sm border border-orange-100">
+        <section className="mb-6 bg-white rounded-2xl p-4 shadow-sm border border-teal-100">
           <h2 className="text-lg font-bold text-gray-800 mb-1">{t('ExploreView.stayConnected')}</h2>
           <p className="text-sm text-gray-500 mb-3">{t('ExploreView.stayConnectedDesc')}</p>
           <div className="grid grid-cols-2 gap-3">
@@ -98,7 +98,7 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
                 <div className="text-xs text-gray-500 mb-1">{plan.badge}</div>
                 <div className="font-semibold text-gray-800 text-sm">{plan.name}</div>
                 <div className="text-xs text-gray-500">{plan.duration}</div>
-                <div className="text-orange-600 font-bold mt-1">{plan.price}</div>
+                <div className="text-teal-600 font-bold mt-1">{plan.price}</div>
               </a>
             ))}
           </div>
@@ -106,7 +106,7 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
             href="https://www.trip.com/t/gBO6LQDOIU2"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 w-full flex items-center justify-center gap-2 bg-orange-500 text-white py-3 rounded-xl font-semibold text-sm"
+            className="mt-3 w-full flex items-center justify-center gap-2 bg-teal-600 text-white py-3 rounded-xl font-semibold text-sm"
           >
             {t('ExploreView.browseAllPlans')}
           </a>
@@ -140,7 +140,7 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
                 {card.description}
               </p>
               <svg
-                className="w-5 h-5 text-orange-400 flex-shrink-0"
+                className="w-5 h-5 text-teal-400 flex-shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -154,7 +154,7 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
       </div>
 
       {/* Quick tip */}
-      <div className="mx-4 mt-6 bg-white rounded-xl p-4 border border-orange-100 shadow-sm">
+      <div className="mx-4 mt-6 bg-white rounded-xl p-4 border border-teal-100 shadow-sm">
         <div className="flex gap-3 items-start">
           <span className="text-xl">💡</span>
           <div>

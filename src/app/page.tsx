@@ -159,15 +159,15 @@ export default function Home() {
             subtitle={t("HomePage.subtitle")}
             ctaText={t("HomePage.cta")}
             onCtaClick={handleHeroCtaClick}
-            gradient="from-orange-600 to-amber-600"
+            gradient="from-teal-600 to-teal-500"
             features={heroFeatures}
           />
           {/* Today's Tip */}
           {todaysTip && (
-            <div className="mx-4 -mt-3 mb-2 bg-white rounded-xl shadow-md border border-orange-100 p-4 flex gap-3 items-start z-10 relative">
+            <div className="mx-4 -mt-3 mb-2 bg-white rounded-xl shadow-md border border-teal-100 p-4 flex gap-3 items-start z-10 relative">
               <span className="text-2xl flex-shrink-0">{todaysTip.icon}</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-orange-500 uppercase tracking-wide mb-0.5">Today&apos;s Tip</p>
+                <p className="text-xs font-semibold text-teal-600 uppercase tracking-wide mb-0.5">Today&apos;s Tip</p>
                 <p className="text-sm font-semibold text-gray-800">{todaysTip.title}</p>
                 <p className="text-xs text-gray-500 mt-0.5 leading-relaxed line-clamp-2">{todaysTip.content}</p>
               </div>

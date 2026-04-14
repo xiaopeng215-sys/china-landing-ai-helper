@@ -104,7 +104,7 @@ export default function RouteSelectorView({
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-orange-100 text-orange-700';
+      case 'easy': return 'bg-teal-100 text-teal-700';
       case 'medium': return 'bg-amber-100 text-amber-700';
       case 'hard': return 'bg-red-100 text-red-700';
       default: return 'bg-gray-100 text-gray-700';
@@ -135,11 +135,11 @@ export default function RouteSelectorView({
           </div>
 
           {/* Route Summary */}
-          <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-4 border border-orange-100">
+          <div className="bg-gradient-to-r from-teal-50 to-teal-50 rounded-2xl p-4 border border-teal-100">
             <div className="flex items-center gap-3 mb-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                  <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
                   {from}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -171,7 +171,7 @@ export default function RouteSelectorView({
                 onClick={() => setFilter(tab.id as 'all' | 'fastest' | 'scenic' | 'easy')}
                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                   filter === tab.id
-                    ? 'bg-orange-500 text-white shadow-md'
+                    ? 'bg-teal-600 text-white shadow-md'
                     : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
                 }`}
               >
@@ -194,8 +194,8 @@ export default function RouteSelectorView({
             }}
             className={`bg-white rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
               selectedRoute === route.id
-                ? 'border-orange-500 shadow-lg ring-2 ring-orange-200'
-                : 'border-gray-100 shadow-md hover:shadow-lg hover:border-orange-200'
+                ? 'border-teal-600 shadow-lg ring-2 ring-teal-200'
+                : 'border-gray-100 shadow-md hover:shadow-lg hover:border-teal-200'
             }`}
           >
             {/* Hero Image */}
@@ -210,7 +210,7 @@ export default function RouteSelectorView({
               {/* Badges */}
               <div className="absolute top-3 left-3 flex gap-2">
                                 {route.recommended && (
-                  <span className="px-3 py-1 bg-orange-500 text-white text-xs font-bold rounded-full shadow-lg">
+                  <span className="px-3 py-1 bg-teal-600 text-white text-xs font-bold rounded-full shadow-lg">
                     {t('RouteSelectorView.badgeRecommended')}
                   </span>
                 )}
@@ -246,7 +246,7 @@ export default function RouteSelectorView({
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-gray-500 mb-1">{t('RouteSelectorView.statCO2')}</p>
-                  <p className="font-bold text-orange-600">{route.carbonSaved}kg</p>
+                  <p className="font-bold text-teal-600">{route.carbonSaved}kg</p>
                 </div>
               </div>
 
@@ -274,8 +274,8 @@ export default function RouteSelectorView({
               <button
                 className={`w-full py-3 rounded-xl font-semibold transition-all ${
                   selectedRoute === route.id
-                    ? 'bg-orange-500 text-white hover:bg-orange-600'
-                    : 'bg-orange-50 text-orange-600 hover:bg-orange-100'
+                    ? 'bg-teal-600 text-white hover:bg-teal-700'
+                    : 'bg-teal-50 text-teal-600 hover:bg-teal-100'
                 }`}
               >
                                 {selectedRoute === route.id ? t('RouteSelectorView.selectedRoute') : t('RouteSelectorView.selectRoute')}
@@ -288,7 +288,7 @@ export default function RouteSelectorView({
         <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4">
           <div className="flex items-center justify-between mb-3">
                         <h3 className="font-bold text-gray-900">{t('RouteSelectorView.mapPreview')}</h3>
-            <button className="text-sm text-orange-600 font-medium hover:text-orange-700" onClick={() => window.open('https://amap.com', '_blank', 'noopener,noreferrer')}>
+            <button className="text-sm text-teal-600 font-medium hover:text-teal-700" onClick={() => window.open('https://amap.com', '_blank', 'noopener,noreferrer')}>
               {t('RouteSelectorView.openInAmap')}
             </button>
           </div>

@@ -54,11 +54,11 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
       {/* Quick Info */}
       <div className="px-5 py-4 flex items-center gap-4 text-sm text-gray-600 border-b border-gray-100">
         <span className="flex items-center gap-1">
-          <DollarSign className="w-4 h-4 text-orange-500" />
+          <DollarSign className="w-4 h-4 text-teal-500" />
           {trip.budget}
         </span>
         <span className="flex items-center gap-1">
-          <MapPin className="w-4 h-4 text-orange-500" />
+          <MapPin className="w-4 h-4 text-teal-500" />
           {(trip.highlightsEn ?? trip.highlights).slice(0, 2).join(' · ')}
         </span>
       </div>
@@ -69,7 +69,7 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
         <div className="space-y-2">
           {trip.dayPlans.slice(0, 2).map(day => (
             <div key={day.day} className="flex items-center gap-3">
-              <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">
+              <span className="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded">
                 Day {day.day}
               </span>
               <span className="text-sm text-gray-700 truncate">{day.titleEn ?? day.title}</span>

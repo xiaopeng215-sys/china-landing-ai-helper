@@ -83,7 +83,7 @@ export default function DayCard({
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-4">
       {/* 头部图片区域 */}
-      <div className="relative h-48 w-full bg-gradient-to-br from-orange-100 to-amber-100">
+      <div className="relative h-48 w-full bg-gradient-to-br from-teal-100 to-teal-50">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -124,7 +124,7 @@ export default function DayCard({
             >
               {/* 时间线 */}
               <div className="flex flex-col items-center">
-                <div className="w-2 h-2 bg-orange-500 rounded-full mt-2" />
+                <div className="w-2 h-2 bg-teal-600 rounded-full mt-2" />
                 {index < activities.length - 1 && (
                   <div className="w-0.5 flex-1 bg-gray-200 my-1" />
                 )}
@@ -147,7 +147,7 @@ export default function DayCard({
                   </p>
                 )}
                 {activity.cost && (
-                  <span className="inline-block mt-2 px-2 py-1 bg-orange-50 text-orange-700 text-xs rounded-full">
+                  <span className="inline-block mt-2 px-2 py-1 bg-teal-50 text-teal-700 text-xs rounded-full">
                     💰 {activity.cost}
                   </span>
                 )}
@@ -160,7 +160,7 @@ export default function DayCard({
         {activities.length > 2 && (
           <button
             onClick={handleToggle}
-            className="w-full mt-2 py-2 text-sm text-orange-600 font-medium hover:bg-orange-50 rounded-lg transition-colors"
+            className="w-full mt-2 py-2 text-sm text-teal-600 font-medium hover:bg-teal-50 rounded-lg transition-colors"
           >
             {expanded ? '收起详情' : `展开更多 (${activities.length - 2}项活动)`}
           </button>
@@ -170,7 +170,7 @@ export default function DayCard({
         <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
           <div className="text-sm">
             <span className="font-semibold text-gray-900">今日总计：</span>
-            <span className="text-orange-600 font-bold">💰{totalCost}</span>
+            <span className="text-teal-600 font-bold">💰{totalCost}</span>
             {steps && (
               <span className="ml-3 text-gray-600">🚶 {steps.toLocaleString()}步</span>
             )}

@@ -75,7 +75,7 @@ export default function LanguageSwitcher({ variant = 'full', className = '' }: L
                   onClick={() => handleSelect(loc)}
                   className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${
                     locale === loc
-                      ? 'bg-orange-50 text-orange-600 font-semibold'
+                      ? 'bg-teal-50 text-teal-600 font-semibold'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >

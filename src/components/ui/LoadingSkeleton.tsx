@@ -24,9 +24,9 @@ export default function LoadingSkeleton({ type = 'default' }: LoadingSkeletonPro
           </div>
           <div className="flex gap-3 justify-end">
             <div className="flex-1 space-y-2">
-              <div className="h-4 bg-orange-100 rounded w-2/3 ml-auto" />
+              <div className="h-4 bg-teal-100 rounded w-2/3 ml-auto" />
             </div>
-            <div className="w-8 h-8 bg-orange-200 rounded-full" />
+            <div className="w-8 h-8 bg-teal-200 rounded-full" />
           </div>
         </div>
         

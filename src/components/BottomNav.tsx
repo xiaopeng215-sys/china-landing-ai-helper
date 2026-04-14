@@ -39,7 +39,7 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
               onClick={() => onTabChange(item.id)}
               className={`flex flex-col items-center justify-center w-full py-2 px-1 transition-colors tap-feedback ${
                 isActive
-                  ? "text-orange-600"
+                  ? "text-teal-600"
                   : "text-gray-500 hover:text-gray-700"
               }`}
               type="button"
@@ -53,7 +53,7 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
               </span>
               {isActive && (
                 <div
-                  className="w-1 h-1 bg-orange-600 rounded-full mt-1"
+                  className="w-1 h-1 bg-teal-600 rounded-full mt-1"
                   aria-hidden="true"
                 />
               )}

@@ -72,7 +72,7 @@ export default function RestaurantCard({
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200">
       <div className="flex">
         {/* 图片区域 */}
-        <div className="relative w-32 h-32 flex-shrink-0 bg-gradient-to-br from-orange-100 to-yellow-100">
+        <div className="relative w-32 h-32 flex-shrink-0 bg-gradient-to-br from-teal-100 to-teal-50">
           {imageUrl ? (
             <Image
               src={imageUrl}

@@ -16,13 +16,13 @@ function FoodCard({ food, t }: { food: ChineseFood; t: (key: string) => string }
     <button
       type="button"
       onClick={() => setExpanded((v) => !v)}
-      className="w-full text-left bg-white rounded-2xl shadow-sm border border-orange-100 overflow-hidden transition-all active:scale-[0.98]"
+      className="w-full text-left bg-white rounded-2xl shadow-sm border border-teal-100 overflow-hidden transition-all active:scale-[0.98]"
     >
       {/* Card header */}
       <div className="p-3">
         <div className="text-3xl mb-2 text-center">{food.emoji}</div>
         <p className="font-semibold text-gray-900 text-sm leading-tight">{food.nameEn}</p>
-        <p className="text-orange-600 text-xs mt-0.5">{food.nameCn}</p>
+        <p className="text-teal-600 text-xs mt-0.5">{food.nameCn}</p>
 
         {/* Tags row */}
         <div className="flex flex-wrap gap-1 mt-2">
@@ -42,7 +42,7 @@ function FoodCard({ food, t }: { food: ChineseFood; t: (key: string) => string }
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="border-t border-orange-50 bg-orange-50/40 p-3 text-left">
+        <div className="border-t border-teal-50 bg-teal-50/40 p-3 text-left">
           <p className="text-xs text-gray-700 leading-relaxed mb-2">{food.description}</p>
           <div className="space-y-1">
             <p className="text-xs text-gray-500">
@@ -88,9 +88,9 @@ export default function FoodEncyclopediaView() {
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-4 pt-6 pb-4">
+      <div className="bg-gradient-to-r from-teal-600 to-teal-500 px-4 pt-6 pb-4">
         <h1 className="text-white text-xl font-bold mb-1">{t('FoodEncyclopediaView.title')}</h1>
-        <p className="text-orange-100 text-sm">{t('FoodEncyclopediaView.subtitle')}</p>
+        <p className="text-teal-100 text-sm">{t('FoodEncyclopediaView.subtitle')}</p>
 
         {/* Search */}
         <div className="mt-3 relative">
@@ -100,7 +100,7 @@ export default function FoodEncyclopediaView() {
             placeholder={t('FoodEncyclopediaView.searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm bg-white/95 text-gray-800 placeholder-gray-400 outline-none focus:ring-2 focus:ring-orange-300"
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm bg-white/95 text-gray-800 placeholder-gray-400 outline-none focus:ring-2 focus:ring-teal-300"
           />
         </div>
       </div>
@@ -113,7 +113,7 @@ export default function FoodEncyclopediaView() {
             onClick={() => setRegionFilter("all")}
             className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
               regionFilter === "all"
-                ? "bg-orange-500 text-white"
+                ? "bg-teal-600 text-white"
                 : "bg-white text-gray-600 border border-gray-200"
             }`}
           >
@@ -126,7 +126,7 @@ export default function FoodEncyclopediaView() {
               onClick={() => setRegionFilter(r.id)}
               className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                 regionFilter === r.id
-                  ? "bg-orange-500 text-white"
+                  ? "bg-teal-600 text-white"
                   : "bg-white text-gray-600 border border-gray-200"
               }`}
             >
@@ -146,7 +146,7 @@ export default function FoodEncyclopediaView() {
                 onClick={() => setDietFilter(d)}
                 className={`flex-1 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
                   dietFilter === d
-                    ? "bg-orange-500 text-white"
+                    ? "bg-teal-600 text-white"
                     : "bg-white text-gray-600 border border-gray-200"
                 }`}
               >
@@ -164,7 +164,7 @@ export default function FoodEncyclopediaView() {
                 onClick={() => setSpiceFilter(s)}
                 className={`flex-1 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
                   spiceFilter === s
-                    ? "bg-orange-500 text-white"
+                    ? "bg-teal-600 text-white"
                     : "bg-white text-gray-600 border border-gray-200"
                 }`}
               >

@@ -35,14 +35,14 @@ function TransportBookingCard({ card }: { card: TransportCardData }) {
 
   return (
     <div className={`mt-3 rounded-xl border p-3 ${
-      isFlights ? 'bg-orange-50 border-orange-200' : 'bg-blue-50 border-blue-200'
+      isFlights ? 'bg-teal-50 border-teal-200' : 'bg-blue-50 border-blue-200'
     }`}>
       <div className="flex items-center gap-2 mb-2">
         {isFlights
-          ? <Plane className="w-4 h-4 text-orange-500" />
+          ? <Plane className="w-4 h-4 text-teal-500" />
           : <Train className="w-4 h-4 text-blue-500" />}
         <span className={`text-xs font-semibold ${
-          isFlights ? 'text-orange-700' : 'text-blue-700'
+          isFlights ? 'text-teal-700' : 'text-blue-700'
         }`}>
           {isFlights ? 'Flight Search' : 'Train Search'}
         </span>
@@ -61,7 +61,7 @@ function TransportBookingCard({ card }: { card: TransportCardData }) {
         rel="noopener noreferrer"
         className={`mt-2 w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-white text-xs font-semibold transition-colors ${
           isFlights
-            ? 'bg-orange-500 hover:bg-orange-600'
+            ? 'bg-teal-600 hover:bg-teal-700'
             : 'bg-blue-600 hover:bg-blue-700'
         }`}
       >
@@ -180,8 +180,8 @@ function RecommendationCard({ recommendation }: { recommendation: Recommendation
   };
 
   const typeColors = {
-    attraction: 'bg-orange-50 border-orange-200',
-    restaurant: 'bg-orange-50 border-orange-200',
+    attraction: 'bg-teal-50 border-teal-200',
+    restaurant: 'bg-teal-50 border-teal-200',
     hotel: 'bg-purple-50 border-purple-200',
     transport: 'bg-green-50 border-green-200',
   };

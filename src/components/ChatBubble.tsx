@@ -33,7 +33,7 @@ export default function ChatBubble({ message, onTripView, isLoading = false }: C
     return (
       <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
         <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 ${
-          isUser ? 'bg-orange-100' : 'bg-gray-100'
+          isUser ? 'bg-teal-100' : 'bg-gray-100'
         }`}>
           <Skeleton className="mb-2" height="0.75rem" width="80%" />
           <Skeleton className="mb-2" height="0.75rem" width="60%" />
@@ -52,7 +52,7 @@ export default function ChatBubble({ message, onTripView, isLoading = false }: C
       <div
         className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 ${
           isUser
-            ? 'bg-orange-500 text-white rounded-br-sm'
+            ? 'bg-teal-600 text-white rounded-br-sm'
             : 'bg-white text-gray-900 shadow-sm border border-gray-100 rounded-bl-sm'
         }`}
       >
@@ -63,7 +63,7 @@ export default function ChatBubble({ message, onTripView, isLoading = false }: C
 
         {/* 行程预览卡片（仅 AI 消息） */}
         {!isUser && message.tripPreview && (
-          <div className="mt-3 bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-3 border border-orange-100">
+          <div className="mt-3 bg-gradient-to-br from-teal-50 to-teal-50 rounded-xl p-3 border border-teal-100">
             <h4 className="font-bold text-gray-900 text-sm mb-1">{message.tripPreview.title}</h4>
             <div className="flex items-center gap-3 text-xs text-gray-600 mb-2">
               <span>⏱️ {message.tripPreview.duration}</span>
@@ -72,7 +72,7 @@ export default function ChatBubble({ message, onTripView, isLoading = false }: C
             </div>
             <div className="flex flex-wrap gap-1 mb-3">
               {message.tripPreview.tags.map((tag, i) => (
-                <span key={i} className="text-xs px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full">
+                <span key={i} className="text-xs px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full">
                   {tag}
                 </span>
               ))}
@@ -91,7 +91,7 @@ export default function ChatBubble({ message, onTripView, isLoading = false }: C
         {/* 时间戳 */}
         <div
           className={`text-xs mt-2 ${
-            isUser ? 'text-orange-100' : 'text-gray-400'
+            isUser ? 'text-teal-100' : 'text-gray-400'
           }`}
         >
           {message.timestamp}

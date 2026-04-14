@@ -30,7 +30,7 @@ export default function MoreDestinations({ onDestinationSelect }: MoreDestinatio
           <button
             key={city.name}
             onClick={() => onDestinationSelect(city.name.toLowerCase().replace("'", '-') + '-3days')}
-            className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl text-left active:scale-[0.98] transition-transform border border-gray-200 hover:border-orange-400 touch-manipulation"
+            className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl text-left active:scale-[0.98] transition-transform border border-gray-200 hover:border-teal-400 touch-manipulation"
           >
             <span className="text-2xl mb-1 block">{city.emoji}</span>
             <span className="font-semibold text-gray-900 text-sm">{city.name}</span>

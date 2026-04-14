@@ -60,7 +60,7 @@ export default function CookiePolicyPage() {
                   <tr className="border-b border-gray-100">
                     <td className="py-3 px-4">
                       <span className="inline-flex items-center gap-2">
-                        <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                        <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
                         功能 Cookie
                       </span>
                     </td>

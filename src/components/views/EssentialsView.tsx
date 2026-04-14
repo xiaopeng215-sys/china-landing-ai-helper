@@ -175,9 +175,9 @@ export default function EssentialsView() {
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 pt-6 pb-4">
+      <div className="bg-gradient-to-r from-teal-600 to-teal-500 text-white px-4 pt-6 pb-4">
         <h1 className="text-2xl font-bold">{t('EssentialsView.title')}</h1>
-        <p className="text-orange-100 text-sm mt-1">{t('EssentialsView.subtitle')}</p>
+        <p className="text-teal-100 text-sm mt-1">{t('EssentialsView.subtitle')}</p>
       </div>
 
       {/* Tab Bar */}
@@ -191,7 +191,7 @@ export default function EssentialsView() {
                 activeTab === tab.id
                   ? tab.id === 'emergency'
                     ? 'border-red-500 text-red-600'
-                    : 'border-orange-500 text-orange-600'
+                    : 'border-teal-600 text-teal-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
               type="button"
@@ -210,7 +210,7 @@ export default function EssentialsView() {
         ) : (
           <>
             {/* Section Header */}
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-orange-100">
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-teal-100">
               <div className="flex items-center gap-3">
                 <span className="text-3xl">{section.icon}</span>
                 <div>
@@ -223,13 +223,13 @@ export default function EssentialsView() {
             {/* Steps (if any) */}
             {section.steps && section.steps.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="px-4 py-3 bg-orange-50 border-b border-orange-100">
-                  <h3 className="text-sm font-semibold text-orange-700">{t('EssentialsView.stepByStep')}</h3>
+                <div className="px-4 py-3 bg-teal-50 border-b border-teal-100">
+                  <h3 className="text-sm font-semibold text-teal-700">{t('EssentialsView.stepByStep')}</h3>
                 </div>
                 <div className="divide-y divide-gray-100">
                   {section.steps.map((s) => (
                     <div key={s.step} className="flex gap-3 px-4 py-3">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-orange-500 text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-teal-600 text-white text-xs font-bold flex items-center justify-center mt-0.5">
                         {s.step}
                       </div>
                       <div>

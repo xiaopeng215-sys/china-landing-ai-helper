@@ -73,7 +73,7 @@ export default function RestaurantGrid({ restaurants = DEFAULT_RESTAURANTS }: Re
     <div className="bg-white rounded-3xl shadow-xl p-6 border border-gray-100 hover-lift animate-slideUp" style={{ animationDelay: '0.2s' }}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center text-2xl shadow-md">
+          <div className="w-12 h-12 bg-gradient-to-br from-teal-600 to-teal-500 rounded-2xl flex items-center justify-center text-2xl shadow-md">
             🍜
           </div>
           <div>
@@ -95,7 +95,7 @@ export default function RestaurantGrid({ restaurants = DEFAULT_RESTAURANTS }: Re
           >
             <div className="flex">
               {/* 美食大图 - 占 60% 面积 */}
-              <div className="relative w-[60%] h-40 flex-shrink-0 bg-gradient-to-br from-orange-100 to-yellow-100 overflow-hidden">
+              <div className="relative w-[60%] h-40 flex-shrink-0 bg-gradient-to-br from-teal-100 to-teal-50 overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center text-6xl">
                   🍜
                 </div>

@@ -45,9 +45,9 @@ export default function HotelView() {
   return (
     <div className="pb-20 bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-4 pt-6 pb-4">
+      <div className="bg-gradient-to-r from-teal-600 to-teal-500 px-4 pt-6 pb-4">
         <h1 className="text-white text-2xl font-bold">{t('HotelView.title')}</h1>
-        <p className="text-orange-100 text-sm mt-1">{t('HotelView.subtitle')}</p>
+        <p className="text-teal-100 text-sm mt-1">{t('HotelView.subtitle')}</p>
       </div>
 
       {/* City Tabs */}
@@ -59,8 +59,8 @@ export default function HotelView() {
               onClick={() => setActiveCity(city.key)}
               className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 activeCity === city.key
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-orange-50 hover:text-orange-600'
+                  ? 'bg-teal-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-teal-50 hover:text-teal-600'
               }`}
             >
               {city.label}
@@ -77,8 +77,8 @@ export default function HotelView() {
             onClick={() => setPriceFilter(f.key)}
             className={`flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
               priceFilter === f.key
-                ? 'bg-orange-500 text-white border-orange-500'
-                : 'bg-white text-gray-600 border-gray-200 hover:border-orange-300'
+                ? 'bg-teal-600 text-white border-teal-600'
+                : 'bg-white text-gray-600 border-gray-200 hover:border-teal-300'
             }`}
           >
             <span>{f.emoji}</span>
@@ -101,7 +101,7 @@ export default function HotelView() {
               className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
             >
               {/* Card Header */}
-              <div className="bg-gradient-to-r from-orange-50 to-amber-50 px-4 py-3 flex items-start justify-between">
+              <div className="bg-gradient-to-r from-teal-50 to-teal-50 px-4 py-3 flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-gray-900 text-base leading-tight">
                     {hotel.name}
@@ -127,7 +127,7 @@ export default function HotelView() {
               <div className="px-4 py-3">
                 {/* Price */}
                 <div className="flex items-center gap-1 mb-3">
-                  <span className="text-orange-600 font-bold text-lg">
+                  <span className="text-teal-600 font-bold text-lg">
                     {hotel.pricePerNight}
                   </span>
                   <span className="text-gray-400 text-sm">{t('HotelView.perNight')}</span>
@@ -138,7 +138,7 @@ export default function HotelView() {
                   {hotel.highlights.map((h) => (
                     <span
                       key={h}
-                      className="bg-orange-50 text-orange-700 text-xs px-2 py-0.5 rounded-full border border-orange-100"
+                      className="bg-teal-50 text-teal-700 text-xs px-2 py-0.5 rounded-full border border-teal-100"
                     >
                       ✓ {h}
                     </span>

@@ -23,11 +23,11 @@ export default function Button({
 
   const variantStyles = {
     primary:
-      "bg-orange-500 text-white hover:bg-orange-600 focus:ring-orange-500",
+      "bg-teal-600 text-white hover:bg-teal-700 focus:ring-teal-600",
     secondary:
       "bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500",
     outline:
-      "border-2 border-orange-500 text-orange-500 hover:bg-orange-50 focus:ring-orange-500",
+      "border-2 border-teal-600 text-teal-600 hover:bg-teal-50 focus:ring-teal-600",
     ghost: "text-gray-700 hover:bg-gray-100 focus:ring-gray-500",
   };
 
