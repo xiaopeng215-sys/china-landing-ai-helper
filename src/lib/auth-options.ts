@@ -256,7 +256,7 @@ export function getAuthOptions(): NextAuthOptions {
   },
   
   // 安全配置
-  secret: process.env.NEXTAUTH_SECRET || 'travelerlocal-fallback-secret-2026',
+  secret: process.env.NEXTAUTH_SECRET,
   
   // 调试模式 (开发环境启用)
   debug: process.env.NODE_ENV === 'development',
