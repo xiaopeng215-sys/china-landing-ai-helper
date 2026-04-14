@@ -47,6 +47,14 @@ const EssentialsView = dynamic(
   },
 );
 
+const FoodEncyclopediaView = dynamic(
+  () => import("@/components/views/FoodEncyclopediaView"),
+  {
+    loading: () => <LoadingSkeleton type="food" />,
+    ssr: false,
+  },
+);
+
 const HotelView = dynamic(() => import("@/components/views/HotelView"), {
   loading: () => <LoadingSkeleton type="transport" />,
   ssr: false,
@@ -61,7 +69,7 @@ const TimelineView = dynamic(
 );
 
 // 使用 const assertions 定义 Tab 值，提高类型安全性
-const TAB_VALUES = ["chat", "trips", "food", "transport", "essentials", "hotels", "timeline", "profile"] as const;
+const TAB_VALUES = ["chat", "trips", "food", "food-encyclopedia", "transport", "essentials", "hotels", "timeline", "profile"] as const;
 type Tab = typeof TAB_VALUES[number];
 
 export default function Home() {
@@ -88,6 +96,8 @@ export default function Home() {
         return <TripsView />;
       case "food":
         return <FoodView />;
+      case "food-encyclopedia":
+        return <FoodEncyclopediaView />;
       case "transport":
         return <TransportView />;
       case "essentials":
