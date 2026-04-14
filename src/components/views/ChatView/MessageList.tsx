@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { ExternalLink, MapPin, Star, Camera, Plane, Train } from 'lucide-react';
 import type { Message, Recommendation, Action, ChatImage } from './types';
 import { useClientI18n } from '@/lib/i18n/client';
@@ -110,7 +111,9 @@ export function MessageList({ messages, messagesEndRef }: MessageListProps) {
               const { text, card } = parseTransportCard(message.content);
               return (
                 <>
-                  <p className="text-sm whitespace-pre-wrap">{text}</p>
+                  <div className="text-sm prose prose-sm max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-li:my-0">
+                    <ReactMarkdown>{text}</ReactMarkdown>
+                  </div>
                   {card && <TransportBookingCard card={card} />}
                 </>
               );
