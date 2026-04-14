@@ -10,6 +10,8 @@ const LOCALE_FLAGS: Record<Locale, string> = {
   'zh-TW': '🇹🇼',
   'ko-KR': '🇰🇷',
   'ja-JP': '🇯🇵',
+  'es-ES': '🇪🇸',
+  'pt-BR': '🇧🇷',
 };
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -18,6 +20,8 @@ const LOCALE_LABELS: Record<Locale, string> = {
   'zh-TW': '繁體中文',
   'ko-KR': '한국어',
   'ja-JP': '日本語',
+  'es-ES': 'Español',
+  'pt-BR': 'Português',
 };
 
 interface LanguageSwitcherProps {
