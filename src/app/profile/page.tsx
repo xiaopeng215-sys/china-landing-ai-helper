@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { useClientI18n } from '@/lib/i18n/client';
 import { useSession, signOut } from 'next-auth/react';
@@ -944,6 +945,13 @@ export default function ProfilePage() {
           </div>
         </div>
       )}
+
+      {/* Footer Links */}
+      <footer className="text-center py-6 text-sm text-[#767676] space-x-4">
+        <Link href="/privacy" className="hover:text-[#ff5a5f] transition-colors">Privacy Policy</Link>
+        <span>|</span>
+        <Link href="/terms" className="hover:text-[#ff5a5f] transition-colors">Terms of Service</Link>
+      </footer>
     </div>
   );
 }
