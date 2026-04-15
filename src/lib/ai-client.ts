@@ -609,74 +609,41 @@ async function sendToMiniMax(
 function getMockResponse(messages: Message[]): AIResponse {
   const lastMessage = messages[messages.length - 1].content.toLowerCase();
   
-  // 行程规划
-  if (lastMessage.includes('行程') || lastMessage.includes('规划') || lastMessage.includes('itinerary')) {
+  // 行程规划 - 从用户消息中提取城市和天数
+  if (lastMessage.includes('行程') || lastMessage.includes('规划') || lastMessage.includes('itinerary') || lastMessage.includes('plan')) {
+    // 提取城市名（支持常见中英文城市）
+    const cityMap: Record<string, string> = {
+      'beijing': 'Beijing', '北京': 'Beijing',
+      'shanghai': 'Shanghai', '上海': 'Shanghai',
+      'chengdu': 'Chengdu', '成都': 'Chengdu',
+      "xi'an": "Xi'an", 'xian': "Xi'an", '西安': "Xi'an",
+      'guilin': 'Guilin', '桂林': 'Guilin',
+      'hangzhou': 'Hangzhou', '杭州': 'Hangzhou',
+      'shenzhen': 'Shenzhen', '深圳': 'Shenzhen',
+      'guangzhou': 'Guangzhou', '广州': 'Guangzhou',
+    };
+    let detectedCity = 'your destination';
+    for (const [key, val] of Object.entries(cityMap)) {
+      if (lastMessage.includes(key)) { detectedCity = val; break; }
+    }
+
+    // 提取天数
+    const daysMatch = lastMessage.match(/(\d+)\s*(?:day|天|日)/) || lastMessage.match(/(?:day|天|日)\s*(\d+)/);
+    const days = daysMatch ? parseInt(daysMatch[1]) : 3;
+
+    const dayLines = Array.from({ length: days }, (_, i) =>
+      `📅 **Day ${i + 1}**: Explore ${detectedCity}\n• Morning: Visit a major landmark\n• Afternoon: Local market or museum\n• Evening: Night food street or cultural show`
+    ).join('\n\n');
+    const mockText = `🗺️ **${detectedCity} ${days}-Day Itinerary**\n\n⚠️ *AI service is temporarily unavailable. Here's a general template — please try again for a personalized plan.*\n\n${dayLines}\n\n💰 **Budget estimate**: ¥300–600/person/day (excl. accommodation)\n\n🔄 Please try again for a detailed AI-generated itinerary!`;
     const structuredResponse: StructuredAIResponse = {
-      text: `🗽 **上海 4 天经典行程**
-
-📍 **Day 1**: 经典地标
-• 上午：外滩 (免费) - 经典 skyline 拍照
-• 下午：豫园 (¥40) - 古典园林
-• 晚上：南京路步行街
-
-📍 **Day 2**: 文化体验
-• 上午：上海博物馆 (免费)
-• 下午：田子坊 (免费) - 艺术街区
-• 晚上：新天地
-
-📍 **Day 3**: 现代上海
-• 上午：陆家嘴 - 东方明珠 (¥180)
-• 下午：上海中心观景台 (¥180)
-• 晚上：滨江骑行 (免费)
-
-📍 **Day 4**: 水乡风情
-• 全天：朱家角古镇 (免费)
-• 品尝：扎肉、阿婆粽
-
-💰 **预算参考**: ¥2000-3000/人 (不含住宿)
-
-需要我详细规划某一天吗？或者你有其他偏好？`,
-      recommendations: [
-        {
-          type: 'attraction',
-          id: 'bund-shanghai',
-          name: '外滩',
-          nameEn: 'The Bund',
-          reason: '上海标志性景点，欣赏浦江两岸美景',
-          price: '免费',
-          location: '上海市黄浦区中山东一路',
-        },
-        {
-          type: 'attraction',
-          id: 'yu-garden',
-          name: '豫园',
-          nameEn: 'Yu Garden',
-          reason: '明代古典园林，体验传统江南园林艺术',
-          price: '¥40',
-          location: '上海市黄浦区安仁街 218 号',
-        },
-        {
-          type: 'attraction',
-          id: 'oriental-pearl',
-          name: '东方明珠',
-          nameEn: 'Oriental Pearl Tower',
-          reason: '上海地标建筑，俯瞰全城美景',
-          price: '¥180',
-          location: '上海市浦东新区陆家嘴世纪大道 1 号',
-        },
-      ],
+      text: mockText,
+      recommendations: [],
       actions: [
-        {
-          type: 'book',
-          provider: 'klook',
-          url: 'https://www.klook.com/zh-CN/activity/123-shanghai-tour/',
-          text: '预订上海一日游',
-        },
         {
           type: 'navigate',
           provider: 'amap',
           url: 'https://www.amap.com/',
-          text: '查看地图',
+          text: 'Open Map',
         },
       ],
     };
