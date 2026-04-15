@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useClientI18n } from '@/lib/i18n/client';
+import RecommendationGrid from '@/components/recommendations/RecommendationGrid';
 
 interface ExploreViewProps {
   onNavigate: (tab: 'food-encyclopedia' | 'food' | 'hotels' | 'transport') => void;
@@ -163,6 +164,9 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
           </div>
         </div>
       </div>
+
+      {/* Personalized Recommendations */}
+      <RecommendationGrid limit={6} />
 
       {/* China Travel FAQ - Fear Busters */}
       <section className="px-4 mt-6 mb-6">
