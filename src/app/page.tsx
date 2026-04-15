@@ -95,7 +95,7 @@ const ARView = dynamic(
 );
 
 // 使用 const assertions 定义 Tab 值，提高类型安全性
-const TAB_VALUES = ["chat", "trips", "food", "food-encyclopedia", "transport", "essentials", "hotels", "timeline", "profile", "explore", "itinerary", "ar"] as const;
+const TAB_VALUES = ["chat", "trips", "food", "food-encyclopedia", "transport", "essentials", "hotels", "timeline", "profile", "explore", "itinerary", "ar", "map"] as const;
 type Tab = typeof TAB_VALUES[number];
 
 export default function Home() {

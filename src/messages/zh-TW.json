@@ -11,7 +11,9 @@
     "trips": "行程",
     "profile": "我的",
     "settings": "設定",
-    "navigation": "主導航"
+    "navigation": "主導航",
+    "food": "美食",
+    "transport": "交通"
   },
   "ChatPage": {
     "title": "AI 旅行助手",
