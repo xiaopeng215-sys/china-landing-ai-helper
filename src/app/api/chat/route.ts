@@ -32,6 +32,9 @@ import {
 } from '../middleware/error-handler';
 import { recordApiMetrics } from '../../../lib/metrics';
 
+// 旅行垂直技能库
+import { TravelSkillsEngine, matchesTravelSkill, formatSkillContext } from '../../../lib/travel-skills';
+
 // 数据库操作 - 用于会话和消息管理 (修复 CHAT-01/CHAT-02)
 import {
   createChatSession,
@@ -376,9 +379,27 @@ export async function POST(request: NextRequest) {
 
     // 使用检测到的语言选择 system prompt
     const baseSystemPrompt = SYSTEM_PROMPTS[detectedLanguage] || SYSTEM_PROMPTS['en-US'];
-    const systemPrompt = profileContext
+    let systemPrompt = profileContext
       ? `${baseSystemPrompt}\n\n${profileContext}\n\nUse the traveler profile above to personalize your responses. Reference their nationality, planned cities, budget, and completed prep steps when relevant.`
       : baseSystemPrompt;
+
+    // 旅行技能增强：检测关键词并附加结构化数据
+    const matchedSkill = matchesTravelSkill(message);
+    if (matchedSkill) {
+      try {
+        const skillEngine = new TravelSkillsEngine();
+        const skillResult = await skillEngine.processQuery(message, {
+          nationality: body.nationality,
+          city: body.city,
+        });
+        if (skillResult.result) {
+          systemPrompt += formatSkillContext(skillResult.skill, skillResult.result, skillResult.actionItems);
+          console.log(`🎯 [Chat API] 技能匹配：${matchedSkill}，附加结构化数据`);
+        }
+      } catch (skillError) {
+        console.warn('[Chat API] 技能处理失败，继续正常流程:', skillError);
+      }
+    }
 
     // 优化：使用 AI 响应缓存 (包含消息历史)
     const aiContext = {
