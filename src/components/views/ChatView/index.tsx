@@ -9,6 +9,7 @@ import { ChatInput } from './ChatInput';
 import { SessionList } from './SessionList';
 import type { Message, ChatSession } from './types';
 import { useClientI18n } from '@/lib/i18n/client';
+import { useTravelerProfile } from '@/hooks/useTravelerProfile';
 
 export type AIModel = 'minimax' | 'qwen';
 
@@ -24,6 +25,7 @@ export default function ChatView() {
   const [selectedModel, setSelectedModel] = useState<AIModel>('minimax');
   const [showModelSelector, setShowModelSelector] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { getPersonalizedContext, updateFromConversation, appendChatSummary } = useTravelerProfile();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -110,6 +112,7 @@ export default function ChatView() {
           message: userMessage.content,
           sessionId: currentSessionId,
           model: selectedModel,
+          profileContext: getPersonalizedContext(),
         }),
       });
 
@@ -175,7 +178,12 @@ export default function ChatView() {
         images,
       };
       setMessages(prev => [...prev, assistantMessage]);
-      
+
+      // Update profile from conversation
+      updateFromConversation(userMessage.content);
+      appendChatSummary('user', userMessage.content.slice(0, 200));
+      appendChatSummary('assistant', content.slice(0, 200));
+
       if (data.sessionId && !currentSessionId) {
         setCurrentSessionId(data.sessionId);
         loadSessions();

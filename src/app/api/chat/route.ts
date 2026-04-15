@@ -333,7 +333,7 @@ export async function POST(request: NextRequest) {
       throw createValidationError('Invalid request format');
     }
 
-    const { message, model, sessionId: providedSessionId, language } = body;
+    const { message, model, sessionId: providedSessionId, language, profileContext } = body;
     let sessionId = providedSessionId;
 
     // 检测语言（基于消息内容，不依赖前端传参）
@@ -375,7 +375,10 @@ export async function POST(request: NextRequest) {
     }
 
     // 使用检测到的语言选择 system prompt
-    const systemPrompt = SYSTEM_PROMPTS[detectedLanguage] || SYSTEM_PROMPTS['en-US'];
+    const baseSystemPrompt = SYSTEM_PROMPTS[detectedLanguage] || SYSTEM_PROMPTS['en-US'];
+    const systemPrompt = profileContext
+      ? `${baseSystemPrompt}\n\n${profileContext}\n\nUse the traveler profile above to personalize your responses. Reference their nationality, planned cities, budget, and completed prep steps when relevant.`
+      : baseSystemPrompt;
 
     // 优化：使用 AI 响应缓存 (包含消息历史)
     const aiContext = {
