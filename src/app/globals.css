@@ -194,12 +194,12 @@ body {
 @keyframes glow {
   0%,
   100% {
-    box-shadow: 0 0 5px rgba(255, 90, 95, 0.5);
+    box-shadow: 0 0 5px rgba(13, 148, 136, 0.5);
   }
   50% {
     box-shadow:
-      0 0 20px rgba(255, 90, 95, 0.8),
-      0 0 30px rgba(255, 90, 95, 0.4);
+      0 0 20px rgba(13, 148, 136, 0.8),
+      0 0 30px rgba(13, 148, 136, 0.4);
   }
 }
 
@@ -313,12 +313,12 @@ body {
   border-radius: 0.75rem;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(255, 90, 95, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.3);
   transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-  box-shadow: 0 10px 15px -3px rgba(255, 90, 95, 0.4);
+  box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.4);
   transform: translateY(-1px);
 }
 
@@ -351,7 +351,7 @@ body {
 .input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
 /* Safe Area Insets for Mobile */
@@ -397,16 +397,13 @@ body {
   }
 }
 
-/* Dark Mode Support (Future) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Can be enabled later */
-    /* --text-primary: #f9fafb; */
-    /* --text-secondary: #d1d5db; */
-    /* --bg-primary: #1f2937; */
-    /* --bg-secondary: #111827; */
-    /* --border-color: #374151; */
-  }
+/* Dark Mode Support */
+.dark {
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --bg-primary: #1f2937;
+  --bg-secondary: #111827;
+  --border-color: #374151;
 }
 
 /* Accessibility */
@@ -482,7 +479,7 @@ body {
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 20px rgba(255, 90, 95, 0.6);
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.6);
 }
 
 /* Tap Feedback - Mobile Optimized */
@@ -505,7 +502,7 @@ body {
   button,
   a {
     touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(255, 90, 95, 0.1);
+    -webkit-tap-highlight-color: rgba(13, 148, 136, 0.1);
   }
 }
 
@@ -623,7 +620,7 @@ body {
 /* Focus States */
 .focus-ring:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.3);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.3);
 }
 
 /* Smooth Scroll */
@@ -635,7 +632,7 @@ html {
 
 /* Selection Color */
 ::selection {
-  background: rgba(255, 90, 95, 0.3);
+  background: rgba(13, 148, 136, 0.3);
   color: var(--text-primary);
 }
 
