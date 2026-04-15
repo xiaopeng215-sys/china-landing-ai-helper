@@ -64,10 +64,12 @@ const privacyContent: Record<string, LocaleContent> = {
         heading: '6. Contact',
         body: 'For privacy requests or questions, contact us at: privacy@travelerlocal.ai',
       },
+      {
+        heading: '7. Data Deletion',
+        body: 'To request deletion of your account and all associated data, email privacy@travelerlocal.ai with subject "Data Deletion Request". We will process your request within 30 days. You can also delete your account directly from the Profile page in the app.',
+      },
     ],
   },
-
-  'zh-CN': {
     title: '隐私政策',
     lastUpdated: '最后更新：2025年1月',
     backToTerms: '服务条款',
