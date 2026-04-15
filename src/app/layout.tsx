@@ -4,6 +4,7 @@ import './globals.css';
 import Providers from '@/components/Providers';
 import NetworkStatus from '@/components/NetworkStatus';
 import PushNotificationPrompt from '@/components/notifications/PushNotificationPrompt';
+import FeedbackButton from '@/components/feedback/FeedbackButton';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -330,6 +331,7 @@ export default function RootLayout({
           <div className="safe-top safe-bottom">
             {children}
           </div>
+          <FeedbackButton />
         </Providers>
       </body>
     </html>
