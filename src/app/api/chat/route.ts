@@ -92,6 +92,10 @@ const SYSTEM_PROMPTS: Record<string, string> = {
 - 交通方式只推荐地铁、滴滴、高铁等主流方式`,
   'ja-JP': 'あなたは中国旅行の専門アシスタントです。旅程計画、グルメ推薦、交通案内を日本語で提供してください。AIモデル名やプロバイダーには言及しないでください。',
   'ko-KR': '당신은 중국 여행 전문 어시스턴트입니다. 여행 일정, 맛집 추천, 교통 안내를 한국어로 제공해주세요. AI 모델 이름이나 제공업체를 언급하지 마세요.',
+  'zh-TW': `你是一個專業的中國旅行助手，幫助遊客規劃行程、推薦美食和提供交通指南。請用繁體中文回覆，友好、簡潔、實用。不要提及 AI 模型名稱或提供商。`,
+  'es-ES': `Eres un asistente de viaje experto para visitantes internacionales en China. Responde SIEMPRE en español. No menciones el nombre del modelo de IA ni del proveedor. Proporciona información práctica sobre itinerarios, gastronomía y transporte.`,
+  'pt-BR': `Você é um assistente de viagem especializado para visitantes internacionais na China. Responda SEMPRE em português brasileiro. Não mencione o nome do modelo de IA ou provedor. Forneça informações práticas sobre roteiros, gastronomia e transporte.`,
+  'ar-SA': `أنت مساعد سفر متخصص للزوار الدوليين في الصين. يجب أن تجيب دائماً باللغة العربية فقط. لا تذكر اسم نموذج الذكاء الاصطناعي أو المزود. قدم معلومات عملية حول المسارات السياحية والمطاعم والمواصلات.`,
   'en-US': `You are a knowledgeable and friendly travel assistant for international visitors to China.
 
 LANGUAGE RULE (HIGHEST PRIORITY): You MUST respond in English ONLY. This is non-negotiable. Do NOT use Chinese characters (汉字) under any circumstances. Do NOT switch to Chinese even for place names — use pinyin or English translations instead. If you find yourself writing Chinese, stop and rewrite in English.
@@ -339,8 +343,12 @@ export async function POST(request: NextRequest) {
     const { message, model, sessionId: providedSessionId, language, profileContext } = body;
     let sessionId = providedSessionId;
 
-    // 检测语言（基于消息内容，不依赖前端传参）
-    const detectedLanguage = detectLanguage(message?.trim() || '');
+    // 语言优先级：前端明确传入 > 消息内容检测
+    const detectedLanguage: string = (
+      language && typeof language === 'string' && SYSTEM_PROMPTS[language]
+        ? language
+        : detectLanguage(message?.trim() || '')
+    );
 
     // 验证消息
     if (!message || typeof message !== 'string' || !message.trim()) {
@@ -377,8 +385,20 @@ export async function POST(request: NextRequest) {
       console.warn('[Chat API] 加载消息历史失败:', e);
     }
 
-    // 使用检测到的语言选择 system prompt
-    const baseSystemPrompt = SYSTEM_PROMPTS[detectedLanguage] || SYSTEM_PROMPTS['en-US'];
+    // 使用检测到的语言选择 system prompt，并注入强制语言指令
+    const langNames: Record<string, string> = {
+      'en-US': 'English',
+      'zh-CN': '中文（简体）',
+      'zh-TW': '中文（繁體）',
+      'ja-JP': '日本語',
+      'ko-KR': '한국어',
+      'es-ES': 'Español',
+      'pt-BR': 'Português',
+      'ar-SA': 'العربية',
+    };
+    const langName = langNames[detectedLanguage] || 'English';
+    const langInstruction = `\n\n[LANGUAGE DIRECTIVE] You MUST respond in ${langName} ONLY. Do not use any other language under any circumstances.`;
+    const baseSystemPrompt = (SYSTEM_PROMPTS[detectedLanguage] || SYSTEM_PROMPTS['en-US']) + langInstruction;
     let systemPrompt = profileContext
       ? `${baseSystemPrompt}\n\n${profileContext}\n\nUse the traveler profile above to personalize your responses. Reference their nationality, planned cities, budget, and completed prep steps when relevant.`
       : baseSystemPrompt;
@@ -406,7 +426,7 @@ export async function POST(request: NextRequest) {
       messages: [
         { role: 'system' as const, content: systemPrompt },
         ...messageHistory.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
-        { role: 'user' as const, content: detectedLanguage === 'en-US' ? `[IMPORTANT: Reply in English only] ${message}` : message }
+        { role: 'user' as const, content: `[RESPOND IN ${langName.toUpperCase()} ONLY] ${message}` }
       ],
       model: selectedModel,
       temperature: 0.7,

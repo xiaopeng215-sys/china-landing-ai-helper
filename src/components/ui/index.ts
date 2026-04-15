@@ -22,3 +22,4 @@ export {
 } from './SkeletonEnhanced';
 export { default as UndoButton, useUndoHistory, UndoHistoryManager } from './UndoButton';
 export { default as EstimatedTime } from './EstimatedTime';
+export { default as LanguageSwitcher } from './LanguageSwitcher';
