@@ -290,6 +290,29 @@ export default function ProfilePage() {
     return membershipTiers.find(t => t.id === userMembership.tier_id) || null;
   };
 
+  // NextAuth v5 edge case: status=authenticated but session.user is empty
+  if (status !== 'loading' && !session?.user?.email) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
+        <div className="text-6xl mb-4">👤</div>
+        <h2 className="text-xl font-bold text-gray-800 mb-2">Guest User</h2>
+        <p className="text-gray-500 text-sm mb-6 text-center">Sign in to save your trips and preferences</p>
+        <button
+          onClick={() => router.push('/auth/signin?callbackUrl=/profile')}
+          className="px-8 py-3 bg-teal-600 text-white rounded-xl font-semibold text-base hover:bg-teal-700 transition-all"
+        >
+          Sign In
+        </button>
+        <button
+          onClick={() => router.push('/auth/signup')}
+          className="mt-3 px-8 py-3 border border-teal-600 text-teal-600 rounded-xl font-semibold text-base hover:bg-teal-50 transition-all"
+        >
+          Create Account
+        </button>
+      </div>
+    );
+  }
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
