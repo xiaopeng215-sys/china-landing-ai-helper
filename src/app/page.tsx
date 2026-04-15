@@ -11,6 +11,8 @@ import type { HeroFeature } from "@/components/ui/HeroSection";
 import { useClientI18n } from "@/lib/i18n/client";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { ESSENTIALS_DATA } from "@/data/essentials";
+import DailyRecommendation from "@/components/home/DailyRecommendation";
+import QuickActions from "@/components/home/QuickActions";
 
 // 动态导入 - 按需加载，减少初始包体积
 const ChatView = dynamic(() => import("@/components/views/ChatView/index"), {
@@ -101,6 +103,7 @@ type Tab = typeof TAB_VALUES[number];
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("chat");
   const [showHero, setShowHero] = useState(true);
+  const [chatInitialMessage, setChatInitialMessage] = useState<string | undefined>();
   const { t, locale } = useClientI18n();
 
   // Random tip from essentials data
@@ -125,7 +128,7 @@ export default function Home() {
   const renderView = React.useMemo(() => {
     switch (activeTab) {
       case "chat":
-        return <ChatView />;
+        return <ChatView initialMessage={chatInitialMessage} onNavigate={(tab) => setActiveTab(tab as Tab)} />;
       case "trips":
         return <TripsView />;
       case "food":
@@ -157,6 +160,23 @@ export default function Home() {
   const handleHeroCtaClick = () => {
     setActiveTab("chat");
     setShowHero(false);
+  };
+
+  const handleCitySelect = (city: string) => {
+    setChatInitialMessage(`Tell me everything I need to know about visiting ${city} — top sights, food, transport, and tips.`);
+    setActiveTab("chat");
+    setShowHero(false);
+  };
+
+  const handleQuickAction = ({ message, tab }: { message?: string; tab?: string }) => {
+    if (tab) {
+      setActiveTab(tab as Tab);
+      setShowHero(false);
+    } else if (message) {
+      setChatInitialMessage(message);
+      setActiveTab("chat");
+      setShowHero(false);
+    }
   };
 
   const heroFeatures: HeroFeature[] = [
@@ -208,6 +228,12 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Daily Recommendation */}
+          <DailyRecommendation onCitySelect={handleCitySelect} />
+
+          {/* Quick Actions */}
+          <QuickActions onAction={handleQuickAction} />
+
           {/* Traveler Stories */}
           <section className="px-4 mb-6">
             <h2 className="text-lg font-bold text-gray-800 mb-3">💬 Real Traveler Stories</h2>
@@ -256,6 +282,7 @@ export default function Home() {
         </>
       )}
       
+
       <main role="main">
         <Suspense fallback={<LoadingSkeleton type={activeTab} />}>
           {renderView}

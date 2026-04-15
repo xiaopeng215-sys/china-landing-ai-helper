@@ -26,9 +26,10 @@ function detectItineraryIntent(text: string): boolean {
 
 interface ChatViewProps {
   onNavigate?: (tab: string) => void;
+  initialMessage?: string;
 }
 
-export default function ChatView({ onNavigate }: ChatViewProps = {}) {
+export default function ChatView({ onNavigate, initialMessage }: ChatViewProps = {}) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -313,6 +314,13 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
   };
 
   const { t } = useClientI18n();
+
+  // Auto-send initialMessage once on mount
+  useEffect(() => {
+    if (initialMessage) {
+      setInputValue(initialMessage);
+    }
+  }, [initialMessage]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
