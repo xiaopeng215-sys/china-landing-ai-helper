@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
 import NetworkStatus from '@/components/NetworkStatus';
+import PushNotificationPrompt from '@/components/notifications/PushNotificationPrompt';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -225,6 +226,7 @@ export default function RootLayout({
         />
         <Providers>
           <NetworkStatus />
+          <PushNotificationPrompt />
           {/* 结构化数据 - Schema.org JSON-LD */}
           <script
             type="application/ld+json"

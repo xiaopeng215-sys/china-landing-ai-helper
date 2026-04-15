@@ -1,8 +1,11 @@
 'use client';
 
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
+import dynamic from 'next/dynamic';
 import { ExternalLink, MapPin, Star, Camera, Plane, Train } from 'lucide-react';
+
+// 动态导入 react-markdown，避免进入 shared chunk（remark/rehype 生态较重）
+const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
 import type { Message, Recommendation, Action, ChatImage } from './types';
 import { useClientI18n } from '@/lib/i18n/client';
 
