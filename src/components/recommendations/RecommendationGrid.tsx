@@ -26,9 +26,10 @@ function CardSkeleton() {
 
 interface RecommendationGridProps {
   limit?: number;
+  onAskAI?: (message: string) => void;
 }
 
-export default function RecommendationGrid({ limit = 6 }: RecommendationGridProps) {
+export default function RecommendationGrid({ limit = 6, onAskAI }: RecommendationGridProps) {
   const { profile } = useTravelerProfile();
   const [mounted, setMounted] = React.useState(false);
 
@@ -71,7 +72,7 @@ export default function RecommendationGrid({ limit = 6 }: RecommendationGridProp
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {recommendations.map(rec => (
-            <RecommendationCard key={rec.id} recommendation={rec} />
+            <RecommendationCard key={rec.id} recommendation={rec} onAskAI={onAskAI} />
           ))}
         </div>
       )}

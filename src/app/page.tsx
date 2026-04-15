@@ -144,7 +144,7 @@ export default function Home() {
       case "timeline":
         return <TimelineView />;
       case "explore":
-        return <ExploreView onNavigate={(tab) => setActiveTab(tab)} />;
+        return <ExploreView onNavigate={(tab) => setActiveTab(tab)} onAskAI={(msg) => { setChatInitialMessage(msg); setActiveTab('chat'); }} />;
       case "itinerary":
         return <ItineraryView />;
       case "ar":

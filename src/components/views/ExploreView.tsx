@@ -6,9 +6,10 @@ import RecommendationGrid from '@/components/recommendations/RecommendationGrid'
 
 interface ExploreViewProps {
   onNavigate: (tab: 'food-encyclopedia' | 'food' | 'hotels' | 'transport') => void;
+  onAskAI?: (message: string) => void;
 }
 
-export default function ExploreView({ onNavigate }: ExploreViewProps) {
+export default function ExploreView({ onNavigate, onAskAI }: ExploreViewProps) {
   const { t } = useClientI18n();
 
   const EXPLORE_CARDS = [
@@ -166,7 +167,7 @@ export default function ExploreView({ onNavigate }: ExploreViewProps) {
       </div>
 
       {/* Personalized Recommendations */}
-      <RecommendationGrid limit={6} />
+      <RecommendationGrid limit={6} onAskAI={onAskAI} />
 
       {/* China Travel FAQ - Fear Busters */}
       <section className="px-4 mt-6 mb-6">
