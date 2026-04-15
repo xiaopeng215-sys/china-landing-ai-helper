@@ -37,7 +37,8 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
   const [selectedModel, setSelectedModel] = useState<AIModel>('minimax');
   const [showModelSelector, setShowModelSelector] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { getPersonalizedContext, updateFromConversation, appendChatSummary } = useTravelerProfile();
+  const { getPersonalizedContext, updateFromConversation, appendChatSummary, profile } = useTravelerProfile();
+  const voiceLanguage = profile?.languages?.[0] ?? 'en-US';
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -321,7 +322,7 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
       {/* Model Selector hidden - internal use only */}
 
       {/* Messages */}
-      <MessageList messages={messages} messagesEndRef={messagesEndRef} onNavigate={onNavigate} />
+      <MessageList messages={messages} messagesEndRef={messagesEndRef} onNavigate={onNavigate} voiceLanguage={voiceLanguage} />
 
       {/* Welcome screen - shown when chat is empty */}
       {messages.length === 0 && !isTyping && (
@@ -383,6 +384,7 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
         onSend={handleSendMessage}
         onChange={setInputValue}
         onSubmit={handleSubmit}
+        voiceLanguage={voiceLanguage}
       />
 
       {/* Session List Modal */}

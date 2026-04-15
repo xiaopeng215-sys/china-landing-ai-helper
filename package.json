@@ -19,6 +19,7 @@
     "@auth/supabase-adapter": "^1.11.1",
     "@next/bundle-analyzer": "^16.2.3",
     "@sentry/nextjs": "^10.48.0",
+    "@stripe/stripe-js": "^9.2.0",
     "@supabase/supabase-js": "^2.103.0",
     "@tailwindcss/typography": "^0.5.19",
     "@upstash/ratelimit": "^2.0.8",
@@ -37,6 +38,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-markdown": "^10.1.0",
+    "stripe": "^22.0.1",
     "workbox-webpack-plugin": "^7.3.0"
   },
   "devDependencies": {

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Send, Mic } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useClientI18n } from '@/lib/i18n/client';
+import { VoiceInput } from '@/components/voice/VoiceInput';
 
 interface ChatInputProps {
   inputValue: string;
@@ -10,9 +11,10 @@ interface ChatInputProps {
   onSend: () => void;
   onChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
+  voiceLanguage?: string;
 }
 
-export function ChatInput({ inputValue, isTyping, onSend, onChange, onSubmit }: ChatInputProps) {
+export function ChatInput({ inputValue, isTyping, onSend, onChange, onSubmit, voiceLanguage }: ChatInputProps) {
   const { t } = useClientI18n();
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -36,14 +38,12 @@ export function ChatInput({ inputValue, isTyping, onSend, onChange, onSubmit }: 
                        resize-none max-h-32 text-sm"
             style={{ minHeight: '44px' }}
           />
-          <button
-            type="button"
-            onClick={() => alert('Voice input coming soon!')}
-            className="absolute right-3 rtl:right-auto rtl:left-3 bottom-3 text-[#767676] hover:text-[#ff5a5f]"
-            title="Voice input (coming soon)"
-          >
-            <Mic className="w-5 h-5" />
-          </button>
+          <div className="absolute right-3 rtl:right-auto rtl:left-3 bottom-2">
+            <VoiceInput
+              language={voiceLanguage}
+              onTranscript={(text) => onChange(inputValue ? inputValue + ' ' + text : text)}
+            />
+          </div>
         </div>
         
         <button

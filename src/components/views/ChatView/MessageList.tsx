@@ -8,6 +8,7 @@ import { ExternalLink, MapPin, Star, Camera, Plane, Train } from 'lucide-react';
 const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
 import type { Message, Recommendation, Action, ChatImage } from './types';
 import { useClientI18n } from '@/lib/i18n/client';
+import { VoiceOutput } from '@/components/voice/VoiceOutput';
 
 interface TransportCardData {
   type: 'flight' | 'train';
@@ -79,9 +80,10 @@ interface MessageListProps {
   messages: Message[];
   messagesEndRef: React.RefObject<HTMLDivElement>;
   onNavigate?: (tab: string) => void;
+  voiceLanguage?: string;
 }
 
-export function MessageList({ messages, messagesEndRef, onNavigate }: MessageListProps) {
+export function MessageList({ messages, messagesEndRef, onNavigate, voiceLanguage }: MessageListProps) {
   const { t, locale } = useClientI18n();
 
   if (messages.length === 0) {
@@ -176,11 +178,16 @@ export function MessageList({ messages, messagesEndRef, onNavigate }: MessageLis
             )}
             
             {/* 时间戳 */}
-            <div className={`text-xs mt-2 ${message.role === 'user' ? 'text-white/70' : 'text-[#767676]'}`}>
-              {typeof message.timestamp === 'string' 
-                ? new Date(message.timestamp).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
-                : message.timestamp.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
-              }
+            <div className={`text-xs mt-2 flex items-center gap-1 ${message.role === 'user' ? 'text-white/70 justify-end' : 'text-[#767676]'}`}>
+              <span>
+                {typeof message.timestamp === 'string' 
+                  ? new Date(message.timestamp).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
+                  : message.timestamp.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
+                }
+              </span>
+              {message.role !== 'user' && (
+                <VoiceOutput text={message.content} language={voiceLanguage} />
+              )}
             </div>
           </>)}
           </div>
