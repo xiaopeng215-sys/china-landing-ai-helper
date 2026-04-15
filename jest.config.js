@@ -11,6 +11,7 @@ const config = {
       tsconfig: {
         ...require('./tsconfig.json').compilerOptions,
         jsx: 'react-jsx',
+        moduleResolution: 'node',
       },
     }],
   },
