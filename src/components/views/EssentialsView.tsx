@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ESSENTIALS_DATA, ESSENTIALS_TABS, EMERGENCY_DATA, type EssentialsTab } from '@/data/essentials';
+import EmergencyContacts from '@/components/essentials/EmergencyContacts';
 import { useClientI18n } from '@/lib/i18n/client';
 
 // ─── Emergency Tab ────────────────────────────────────────────────────────────
@@ -12,6 +13,9 @@ function EmergencyView() {
 
   return (
     <div className="space-y-4">
+      {/* Quick-dial emergency contacts */}
+      <EmergencyContacts />
+
       {/* SOS Hero */}
       <div className="bg-red-600 rounded-2xl p-5 text-white shadow-lg">
         <div className="text-center mb-4">
