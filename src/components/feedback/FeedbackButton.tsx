@@ -42,15 +42,6 @@ export default function FeedbackButton() {
 
   return (
     <>
-      {/* Floating button */}
-      <button
-        onClick={() => setOpen(true)}
-        aria-label="Send feedback"
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-emerald-500 text-white shadow-lg flex items-center justify-center text-xl hover:bg-emerald-600 transition-colors"
-      >
-        💬
-      </button>
-
       {/* Modal overlay */}
       {open && (
         <div
