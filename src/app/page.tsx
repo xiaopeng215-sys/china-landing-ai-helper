@@ -78,8 +78,16 @@ const ExploreView = dynamic(
   },
 );
 
+const ItineraryView = dynamic(
+  () => import("@/components/views/ItineraryView"),
+  {
+    loading: () => <LoadingSkeleton type="trips" />,
+    ssr: false,
+  },
+);
+
 // 使用 const assertions 定义 Tab 值，提高类型安全性
-const TAB_VALUES = ["chat", "trips", "food", "food-encyclopedia", "transport", "essentials", "hotels", "timeline", "profile", "explore"] as const;
+const TAB_VALUES = ["chat", "trips", "food", "food-encyclopedia", "transport", "essentials", "hotels", "timeline", "profile", "explore", "itinerary"] as const;
 type Tab = typeof TAB_VALUES[number];
 
 export default function Home() {
@@ -126,6 +134,8 @@ export default function Home() {
         return <TimelineView />;
       case "explore":
         return <ExploreView onNavigate={(tab) => setActiveTab(tab)} />;
+      case "itinerary":
+        return <ItineraryView />;
       case "profile":
         return <ProfileView />;
       default:

@@ -5,6 +5,7 @@ import { Calendar, DollarSign, Star } from 'lucide-react';
 import { useClientI18n } from '@/lib/i18n/client';
 import type { ItineraryRoute } from '@/lib/itineraries';
 import ActivityItem from './ActivityItem';
+import ItineraryExportButtons from '@/components/pdf/ItineraryExportButtons';
 
 interface TripDetailModalProps {
   trip: ItineraryRoute;
@@ -30,13 +31,16 @@ export default function TripDetailModal({ trip, onClose }: TripDetailModalProps)
               <h2 className="text-xl font-bold text-gray-900">{trip.titleEn ?? trip.title}</h2>
               <p className="text-sm text-gray-500">{trip.subtitleEn ?? trip.subtitle}</p>
             </div>
-            <button 
-              onClick={onClose}
-              className="p-2 -m-2 text-gray-400 hover:text-gray-600 active:bg-gray-100 rounded-full transition-colors"
-              aria-label={t('Common.close', 'Close')}
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-2">
+              <ItineraryExportButtons trip={trip} />
+              <button 
+                onClick={onClose}
+                className="p-2 -m-2 text-gray-400 hover:text-gray-600 active:bg-gray-100 rounded-full transition-colors"
+                aria-label={t('Common.close', 'Close')}
+              >
+                ✕
+              </button>
+            </div>
           </div>
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mt-3">

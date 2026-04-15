@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { MessagesSquare, History, Cpu } from 'lucide-react';
+import { MessagesSquare, History, Map } from 'lucide-react';
 import { MessageList } from './MessageList';
 import { ChatInput } from './ChatInput';
 import { SessionList } from './SessionList';
@@ -13,7 +13,19 @@ import { useTravelerProfile } from '@/hooks/useTravelerProfile';
 
 export type AIModel = 'minimax' | 'qwen';
 
-export default function ChatView() {
+function detectItineraryIntent(text: string): boolean {
+  const lower = text.toLowerCase();
+  return [
+    'plan my trip', 'plan a trip', 'itinerary', '行程', '规划', 'plan.*day', 'days? in',
+    'trip to', 'visit.*china', 'travel plan', 'schedule',
+  ].some(kw => new RegExp(kw).test(lower));
+}
+
+interface ChatViewProps {
+  onNavigate?: (tab: string) => void;
+}
+
+export default function ChatView({ onNavigate }: ChatViewProps = {}) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
