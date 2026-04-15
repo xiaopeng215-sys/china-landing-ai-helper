@@ -95,7 +95,7 @@ export default function ItineraryView() {
         <div className="flex-1 px-4 -mt-4 space-y-3 pb-24">
           {/* Day cards */}
           {itinerary.days.map((day, i) => (
-            <DayCard key={day.day} plan={day} defaultOpen={i === 0} />
+            <DayCard key={day.day} plan={day} defaultOpen={i === 0} city={itinerary.request.destination} />
           ))}
 
           {/* Essential Tips */}

@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import { MapPin, Clock, DollarSign, ChevronDown, ChevronUp, ExternalLink, AlertCircle } from 'lucide-react';
 import type { Activity, Meal } from '@/lib/itinerary/types';
+import { buildKlookLink } from '@/lib/affiliate';
 
 interface ActivityItemProps {
   activity: Activity;
+  city?: string;
 }
 
-export function ActivityItem({ activity }: ActivityItemProps) {
+export function ActivityItem({ activity, city }: ActivityItemProps) {
   const [expanded, setExpanded] = useState(false);
 
   const typeColors: Record<string, string> = {
@@ -55,12 +57,24 @@ export function ActivityItem({ activity }: ActivityItemProps) {
             </ul>
           )}
           {activity.bookingRequired && (
-            <div className="flex items-center gap-1 text-xs text-amber-600">
-              <AlertCircle className="w-3 h-3" />
-              <span>Booking required</span>
-              {activity.bookingUrl && (
-                <a href={activity.bookingUrl} target="_blank" rel="noopener noreferrer" className="ml-1 underline flex items-center gap-0.5">
-                  Book <ExternalLink className="w-3 h-3" />
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-1 text-xs text-amber-600">
+                <AlertCircle className="w-3 h-3" />
+                <span>Booking required</span>
+                {activity.bookingUrl && (
+                  <a href={activity.bookingUrl} target="_blank" rel="noopener noreferrer" className="ml-1 underline flex items-center gap-0.5">
+                    Book <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+              {city && (
+                <a
+                  href={buildKlookLink({ city, category: 'attraction' })}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  className="flex items-center justify-center gap-1.5 w-full bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold py-2 rounded-lg transition-colors"
+                >
+                  🎫 Book on Klook
                 </a>
               )}
             </div>

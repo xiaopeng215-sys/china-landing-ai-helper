@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calendar, DollarSign, Star, Download, Share2, MapPin, Clock, ChevronDown, ChevronUp } from 'lucide-react';
+import { Calendar, DollarSign, Star, Download, Share2, MapPin, Clock, ChevronDown, ChevronUp, Twitter, Facebook, MessageCircle, Link, Check } from 'lucide-react';
 import type { ItineraryRoute } from '@/data/types';
 import { downloadItineraryPDF } from '@/lib/itinerary/pdf-generator';
 
@@ -15,6 +15,13 @@ export default function SharePageClient({ trip }: Props) {
   const [expandedDay, setExpandedDay] = useState<number | null>(1);
   const [downloading, setDownloading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareTitle = `${trip.titleEn ?? trip.title} | TravelerLocal.ai`;
+  const encodedUrl = encodeURIComponent(shareUrl);
+  const encodedTitle = encodeURIComponent(shareTitle);
+  const isMobile = typeof navigator !== 'undefined' && /Mobi|Android/i.test(navigator.userAgent);
 
   const handleDownloadPDF = async () => {
     setDownloading(true);
@@ -80,14 +87,55 @@ export default function SharePageClient({ trip }: Props) {
             <Download className="w-4 h-4" />
             {downloading ? 'Generating...' : 'Download PDF'}
           </button>
-          <button
-            onClick={handleCopyLink}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold border-2 transition-colors"
-            style={{ borderColor: TEAL, color: copied ? '#fff' : TEAL, background: copied ? TEAL : 'transparent' }}
-          >
-            <Share2 className="w-4 h-4" />
-            {copied ? 'Copied!' : 'Copy Link'}
-          </button>
+
+          {/* Share dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setShareOpen((o) => !o)}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-colors"
+              style={{ borderColor: TEAL, color: TEAL }}
+            >
+              <Share2 className="w-4 h-4" />
+              Share
+            </button>
+            {shareOpen && (
+              <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={() => setShareOpen(false)}
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 transition-colors"
+                >
+                  <Twitter className="w-4 h-4" /> Twitter / X
+                </a>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={() => setShareOpen(false)}
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                >
+                  <Facebook className="w-4 h-4" /> Facebook
+                </a>
+                {isMobile && (
+                  <a
+                    href={`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`}
+                    target="_blank" rel="noopener noreferrer"
+                    onClick={() => setShareOpen(false)}
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" /> WhatsApp
+                  </a>
+                )}
+                <button
+                  onClick={handleCopyLink}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-t border-gray-100"
+                >
+                  {copied ? <Check className="w-4 h-4 text-teal-600" /> : <Link className="w-4 h-4" />}
+                  {copied ? 'Copied!' : 'Copy link'}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

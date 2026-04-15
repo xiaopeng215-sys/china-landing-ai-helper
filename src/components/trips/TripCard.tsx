@@ -4,6 +4,7 @@ import React from 'react';
 import { DollarSign, MapPin } from 'lucide-react';
 import type { ItineraryRoute } from '@/lib/itineraries';
 import { useClientI18n } from '@/lib/i18n/client';
+import ShareButton from '@/components/share/ShareButton';
 
 interface TripCardProps {
   trip: ItineraryRoute;
@@ -89,9 +90,12 @@ export default function TripCard({ trip, onViewDetails }: TripCardProps) {
         >
           {t('TripsPage.viewDetails')}
         </button>
-        <button className="px-4 py-3 bg-gray-100 text-gray-600 font-semibold rounded-2xl active:bg-gray-200 transition-colors touch-manipulation">
-          {t('TripsPage.share')}
-        </button>
+        <ShareButton
+          url={typeof window !== 'undefined' ? `${window.location.origin}/share/${trip.id}` : `/share/${trip.id}`}
+          title={`${trip.cityEn} ${trip.days}-Day Itinerary | TravelerLocal.ai`}
+          text={trip.subtitleEn ?? trip.subtitle}
+          className="touch-manipulation"
+        />
       </div>
     </article>
   );

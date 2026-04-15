@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import { hotels, CITIES } from "@/data/hotels";
 import type { CityKey } from "@/data/hotels";
 import { useClientI18n } from "@/lib/i18n/client";
+import { buildBookingLink } from "@/lib/affiliate";
 
 type PriceFilter = 'all' | 'budget' | 'mid-range' | 'luxury';
 
@@ -145,15 +146,25 @@ export default function HotelView() {
                   ))}
                 </div>
 
-                {/* Book Now Button */}
-                <a
-                  href={hotel.tripcomUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full text-center bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
-                >
-                  {t('HotelView.bookNow')}
-                </a>
+                {/* Book Now Buttons */}
+                <div className="flex gap-2">
+                  <a
+                    href={buildBookingLink({ city: hotel.city })}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="flex-1 text-center bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+                  >
+                    Booking.com
+                  </a>
+                  <a
+                    href={hotel.tripcomUrl}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="flex-1 text-center bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+                  >
+                    {t('HotelView.bookNow')}
+                  </a>
+                </div>
               </div>
             </div>
           ))

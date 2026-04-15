@@ -8,9 +8,10 @@ import { ActivityItem, MealRow } from './ActivityItem';
 interface DayCardProps {
   plan: DayPlan;
   defaultOpen?: boolean;
+  city?: string;
 }
 
-export function DayCard({ plan, defaultOpen = false }: DayCardProps) {
+export function DayCard({ plan, defaultOpen = false, city }: DayCardProps) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
@@ -44,7 +45,7 @@ export function DayCard({ plan, defaultOpen = false }: DayCardProps) {
               <div key={label}>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 mt-3">{label}</p>
                 <div className="space-y-2">
-                  {activities.map((a, i) => <ActivityItem key={i} activity={a} />)}
+                  {activities.map((a, i) => <ActivityItem key={i} activity={a} city={city} />)}
                 </div>
               </div>
             ) : null
