@@ -63,27 +63,47 @@ export async function verifyToken(token: string): Promise<User | null> {
  * 凭证登录
  */
 export async function signIn(email: string, password: string): Promise<SignInResult> {
-  // Mock 认证逻辑
-  if (process.env.USE_MOCK_AUTH === 'true' || process.env.NODE_ENV === 'development') {
-    if (password.length >= 6) {
-      const user: User = {
-        id: `mock-${email.replace(/[^a-zA-Z0-9]/g, '-')}`,
-        email,
-        name: email.split('@')[0],
-      };
-      const token = await createToken(user);
-      
-      return {
-        ok: true,
-        user,
-        sessionId: token,
-      };
-    }
-    return { ok: false, error: '密码长度至少 6 位' };
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (
+    !supabaseUrl ||
+    !supabaseKey ||
+    supabaseUrl.includes('your-project') ||
+    supabaseKey === 'your-anon-key'
+  ) {
+    return { ok: false, error: '认证服务未配置' };
   }
 
-  // 生产模式需要连接数据库验证
-  return { ok: false, error: '认证服务未配置' };
+  const { createClient } = await import('@supabase/supabase-js');
+  const bcrypt = await import('bcryptjs');
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseKey;
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('id, email, name, avatar, password_hash')
+    .eq('email', email)
+    .single();
+
+  if (error || !user) {
+    return { ok: false, error: '用户不存在' };
+  }
+
+  const isValid = await bcrypt.compare(password, user.password_hash);
+  if (!isValid) {
+    return { ok: false, error: '密码错误' };
+  }
+
+  const userObj: User = {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    avatar: user.avatar ?? undefined,
+  };
+  const token = await createToken(userObj);
+
+  return { ok: true, user: userObj, sessionId: token };
 }
 
 /**

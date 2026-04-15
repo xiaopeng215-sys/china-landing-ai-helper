@@ -108,18 +108,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Password is too common. Please choose a stronger password.' }, { status: 400 });
     }
 
-    // Mock 模式优先：USE_MOCK_AUTH=true 时跳过数据库
-    if (process.env.USE_MOCK_AUTH === 'true' || process.env.NODE_ENV === 'development') {
-      return NextResponse.json({
-        success: true,
-        user: {
-          id: `mock-${email.replace(/[^a-zA-Z0-9]/g, '-')}`,
-          email,
-          name: name || email.split('@')[0],
-        },
-      });
-    }
-
     // 检查 Supabase 配置
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
