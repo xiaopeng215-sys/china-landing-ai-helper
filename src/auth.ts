@@ -3,13 +3,17 @@ import Google from "next-auth/providers/google"
 import Facebook from "next-auth/providers/facebook"
 import { hasCompletedOnboarding } from "@/lib/supabase/user-profile"
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
-  trustHost: true,
-  providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET!,
+function buildProviders() {
+  const providers = []
+  const googleId = process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID
+  const googleSecret = process.env.AUTH_GOOGLE_SECRET ?? process.env.GOOGLE_CLIENT_SECRET
+  const fbId = process.env.AUTH_FACEBOOK_ID ?? process.env.FACEBOOK_CLIENT_ID
+  const fbSecret = process.env.AUTH_FACEBOOK_SECRET ?? process.env.FACEBOOK_CLIENT_SECRET
+
+  if (googleId && googleSecret) {
+    providers.push(Google({
+      clientId: googleId,
+      clientSecret: googleSecret,
       authorization: {
         params: {
           prompt: "consent",
@@ -17,12 +21,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           response_type: "code",
         },
       },
-    }),
-    Facebook({
-      clientId: process.env.AUTH_FACEBOOK_ID ?? process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.AUTH_FACEBOOK_SECRET ?? process.env.FACEBOOK_CLIENT_SECRET!,
-    }),
-  ],
+    }))
+  }
+
+  if (fbId && fbSecret) {
+    providers.push(Facebook({
+      clientId: fbId,
+      clientSecret: fbSecret,
+    }))
+  }
+
+  return providers
+}
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  trustHost: true,
+  providers: buildProviders(),
   pages: {
     signIn: '/auth/signin',
     error: '/auth/error',
