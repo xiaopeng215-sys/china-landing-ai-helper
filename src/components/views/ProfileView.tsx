@@ -381,7 +381,10 @@ export default function ProfileView() {
         {/* Sign Out */}
         <div className="px-2">
           <button
-            onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+            onClick={async () => {
+              await signOut({ redirect: false });
+              window.location.href = '/auth/signin';
+            }}
             className="w-full py-3.5 rounded-2xl border-2 border-red-200 text-red-500 font-semibold text-sm hover:bg-red-50 active:bg-red-100 transition-all"
           >
             Sign Out
