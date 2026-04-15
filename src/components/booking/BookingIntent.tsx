@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { buildBookingLink, buildKlookLink } from "@/lib/affiliate";
+import { trackEvent } from "@/lib/analytics/events";
 
 export interface BookingIntentProps {
   placeName: string;
@@ -60,6 +61,9 @@ export function BookingIntent({
     setSubmitting(true);
 
     const url = resolveAffiliateUrl(form);
+
+    // Track booking click
+    trackEvent('click_booking', { placeName, placeType, city, platform: 'booking' });
 
     // Fire-and-forget: record intent, don't block redirect
     fetch("/api/booking/intent", {
@@ -205,6 +209,7 @@ export function BookingIntent({
                   disabled={submitting}
                   onClick={() => {
                     const url = buildKlookLink({ city, category: "attraction" });
+                    trackEvent('click_booking', { placeName, placeType, city, platform: 'klook' });
                     fetch("/api/booking/intent", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },

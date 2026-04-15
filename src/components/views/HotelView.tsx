@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { hotels, CITIES } from "@/data/hotels";
 import type { CityKey } from "@/data/hotels";
 import { useClientI18n } from "@/lib/i18n/client";
 import { BookingIntent } from "@/components/booking/BookingIntent";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 type PriceFilter = 'all' | 'budget' | 'mid-range' | 'luxury';
 
@@ -18,8 +19,20 @@ function StarRating({ stars }: { stars: number }) {
 
 export default function HotelView() {
   const { t } = useClientI18n();
+  const { track } = useAnalytics();
   const [activeCity, setActiveCity] = useState<CityKey>('beijing');
   const [priceFilter, setPriceFilter] = useState<PriceFilter>('all');
+
+  // Track hotel views when the filtered list changes
+  const trackedRef = useRef(new Set<string>());
+  useEffect(() => {
+    filtered.forEach((hotel) => {
+      if (!trackedRef.current.has(hotel.id)) {
+        trackedRef.current.add(hotel.id);
+        track('view_hotel', { hotelId: hotel.id, hotelName: hotel.name, city: hotel.city, priceRange: hotel.priceRange });
+      }
+    });
+  }, [filtered]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const PRICE_FILTERS: { key: PriceFilter; label: string; emoji: string }[] = [
     { key: 'all', label: t('HotelView.filterAll'), emoji: '🏨' },

@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Share2, X, Link, MessageCircle, Check } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics/events';
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -49,6 +50,7 @@ export default function ShareButton({
     if (navigator.share) {
       try {
         await navigator.share({ title, text, url: shareUrl });
+        trackEvent('share_content', { method: 'native', url: shareUrl });
         return;
       } catch {
         // fallback to menu
@@ -59,6 +61,7 @@ export default function ShareButton({
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareUrl);
+    trackEvent('share_content', { method: 'copy_link', url: shareUrl });
     setCopied(true);
     setTimeout(() => { setCopied(false); setOpen(false); }, 2000);
   };
@@ -111,7 +114,7 @@ export default function ShareButton({
               href={opt.href}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
+              onClick={() => { trackEvent('share_content', { method: opt.label.toLowerCase(), url: shareUrl }); setOpen(false); }}
               className={`flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 ${opt.color} transition-colors`}
             >
               {opt.icon}

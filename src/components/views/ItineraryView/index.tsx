@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { MapPin, Calendar, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import type { ItineraryRequest, Itinerary } from '@/lib/itinerary/types';
 import { DayCard } from './DayCard';
+import { trackEvent } from '@/lib/analytics/events';
 
 const INTERESTS = ['History', 'Food', 'Shopping', 'Nature', 'Art', 'Nightlife', 'Architecture', 'Local Life'];
 const DESTINATIONS = ['Beijing', 'Shanghai', 'Chengdu', 'Xi\'an', 'Guilin', 'Hangzhou', 'Shenzhen', 'Guangzhou'];
@@ -50,6 +51,7 @@ export default function ItineraryView() {
       const data: Itinerary = await res.json();
       setItinerary(data);
       setStep('result');
+      trackEvent('save_itinerary', { destination: form.destination, duration: form.duration, budget: form.budget });
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
       setStep('form');

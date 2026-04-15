@@ -10,6 +10,7 @@ import { SessionList } from './SessionList';
 import type { Message, ChatSession } from './types';
 import { useClientI18n } from '@/lib/i18n/client';
 import { useTravelerProfile } from '@/hooks/useTravelerProfile';
+import { trackEvent } from '@/lib/analytics/events';
 
 export type AIModel = 'minimax' | 'qwen';
 
@@ -104,6 +105,8 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
+
+    trackEvent('chat_message', { messageLength: inputValue.trim().length, model: selectedModel });
 
     const userMessage: Message = {
       id: Date.now().toString(),
