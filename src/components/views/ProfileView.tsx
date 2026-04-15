@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 import { useClientI18n } from '@/lib/i18n/client';
 import { useTravelerProfile } from '@/hooks/useTravelerProfile';
 import type { TravelerProfile } from '@/lib/traveler-profile';
@@ -373,6 +374,16 @@ export default function ProfileView() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Sign Out */}
+        <div className="px-2">
+          <button
+            onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+            className="w-full py-3.5 rounded-2xl border-2 border-red-200 text-red-500 font-semibold text-sm hover:bg-red-50 active:bg-red-100 transition-all"
+          >
+            Sign Out
+          </button>
         </div>
 
         {/* App Info */}
