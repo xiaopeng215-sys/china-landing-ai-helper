@@ -377,7 +377,7 @@ export default function ProfileView() {
 
         {/* App Info */}
         <div className="text-center py-6">
-          <div className="text-4xl mb-2">🇨🇳</div>
+          <div className="text-4xl mb-2">🌏</div>
           <p className="font-bold text-[#484848]">{t('ProfileViewPage.appName')}</p>
           <p className="text-sm text-[#767676]">{t('ProfileViewPage.version')}</p>
           <p className="text-xs text-[#767676] mt-4">{t('ProfileViewPage.madeWith')}</p>

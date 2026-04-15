@@ -1,6 +1,6 @@
 /**
  * 推荐线路数据 - 中国热门城市行程规划
- * China Landing AI Helper
+ * LocalPass
  * 
  * 🚀 性能优化：数据已拆分至 /src/data/ 目录
  * - 按城市分离文件，支持按需加载

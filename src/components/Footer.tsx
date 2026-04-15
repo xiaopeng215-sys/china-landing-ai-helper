@@ -55,7 +55,7 @@ export default function Footer() {
         </div>
 
         <div className="text-center text-xs text-gray-500">
-          <p>{t('Footer.copyright', `© ${currentYear} China Landing AI Helper. All rights reserved.`)}</p>
+          <p>{t('Footer.copyright', `© ${currentYear} LocalPass. All rights reserved.`)}</p>
         </div>
       </div>
     </footer>

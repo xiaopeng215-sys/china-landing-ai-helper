@@ -1,6 +1,6 @@
 {
-  "name": "China Landing AI Helper",
-  "short_name": "China AI",
+  "name": "LocalPass",
+  "short_name": "LocalPass",
   "description": "Your AI travel assistant for China — itinerary planning, food recommendations, and transportation guides.",
   "start_url": "/",
   "display": "standalone",

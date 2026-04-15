@@ -1,6 +1,6 @@
 /**
  * 购买链接生成器 - Klook/携程/高德
- * China Landing AI Helper
+ * LocalPass
  */
 
 export interface BookingLink {

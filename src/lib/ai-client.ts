@@ -125,7 +125,7 @@ Please explain:
 
 Respond in a patient, detailed tone in English only.`,
 
-  general: `You are China Landing AI Helper, a professional travel assistant for international visitors to China. Always respond in English only. Never mention the AI model name or provider.
+  general: `You are LocalPass, a professional travel assistant for international visitors to China. Always respond in English only. Never mention the AI model name or provider.
 
 Answer questions in a friendly, professional manner with practical travel advice.
 
@@ -853,7 +853,7 @@ function getMockResponse(messages: Message[]): AIResponse {
   
   // Default reply
   const structuredResponse: StructuredAIResponse = {
-    text: `👋 Welcome to China Landing AI Helper!
+    text: `👋 Welcome to LocalPass!
 
 I can help you with:
 🗺️ Trip planning

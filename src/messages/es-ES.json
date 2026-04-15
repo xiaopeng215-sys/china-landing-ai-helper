@@ -3,7 +3,7 @@
     "title": "Llega a China, empieza aquí",
     "subtitle": "Del aeropuerto al centro, red, transporte, pagos y comida — te guiamos en cada paso.",
     "cta": "Comenzar",
-    "tagline": "Tu asistente de llegada a China"
+    "tagline": "Your AI key to living like a local."
   },
   "NavBar": {
     "home": "Inicio",
@@ -266,7 +266,7 @@
     "contactUs": "Contáctanos",
     "rateApp": "Valorar la app",
     "privacyPolicy": "Política de privacidad",
-    "appName": "China Landing AI Helper",
+    "appName": "LocalPass",
     "version": "Versión 1.0.0-beta",
     "madeWith": "Hecho con ❤️ para viajeros"
   },
@@ -284,7 +284,7 @@
     "privacy": "Política de privacidad",
     "terms": "Términos de servicio",
     "contact": "Contáctanos",
-    "copyright": "© 2026 China Landing AI Helper. Todos los derechos reservados.",
+    "copyright": "© 2026 LocalPass. Todos los derechos reservados.",
     "cookies": "Política de cookies",
     "installGuide": "Guía de instalación"
   },

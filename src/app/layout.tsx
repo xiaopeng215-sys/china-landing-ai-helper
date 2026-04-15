@@ -103,7 +103,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'China Landing AI Helper - AI Travel Assistant',
+        alt: 'LocalPass - AI Travel Assistant',
         type: 'image/png',
       },
       {
@@ -172,7 +172,7 @@ export default function RootLayout({
                   "@type": "WebSite",
                   "@id": "https://www.travelerlocal.ai/#website",
                   "url": "https://www.travelerlocal.ai",
-                  "name": "China Landing AI Helper",
+                  "name": "LocalPass",
                   "description": "AI-powered travel assistant for international visitors to China",
                   "inLanguage": ["en-US","zh-CN","zh-TW","ko-KR","ja-JP","es-ES","pt-BR","ar-SA"],
                   "potentialAction": {
@@ -184,7 +184,7 @@ export default function RootLayout({
                 {
                   "@type": "SoftwareApplication",
                   "@id": "https://www.travelerlocal.ai/#app",
-                  "name": "China Landing AI Helper",
+                  "name": "LocalPass",
                   "applicationCategory": "TravelApplication",
                   "operatingSystem": "Web, iOS, Android",
                   "description": "AI travel assistant for international visitors to China. Get help with itineraries, transport, food, payments, SIM cards, and emergency contacts.",
@@ -235,7 +235,7 @@ export default function RootLayout({
               __html: JSON.stringify({
                 '@context': 'https://schema.org',
                 '@type': 'WebApplication',
-                name: 'China Landing AI Helper',
+                name: 'LocalPass',
                 alternateName: ['China AI Helper', 'China Travel AI Assistant'],
                 url: SITE_URL,
                 description: 'AI-powered China travel planning assistant - smart itinerary customization, authentic food recommendations, transportation guides',
@@ -249,7 +249,7 @@ export default function RootLayout({
                 },
                 author: {
                   '@type': 'Organization',
-                  name: 'China Landing AI Helper',
+                  name: 'LocalPass',
                   url: SITE_URL,
                 },
                 keywords: 'China travel, AI assistant, itinerary planning, food recommendations, transportation guide, Beijing, Shanghai, Xian, Chengdu, Guilin, Hangzhou',
@@ -269,7 +269,7 @@ export default function RootLayout({
               __html: JSON.stringify({
                 '@context': 'https://schema.org',
                 '@type': 'TravelAgency',
-                name: 'China Landing AI Helper',
+                name: 'LocalPass',
                 description: 'AI-powered China travel planning service',
                 url: SITE_URL,
                 priceRange: '¥¥',

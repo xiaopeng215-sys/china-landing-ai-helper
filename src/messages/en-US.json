@@ -3,7 +3,7 @@
     "title": "Land in China, start from here",
     "subtitle": "From airport to downtown, network, transport, payment & food — we guide you every step.",
     "cta": "Start Now",
-    "tagline": "Your China Landing Assistant",
+    "tagline": "Your AI key to living like a local.",
     "todaysTip": "Today's Tip",
     "tryItNow": "✈️ Try it now — no sign up needed",
     "tryItNowDesc": "\"I'm landing in Shanghai tomorrow, what should I do first?\"",
@@ -289,7 +289,7 @@
     "contactUs": "Contact Us",
     "rateApp": "Rate App",
     "privacyPolicy": "Privacy Policy",
-    "appName": "China Landing AI Helper",
+    "appName": "LocalPass",
     "version": "Version 1.0.0-beta",
     "madeWith": "Made with ❤️ for travelers"
   },
@@ -307,7 +307,7 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "contact": "Contact Us",
-    "copyright": "© 2026 China Landing AI Helper. All rights reserved.",
+    "copyright": "© 2026 LocalPass. All rights reserved.",
     "cookies": "Cookie Policy",
     "installGuide": "Install Guide"
   },

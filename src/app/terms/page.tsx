@@ -73,7 +73,7 @@ const termsContent: Record<string, LocaleContent> = {
     sections: [
       {
         heading: '1. 服务说明',
-        body: 'China Landing AI Helper是面向来华旅行者的AI旅行助手，提供行程规划、交通指南、美食推荐等服务。本服务仅供参考，按"现状"提供。',
+        body: 'LocalPass是面向来华旅行者的AI旅行助手，提供行程规划、交通指南、美食推荐等服务。本服务仅供参考，按"现状"提供。',
       },
       {
         heading: '2. 条款接受',
@@ -125,7 +125,7 @@ const termsContent: Record<string, LocaleContent> = {
     sections: [
       {
         heading: '1. 服務說明',
-        body: 'China Landing AI Helper是面向來華旅行者的AI旅遊助手，提供行程規劃、交通指南、美食推薦等服務。本服務僅供參考，按「現狀」提供。',
+        body: 'LocalPass是面向來華旅行者的AI旅遊助手，提供行程規劃、交通指南、美食推薦等服務。本服務僅供參考，按「現狀」提供。',
       },
       {
         heading: '2. 條款接受',
@@ -177,7 +177,7 @@ const termsContent: Record<string, LocaleContent> = {
     sections: [
       {
         heading: '1. 서비스 설명',
-        body: 'China Landing AI Helper는 중국을 방문하는 여행자를 위한 AI 여행 도우미로, 여행 일정 계획, 교통 안내, 맛집 추천 등의 서비스를 제공합니다. 본 서비스는 정보 제공 목적으로만 "있는 그대로" 제공됩니다.',
+        body: 'LocalPass는 중국을 방문하는 여행자를 위한 AI 여행 도우미로, 여행 일정 계획, 교통 안내, 맛집 추천 등의 서비스를 제공합니다. 본 서비스는 정보 제공 목적으로만 "있는 그대로" 제공됩니다.',
       },
       {
         heading: '2. 약관 동의',
@@ -229,7 +229,7 @@ const termsContent: Record<string, LocaleContent> = {
     sections: [
       {
         heading: '1. サービス説明',
-        body: 'China Landing AI Helperは、中国を訪れる旅行者向けのAIトラベルアシスタントで、旅程計画、交通案内、グルメ情報などのサービスを提供します。本サービスは情報提供のみを目的として「現状のまま」提供されます。',
+        body: 'LocalPassは、中国を訪れる旅行者向けのAIトラベルアシスタントで、旅程計画、交通案内、グルメ情報などのサービスを提供します。本サービスは情報提供のみを目的として「現状のまま」提供されます。',
       },
       {
         heading: '2. 利用規約への同意',
@@ -281,7 +281,7 @@ const termsContent: Record<string, LocaleContent> = {
     sections: [
       {
         heading: '1. Descripción del servicio',
-        body: 'China Landing AI Helper es un asistente de viaje con IA para viajeros que visitan China, que ofrece planificación de itinerarios, guías de transporte y recomendaciones gastronómicas. El servicio se proporciona "tal cual" únicamente con fines informativos.',
+        body: 'LocalPass es un asistente de viaje con IA para viajeros que visitan China, que ofrece planificación de itinerarios, guías de transporte y recomendaciones gastronómicas. El servicio se proporciona "tal cual" únicamente con fines informativos.',
       },
       {
         heading: '2. Aceptación de términos',
@@ -333,7 +333,7 @@ const termsContent: Record<string, LocaleContent> = {
     sections: [
       {
         heading: '1. Descrição do serviço',
-        body: 'China Landing AI Helper é um assistente de viagem com IA para viajantes que visitam a China, oferecendo planejamento de roteiros, guias de transporte e recomendações gastronômicas. O serviço é fornecido "como está" apenas para fins informativos.',
+        body: 'LocalPass é um assistente de viagem com IA para viajantes que visitam a China, oferecendo planejamento de roteiros, guias de transporte e recomendações gastronômicas. O serviço é fornecido "como está" apenas para fins informativos.',
       },
       {
         heading: '2. Aceitação dos termos',
@@ -385,7 +385,7 @@ const termsContent: Record<string, LocaleContent> = {
     sections: [
       {
         heading: '1. وصف الخدمة',
-        body: 'China Landing AI Helper هو مساعد سفر ذكي للمسافرين إلى الصين، يوفر تخطيط الرحلات وأدلة المواصلات وتوصيات المطاعم. تُقدَّم الخدمة "كما هي" لأغراض إعلامية فقط.',
+        body: 'LocalPass هو مساعد سفر ذكي للمسافرين إلى الصين، يوفر تخطيط الرحلات وأدلة المواصلات وتوصيات المطاعم. تُقدَّم الخدمة "كما هي" لأغراض إعلامية فقط.',
       },
       {
         heading: '2. قبول الشروط',
