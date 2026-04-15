@@ -4,7 +4,7 @@ import React, { useState, useMemo } from "react";
 import { hotels, CITIES } from "@/data/hotels";
 import type { CityKey } from "@/data/hotels";
 import { useClientI18n } from "@/lib/i18n/client";
-import { buildBookingLink } from "@/lib/affiliate";
+import { BookingIntent } from "@/components/booking/BookingIntent";
 
 type PriceFilter = 'all' | 'budget' | 'mid-range' | 'luxury';
 
@@ -146,24 +146,15 @@ export default function HotelView() {
                   ))}
                 </div>
 
-                {/* Book Now Buttons */}
+                {/* Book Now — intent collection + affiliate redirect */}
                 <div className="flex gap-2">
-                  <a
-                    href={buildBookingLink({ city: hotel.city })}
-                    target="_blank"
-                    rel="noopener noreferrer sponsored"
-                    className="flex-1 text-center bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
-                  >
-                    Booking.com
-                  </a>
-                  <a
-                    href={hotel.tripcomUrl}
-                    target="_blank"
-                    rel="noopener noreferrer sponsored"
-                    className="flex-1 text-center bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
-                  >
-                    {t('HotelView.bookNow')}
-                  </a>
+                  <BookingIntent
+                    placeName={hotel.name}
+                    placeType="hotel"
+                    city={hotel.city}
+                    buttonLabel={t('HotelView.bookNow')}
+                    buttonClassName="flex-1 text-center bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+                  />
                 </div>
               </div>
             </div>
