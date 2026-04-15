@@ -16,24 +16,24 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.travelerlocal.
 export const metadata: Metadata = {
   // SEO
   title: {
-    default: 'China Landing AI Helper - Your AI Travel Assistant for China',
-    template: '%s | China AI Helper',
+    default: 'TravelerLocal.ai - AI Travel Assistant for China',
+    template: '%s | TravelerLocal.ai',
   },
-  description: 'AI-powered travel assistant for visiting China — smart itinerary planning, authentic food recommendations, and transportation guides for Beijing, Shanghai, Xi\'an, Chengdu, Guilin, and Hangzhou.',
+  description: 'Your AI-powered guide for traveling in China. Get help with visa, payments, transport, and more in 8 languages.',
   keywords: [
     'China travel', 'China travel guide', 'AI travel assistant', 'visit China',
     'China itinerary', 'China tourism', 'Beijing travel', 'Shanghai travel',
     'Chengdu travel', 'Xian travel', 'Guangzhou travel', 'Shenzhen travel',
-    'Alipay guide', 'WeChat Pay foreigner', 'China SIM card', 'eSIM China',
-    'China food guide', 'Chinese food', 'China transport guide', 'Didi China',
+    'Alipay for foreigners', 'WeChat Pay foreigners', 'China SIM card', 'eSIM China',
+    'China visa', 'China food guide', 'Chinese food', 'China transport guide', 'Didi China',
     'China metro guide', 'high speed rail China', 'China airport transfer',
-    'travel China tips', 'China travel app',
+    'travel China tips', 'China travel app', 'China travel guide 2026',
   ],
   authors: [
-    { name: 'China Landing AI Helper', url: SITE_URL },
+    { name: 'TravelerLocal.ai', url: SITE_URL },
   ],
-  creator: 'China Landing AI Helper',
-  publisher: 'China Landing AI Helper',
+  creator: 'TravelerLocal.ai',
+  publisher: 'TravelerLocal.ai',
   
   // 规范 URL
   metadataBase: new URL(SITE_URL),
@@ -94,9 +94,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     alternateLocale: ['zh_CN', 'ko_KR', 'ja_JP'],
     url: SITE_URL,
-    siteName: 'China AI Helper',
-    title: 'China Landing AI Helper - Your AI Travel Assistant for China',
-    description: 'AI-powered travel assistant for visiting China — smart itinerary planning, authentic food recommendations, and transportation guides.',
+    siteName: 'TravelerLocal.ai',
+    title: 'TravelerLocal.ai - AI Travel Assistant for China',
+    description: 'Your AI-powered guide for traveling in China. Get help with visa, payments, transport, and more in 8 languages.',
     images: [
       {
         url: '/og-image.png',
@@ -120,8 +120,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@ChinaAIHelper',
     creator: '@ChinaAIHelper',
-    title: 'China Landing AI Helper - Your AI Travel Assistant for China',
-    description: 'AI-powered travel assistant for visiting China — smart itinerary planning, authentic food recommendations, and transportation guides.',
+    title: 'TravelerLocal.ai - AI Travel Assistant for China',
+    description: 'Your AI-powered guide for traveling in China. Get help with visa, payments, transport, and more in 8 languages.',
     images: ['/og-image.png'],
   },
   
