@@ -280,6 +280,14 @@ export default function ProfileView() {
                   ? `Visiting: ${profile.plannedCities.join(' · ')}`
                   : t('ProfileViewPage.guestDesc')}
               </p>
+              {!profile?.nationality && (
+                <button
+                  onClick={() => window.location.href = '/auth/signin?callbackUrl=/profile'}
+                  className="mt-2 px-4 py-1.5 bg-white text-teal-600 rounded-lg text-xs font-semibold hover:bg-white/90 transition-all"
+                >
+                  Sign In
+                </button>
+              )}
               {profile?.travelDates && (
                 <p className="text-white/70 text-xs mt-1">
                   📅 {profile.travelDates.arrival} → {profile.travelDates.departure}

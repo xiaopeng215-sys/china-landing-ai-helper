@@ -1,29 +1,27 @@
 'use client';
 
 import React from 'react';
-
-interface QuickAction {
-  emoji: string;
-  label: string;
-  message?: string;
-  tab?: string;
-}
-
-const ACTIONS: QuickAction[] = [
-  { emoji: '🍜', label: 'Find Food',   message: 'Recommend local food near me in China' },
-  { emoji: '🚇', label: 'Get Around',  tab: 'transport' },
-  { emoji: '🏨', label: 'Find Hotel',  tab: 'hotels' },
-  { emoji: '📅', label: 'Plan Trip',   message: 'Help me plan a trip itinerary in China' },
-];
+import { useClientI18n } from '@/lib/i18n/client';
 
 interface QuickActionsProps {
   onAction: (opts: { message?: string; tab?: string }) => void;
 }
 
 export default function QuickActions({ onAction }: QuickActionsProps) {
+  const { t } = useClientI18n();
+
+  const ACTIONS = [
+    { emoji: '🍜', label: t('QuickActions.findFood'), message: t('QuickActions.findFoodMsg') },
+    { emoji: '🚇', label: t('QuickActions.getAround'), tab: 'transport' },
+    { emoji: '🏨', label: t('QuickActions.findHotel'), tab: 'hotels' },
+    { emoji: '📅', label: t('QuickActions.planTrip'), message: t('QuickActions.planTripMsg') },
+  ];
+
   return (
     <div className="px-4 mb-4">
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Quick Actions</p>
+      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+        {t('QuickActions.sectionTitle')}
+      </p>
       <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
         {ACTIONS.map((a) => (
           <button

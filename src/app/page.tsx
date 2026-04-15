@@ -180,9 +180,9 @@ export default function Home() {
   };
 
   const heroFeatures: HeroFeature[] = [
-    { label: "✨ AI Trip Planning", onClick: () => { setActiveTab("trips"); setShowHero(false); } },
-    { label: "🍜 Local Food", onClick: () => { setActiveTab("food"); setShowHero(false); } },
-    { label: "🚇 Transport Guide", onClick: () => { setActiveTab("transport"); setShowHero(false); } },
+    { label: t("HomePage.heroFeatureTrip"), onClick: () => { setActiveTab("trips"); setShowHero(false); } },
+    { label: t("HomePage.heroFeatureFood"), onClick: () => { setActiveTab("food"); setShowHero(false); } },
+    { label: t("HomePage.heroFeatureTransport"), onClick: () => { setActiveTab("transport"); setShowHero(false); } },
   ];
 
   return (
@@ -207,7 +207,7 @@ export default function Home() {
             <div className="mx-4 -mt-3 mb-2 bg-white rounded-xl shadow-md border border-teal-100 p-4 flex gap-3 items-start z-10 relative">
               <span className="text-2xl flex-shrink-0">{todaysTip.icon}</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-teal-600 uppercase tracking-wide mb-0.5">Today&apos;s Tip</p>
+                <p className="text-xs font-semibold text-teal-600 uppercase tracking-wide mb-0.5">{t('HomePage.todaysTip')}</p>
                 <p className="text-base font-semibold text-gray-800">{todaysTip.title}</p>
                 <p className="text-sm text-gray-500 mt-0.5 leading-relaxed line-clamp-2">{todaysTip.content}</p>
               </div>
@@ -217,13 +217,13 @@ export default function Home() {
           {/* Quick Start Demo */}
           <div className="px-4 mb-4">
             <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-4 text-white">
-              <p className="text-base font-medium mb-1">✈️ Try it now — no sign up needed</p>
-              <p className="text-sm opacity-90 mb-3">&ldquo;I&apos;m landing in Shanghai tomorrow, what should I do first?&rdquo;</p>
+              <p className="text-base font-medium mb-1">{t('HomePage.tryItNow')}</p>
+              <p className="text-sm opacity-90 mb-3">&ldquo;{t('HomePage.tryItNowDesc')}&rdquo;</p>
               <button
                 onClick={handleHeroCtaClick}
                 className="inline-block bg-amber-400 hover:bg-amber-500 text-white font-semibold text-sm px-4 py-2 rounded-xl transition-colors"
               >
-                Ask AI Now →
+                {t('HomePage.askAINow')}
               </button>
             </div>
           </div>
@@ -236,32 +236,32 @@ export default function Home() {
 
           {/* Traveler Stories */}
           <section className="px-4 mb-6">
-            <h2 className="text-lg font-bold text-gray-800 mb-3">💬 Real Traveler Stories</h2>
+            <h2 className="text-lg font-bold text-gray-800 mb-3">{t('HomePage.travelerStories')}</h2>
             <div className="space-y-3">
               {[
                 {
-                  name: "Sarah M.",
+                  name: t('HomePage.storySarahName'),
                   flag: "🇺🇸",
-                  city: "Shanghai",
-                  date: "April 2026",
-                  story: "Landed at Pudong at midnight. Set up Alipay in 20 minutes using the AI guide. Took the Maglev to the city — total cost ¥55. Couldn't have done it without this app.",
-                  tag: "Payment Setup"
+                  city: t('HomePage.storySarahCity'),
+                  date: t('HomePage.storySarahDate'),
+                  story: t('HomePage.storySarahText'),
+                  tag: t('HomePage.storyPaymentTag')
                 },
                 {
-                  name: "James K.",
+                  name: t('HomePage.storyJamesName'),
                   flag: "🇬🇧",
-                  city: "Beijing",
-                  date: "March 2026",
-                  story: "Asked the AI for a 3-day Beijing itinerary avoiding tourist traps. Got a detailed plan with local restaurants and metro routes. The hutong food recommendations were spot on.",
-                  tag: "Itinerary"
+                  city: t('HomePage.storyJamesCity'),
+                  date: t('HomePage.storyJamesDate'),
+                  story: t('HomePage.storyJamesText'),
+                  tag: t('HomePage.storyItineraryTag')
                 },
                 {
-                  name: "Yuki T.",
+                  name: t('HomePage.storyYukiName'),
                   flag: "🇯🇵",
-                  city: "Chengdu",
-                  date: "April 2026",
-                  story: "Needed a vegetarian-friendly hot pot place in Chengdu. The AI found one immediately and even told me how to ask for no meat in Chinese. Perfect trip.",
-                  tag: "Food Guide"
+                  city: t('HomePage.storyYukiCity'),
+                  date: t('HomePage.storyYukiDate'),
+                  story: t('HomePage.storyYukiText'),
+                  tag: t('HomePage.storyFoodTag')
                 }
               ].map((s) => (
                 <div key={s.name} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
