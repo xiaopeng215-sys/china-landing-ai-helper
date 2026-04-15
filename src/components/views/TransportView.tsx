@@ -450,7 +450,7 @@ export default function TransportView() {
                   <div>
                     <label className="text-xs text-[#767676] mb-1 block">Date</label>
                     <input
-                      type="date"
+                      type="date" lang="en" placeholder="MM/DD/YYYY"
                       value={flightDate}
                       onChange={(e) => setFlightDate(e.target.value)}
                       className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
@@ -527,7 +527,7 @@ export default function TransportView() {
                 <div>
                   <label className="text-xs text-[#767676] mb-1 block">Date</label>
                   <input
-                    type="date"
+                    type="date" lang="en" placeholder="MM/DD/YYYY"
                     value={trainDate}
                     onChange={(e) => setTrainDate(e.target.value)}
                     className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"

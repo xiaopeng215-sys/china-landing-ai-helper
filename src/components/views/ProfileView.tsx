@@ -161,7 +161,7 @@ function EditModal({
           <label className="block">
             <span className="text-sm font-medium text-gray-600">Arrival</span>
             <input
-              type="date"
+              type="date" lang="en" placeholder="MM/DD/YYYY"
               className="mt-1 w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
               value={form.arrivalDate}
               onChange={e => setForm(f => ({ ...f, arrivalDate: e.target.value }))}
@@ -170,7 +170,7 @@ function EditModal({
           <label className="block">
             <span className="text-sm font-medium text-gray-600">Departure</span>
             <input
-              type="date"
+              type="date" lang="en" placeholder="MM/DD/YYYY"
               className="mt-1 w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
               value={form.departureDate}
               onChange={e => setForm(f => ({ ...f, departureDate: e.target.value }))}

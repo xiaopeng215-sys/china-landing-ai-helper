@@ -136,7 +136,7 @@ export function BookingIntent({
                     Check-in
                   </label>
                   <input
-                    type="date"
+                    type="date" lang="en" placeholder="MM/DD/YYYY"
                     value={form.checkIn}
                     onChange={(e) => setForm((f) => ({ ...f, checkIn: e.target.value }))}
                     className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
@@ -147,7 +147,7 @@ export function BookingIntent({
                     Check-out
                   </label>
                   <input
-                    type="date"
+                    type="date" lang="en" placeholder="MM/DD/YYYY"
                     value={form.checkOut}
                     min={form.checkIn || undefined}
                     onChange={(e) => setForm((f) => ({ ...f, checkOut: e.target.value }))}

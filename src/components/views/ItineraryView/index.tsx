@@ -296,12 +296,16 @@ export default function ItineraryView() {
           <div className="grid grid-cols-2 gap-2">
             <input
               type="date"
+              lang="en"
+              placeholder="MM/DD/YYYY"
               value={form.travelDates?.start || ''}
               onChange={e => setForm(prev => ({ ...prev, travelDates: { start: e.target.value, end: prev.travelDates?.end || '' } }))}
               className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-400"
             />
             <input
               type="date"
+              lang="en"
+              placeholder="MM/DD/YYYY"
               value={form.travelDates?.end || ''}
               onChange={e => setForm(prev => ({ ...prev, travelDates: { start: prev.travelDates?.start || '', end: e.target.value } }))}
               className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-400"
