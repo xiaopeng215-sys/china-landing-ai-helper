@@ -28,6 +28,7 @@ function buildProviders() {
     providers.push(Facebook({
       clientId: fbId,
       clientSecret: fbSecret,
+      checks: ['state'],
     }))
   }
 
