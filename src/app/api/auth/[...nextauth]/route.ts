@@ -13,7 +13,10 @@
  *   - NextRequest.cookies 是 RequestCookies 对象，bracket 访问返回 undefined
  *   - 必须用 .get() 方法，但 NextAuth 内部不知道这一点
  *   - 导致 CSRF token 始终为 undefined => state 验证失败 => error=google
- *   - 解决：将 cookies 展开为普通对象注入到 patchedReq
+ *   - 解决：用 Proxy 拦截 cookies getter，返回普通对象（避免 Object.assign 覆盖只读属性失败）
+ *
+ * 问题3: 模块级 handler 初始化可能读取不到运行时环境变量
+ *   - 解决：每次请求动态创建 handler，确保 getAuthOptions() 读取最新环境变量
  */
 
 import NextAuth from 'next-auth';
@@ -24,28 +27,28 @@ type RouteContext = {
   params: Promise<{ nextauth: string[] }> | { nextauth: string[] };
 };
 
-// 在模块级别初始化 handler（固定实例，避免 Google OAuth state 不一致）
-const handler = NextAuth(getAuthOptions());
-
 async function authHandler(req: NextRequest, context: RouteContext) {
-  // 解析 params（Next.js 15 中 params 是 Promise）
   const params = await Promise.resolve(context.params);
   const nextauth = params?.nextauth;
 
-  // 将 RequestCookies 对象展开为普通 { key: value } 对象
-  // NextAuth v4 用 req.cookies["key"] 读取，但 NextRequest.cookies 是
-  // RequestCookies 实例，bracket 访问返回 undefined，必须用 .get()
+  // Proxy 方案：正确覆盖 NextRequest.cookies getter
+  // Object.assign 无法覆盖只读属性，Proxy 可以拦截 get 陷阱
   const cookiesPlain: Record<string, string> = {};
   req.cookies.getAll().forEach(({ name, value }) => {
     cookiesPlain[name] = value;
   });
 
-  // 注入 nextauth query 参数 + 兼容的 cookies 对象
-  const patchedReq = Object.assign(req, {
-    query: { nextauth },
-    cookies: cookiesPlain,
+  const patchedReq = new Proxy(req, {
+    get(target, prop, receiver) {
+      if (prop === 'cookies') return cookiesPlain;
+      if (prop === 'query') return { nextauth };
+      const val = Reflect.get(target, prop, receiver);
+      return typeof val === 'function' ? val.bind(target) : val;
+    },
   });
 
+  // 每次请求动态创建，确保运行时环境变量正确读取
+  const handler = NextAuth(getAuthOptions());
   return handler(patchedReq as any, { params: { nextauth } } as any);
 }
 
