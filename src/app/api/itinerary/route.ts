@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ItineraryGenerator } from '@/lib/itinerary/generator';
 import type { ItineraryRequest } from '@/lib/itinerary/types';
+import { withRateLimit } from '../middleware/rate-limit';
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 10 requests/min per IP (AI call, has cost)
+  const rl = await withRateLimit(req, { limit: 10, windowSize: '60 s' });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: { 'Retry-After': Math.ceil(rl.reset / 1000).toString() } }
+    );
+  }
+
   try {
     const body = await req.json() as ItineraryRequest;
 

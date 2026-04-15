@@ -5,11 +5,17 @@ import { MapPin, Calendar, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import type { ItineraryRequest, Itinerary } from '@/lib/itinerary/types';
 import { DayCard } from './DayCard';
 import { trackEvent } from '@/lib/analytics/events';
+import { useSession } from 'next-auth/react';
+import { useSubscription } from '@/hooks/useSubscription';
+import { UpgradePrompt } from '@/components/paywall/UpgradePrompt';
 
 const INTERESTS = ['History', 'Food', 'Shopping', 'Nature', 'Art', 'Nightlife', 'Architecture', 'Local Life'];
 const DESTINATIONS = ['Beijing', 'Shanghai', 'Chengdu', 'Xi\'an', 'Guilin', 'Hangzhou', 'Shenzhen', 'Guangzhou'];
 
 export default function ItineraryView() {
+  const { data: session } = useSession();
+  const { tier } = useSubscription(session?.user?.id);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const [step, setStep] = useState<'form' | 'loading' | 'result'>('form');
   const [error, setError] = useState<string | null>(null);
   const [itinerary, setItinerary] = useState<Itinerary | null>(null);
@@ -33,6 +39,13 @@ export default function ItineraryView() {
 
   const handleGenerate = async () => {
     if (!form.destination) return;
+
+    // Free users limited to 3 days
+    if (tier === 'free' && form.duration > 3) {
+      setShowUpgrade(true);
+      return;
+    }
+
     setStep('loading');
     setError(null);
 
@@ -144,6 +157,7 @@ export default function ItineraryView() {
 
   // Form
   return (
+    <>
     <div className="flex flex-col min-h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-200 px-4 py-4 sticky top-0 z-10">
         <div className="flex items-center gap-2">
@@ -296,6 +310,12 @@ export default function ItineraryView() {
         </div>
 
         {/* Generate button */}
+        {tier === 'free' && form.duration > 3 && (
+          <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-sm text-amber-700">
+            <span>⚠️</span>
+            <span>Free plan supports up to 3 days. <button onClick={() => setShowUpgrade(true)} className="underline font-semibold">Upgrade</button> for longer trips.</span>
+          </div>
+        )}
         <button
           onClick={handleGenerate}
           disabled={!form.destination || form.interests.length === 0}
@@ -306,5 +326,15 @@ export default function ItineraryView() {
         </button>
       </div>
     </div>
+
+    {/* Upgrade modal */}
+    {showUpgrade && session?.user?.id && (
+      <UpgradePrompt
+        currentTier={tier}
+        userId={session.user.id}
+        onClose={() => setShowUpgrade(false)}
+      />
+    )}
+    </>
   );
 }

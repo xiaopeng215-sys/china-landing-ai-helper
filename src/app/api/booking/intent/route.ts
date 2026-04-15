@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { withRateLimit } from '../../middleware/rate-limit';
+import { auth } from '@/auth';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -20,6 +22,12 @@ export interface BookingIntentPayload {
 
 // POST /api/booking/intent — record a booking intent
 export async function POST(req: NextRequest) {
+  // Rate limit: prevent spam writes
+  const rl = await withRateLimit(req, { limit: 30, windowSize: '60 s' });
+  if (!rl.success) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   try {
     const body: BookingIntentPayload = await req.json();
 
@@ -56,8 +64,14 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/booking/intent?user_id=xxx — fetch booking history
+// GET /api/booking/intent — fetch current user's booking history
 export async function GET(req: NextRequest) {
+  // Auth check: only return the authenticated user's own data (prevent IDOR)
+  const session = await auth();
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const userId = req.nextUrl.searchParams.get('user_id');
   if (!userId) {
     return NextResponse.json({ error: 'user_id is required' }, { status: 400 });

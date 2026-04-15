@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as Sentry from '@sentry/nextjs';
 import { logger, logApiStart, logApiEnd } from '@/lib/logger';
+import { withRateLimit } from '../middleware/rate-limit';
 
 interface WebVitalMetric {
   type: 'web_vital';
@@ -45,6 +46,12 @@ interface MetricsPayload {
  * 接收客户端指标
  */
 export async function POST(request: NextRequest) {
+  // Rate limit: prevent metric flooding / Sentry quota abuse
+  const rl = await withRateLimit(request, { limit: 60, windowSize: '60 s' });
+  if (!rl.success) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   const startTime = Date.now();
   logApiStart({
     method: 'POST',

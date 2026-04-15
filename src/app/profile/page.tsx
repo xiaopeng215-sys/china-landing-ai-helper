@@ -22,6 +22,8 @@ import {
 import { getUserProfile, upsertUserProfile, TravelerProfile } from '@/lib/supabase/user-profile';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { MemberBadge } from '@/components/membership/MemberBadge';
+import { useSubscription } from '@/hooks/useSubscription';
 
 interface HistoryItem {
   id: string;
@@ -46,6 +48,7 @@ interface ItineraryItem {
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
+  const { tier: subscriptionTier } = useSubscription(session?.user?.id);
   const router = useRouter();
   const { t } = useClientI18n();
   const [activeTab, setActiveTab] = useState<'profile' | 'membership' | 'itineraries' | 'history' | 'favorites' | 'settings'>('profile');
@@ -322,8 +325,13 @@ export default function ProfilePage() {
         
         <div className="max-w-3xl mx-auto px-4 relative z-10">
           <div className="flex items-center gap-4 animate-slide-up">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-3xl shadow-lg hover:scale-110 transition-transform duration-300">
-              👤
+            <div className="relative">
+              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-3xl shadow-lg hover:scale-110 transition-transform duration-300">
+                👤
+              </div>
+              <div className="absolute -bottom-1 -right-1">
+                <MemberBadge tier={subscriptionTier} />
+              </div>
             </div>
             <div>
               <h1 className="text-2xl font-bold animate-fade-in">{session?.user?.name || t('ProfileRoutePage.tabProfile')}</h1>

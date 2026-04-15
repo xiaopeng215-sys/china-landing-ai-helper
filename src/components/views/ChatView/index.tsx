@@ -11,6 +11,8 @@ import type { Message, ChatSession } from './types';
 import { useClientI18n } from '@/lib/i18n/client';
 import { useTravelerProfile } from '@/hooks/useTravelerProfile';
 import { trackEvent } from '@/lib/analytics/events';
+import { useSubscription } from '@/hooks/useSubscription';
+import { UpgradePrompt } from '@/components/paywall/UpgradePrompt';
 
 export type AIModel = 'minimax' | 'qwen';
 
@@ -37,6 +39,9 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
   const [showSessionList, setShowSessionList] = useState(false);
   const [selectedModel, setSelectedModel] = useState<AIModel>('minimax');
   const [showModelSelector, setShowModelSelector] = useState(false);
+  const [dailyCount, setDailyCount] = useState(0);
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const { tier, dailyLimit } = useSubscription(session?.user?.id);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { getPersonalizedContext, updateFromConversation, appendChatSummary, profile } = useTravelerProfile();
   const voiceLanguage = profile?.languages?.[0] ?? 'en-US';
@@ -105,6 +110,12 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
+
+    // Daily limit check for free users
+    if (tier === 'free' && dailyCount >= dailyLimit) {
+      setShowUpgrade(true);
+      return;
+    }
 
     trackEvent('chat_message', { messageLength: inputValue.trim().length, model: selectedModel });
 
@@ -212,6 +223,7 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
       updateFromConversation(userMessage.content);
       appendChatSummary('user', userMessage.content.slice(0, 200));
       appendChatSummary('assistant', content.slice(0, 200));
+      setDailyCount(c => c + 1);
 
       if (data.sessionId && !currentSessionId) {
         setCurrentSessionId(data.sessionId);

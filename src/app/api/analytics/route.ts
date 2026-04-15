@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import type { AnalyticsEvent } from '@/lib/analytics/events';
+import { withRateLimit } from '../middleware/rate-limit';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -9,6 +10,12 @@ function getSupabase() {
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limit: prevent data pollution from bulk writes
+  const rl = await withRateLimit(req, { limit: 60, windowSize: '60 s' });
+  if (!rl.success) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   try {
     const body = await req.json();
     const events: AnalyticsEvent[] = Array.isArray(body.events) ? body.events : [body];
