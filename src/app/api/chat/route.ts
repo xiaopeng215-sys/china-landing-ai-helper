@@ -396,12 +396,15 @@ export async function POST(request: NextRequest) {
       'pt-BR': 'Português',
       'ar-SA': 'العربية',
     };
-    const langName = langNames[detectedLanguage] || 'English';
-    const langInstruction = `\n\n[LANGUAGE DIRECTIVE] You MUST respond in ${langName} ONLY. Do not use any other language under any circumstances.`;
-    const baseSystemPrompt = (SYSTEM_PROMPTS[detectedLanguage] || SYSTEM_PROMPTS['en-US']) + langInstruction;
+    // Default to English if language not detected or not in supported list
+    const resolvedLanguage = (SYSTEM_PROMPTS[detectedLanguage] ? detectedLanguage : 'en-US');
+    const langName = langNames[resolvedLanguage] || 'English';
+    // Language directive goes LAST — always, even after profileContext
+    const langInstruction = `\n\n[LANGUAGE DIRECTIVE — HIGHEST PRIORITY] You MUST respond in ${langName} ONLY. Do not use any other language under any circumstances. This overrides all other instructions.`;
+    const baseSystemPrompt = SYSTEM_PROMPTS[resolvedLanguage];
     let systemPrompt = profileContext
-      ? `${baseSystemPrompt}\n\n${profileContext}\n\nUse the traveler profile above to personalize your responses. Reference their nationality, planned cities, budget, and completed prep steps when relevant.`
-      : baseSystemPrompt;
+      ? `${baseSystemPrompt}\n\n${profileContext}\n\nUse the traveler profile above to personalize your responses. Reference their nationality, planned cities, budget, and completed prep steps when relevant.${langInstruction}`
+      : baseSystemPrompt + langInstruction;
 
     // 旅行技能增强：检测关键词并附加结构化数据
     const matchedSkill = matchesTravelSkill(message);
@@ -427,6 +430,7 @@ export async function POST(request: NextRequest) {
         { role: 'system' as const, content: systemPrompt },
         ...messageHistory.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
         { role: 'user' as const, content: `[RESPOND IN ${langName.toUpperCase()} ONLY] ${message}` }
+        // Note: language is also enforced via langInstruction at the END of systemPrompt
       ],
       model: selectedModel,
       temperature: 0.7,
