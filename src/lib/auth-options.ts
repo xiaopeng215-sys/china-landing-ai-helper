@@ -118,8 +118,9 @@ function buildProviders() {
       },
     }));
 
-  // Google 登录（始终注册，环境变量在运行时注入）
-  providers.push(GoogleProvider({
+  // Google 登录（仅在配置了有效凭证时启用）
+  if (isValidConfig(process.env.GOOGLE_CLIENT_ID) && isValidConfig(process.env.GOOGLE_CLIENT_SECRET)) {
+    providers.push(GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
@@ -130,6 +131,7 @@ function buildProviders() {
         }
       }
     }));
+  }
 
   // Facebook 登录（仅在配置了有效凭证时启用）
   if (isValidConfig(process.env.FACEBOOK_CLIENT_ID) && isValidConfig(process.env.FACEBOOK_CLIENT_SECRET)) {
