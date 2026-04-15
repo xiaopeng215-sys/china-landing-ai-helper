@@ -22,9 +22,9 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
 
   const navItems: { id: Tab; label: string; icon: string; isActive?: boolean }[] = [
     { id: "chat", label: t("NavBar.chat", "Home"), icon: "🏠" },
-    { id: "explore", label: t("NavBar.explore", "Explore"), icon: "🔍", isActive: isExploreActive },
-    { id: "food", label: t("NavBar.food", "Food"), icon: "🍜" },
     { id: "itinerary", label: t("NavBar.itinerary", "Plan"), icon: "🗺️" },
+    { id: "food", label: t("NavBar.food", "Food"), icon: "🍜" },
+    { id: "explore", label: t("NavBar.explore", "Explore"), icon: "🔍", isActive: isExploreActive },
     { id: "essentials", label: t("NavBar.essentials", "Essentials"), icon: "🛡️" },
     { id: "profile", label: t("NavBar.profile", "Profile"), icon: "👤" },
   ];
