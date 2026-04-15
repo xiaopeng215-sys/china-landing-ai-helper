@@ -19,6 +19,7 @@ import {
   UserMembership,
   MembershipPoints,
 } from '@/lib/database';
+import { getUserProfile, upsertUserProfile, TravelerProfile } from '@/lib/supabase/user-profile';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
@@ -70,6 +71,15 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  // Traveler profile state
+  const [travelerProfile, setTravelerProfile] = useState<TravelerProfile | null>(null);
+  const [prefNationality, setPrefNationality] = useState('');
+  const [prefCities, setPrefCities] = useState<string[]>([]);
+  const [prefBudget, setPrefBudget] = useState<'budget' | 'mid' | 'luxury'>('mid');
+  const [prefInterests, setPrefInterests] = useState<string[]>([]);
+  const [prefSaving, setPrefSaving] = useState(false);
+  const [prefSaved, setPrefSaved] = useState(false);
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin?callbackUrl=/profile');
@@ -93,12 +103,39 @@ export default function ProfilePage() {
         loadFavorites(),
         loadItineraries(),
         loadMembershipData(),
+        loadTravelerProfile(),
       ]);
     } catch (error) {
       console.error('加载数据失败:', error);
     }
     
     setLoading(false);
+  };
+
+  const loadTravelerProfile = async () => {
+    if (!session?.user?.id) return;
+    const profile = await getUserProfile(session.user.id);
+    if (profile) {
+      setTravelerProfile(profile);
+      setPrefNationality(profile.nationality);
+      setPrefCities(profile.plannedCities);
+      setPrefBudget(profile.budget);
+      setPrefInterests(profile.interests);
+    }
+  };
+
+  const handleSaveTravelerPrefs = async () => {
+    if (!session?.user?.id) return;
+    setPrefSaving(true);
+    await upsertUserProfile(session.user.id, {
+      nationality: prefNationality,
+      plannedCities: prefCities,
+      budget: prefBudget,
+      interests: prefInterests,
+    });
+    setPrefSaving(false);
+    setPrefSaved(true);
+    setTimeout(() => setPrefSaved(false), 2000);
   };
 
   const loadHistory = async () => {
@@ -758,9 +795,97 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            {/* Preferences */}
+            {/* Travel Preferences */}
+            <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              <h2 className="text-lg font-bold text-[#484848] mb-4">✈️ Travel Preferences</h2>
+
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">Nationality</label>
+                <input
+                  type="text"
+                  value={prefNationality}
+                  onChange={(e) => setPrefNationality(e.target.value)}
+                  placeholder="e.g. American"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#ff5a5f]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">Planned Cities</label>
+                <div className="flex flex-wrap gap-2">
+                  {['Beijing', 'Shanghai', 'Chengdu', 'Xian', 'Hangzhou', 'Xiamen'].map((city) => (
+                    <button
+                      key={city}
+                      onClick={() => setPrefCities((prev) =>
+                        prev.includes(city) ? prev.filter((c) => c !== city) : [...prev, city]
+                      )}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                        prefCities.includes(city)
+                          ? 'bg-[#ff5a5f] text-white'
+                          : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
+                      }`}
+                    >
+                      {city}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">Budget Style</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {([['budget', '🎒 Backpacker'], ['mid', '🏨 Comfortable'], ['luxury', '✨ Luxury']] as const).map(([val, label]) => (
+                    <button
+                      key={val}
+                      onClick={() => setPrefBudget(val)}
+                      className={`py-2 px-3 rounded-xl text-xs font-medium transition-all ${
+                        prefBudget === val
+                          ? 'bg-[#ff5a5f] text-white'
+                          : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#767676] mb-2">Interests</label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    ['history', '🏛️ History'], ['food', '🍜 Food'], ['shopping', '🛍️ Shopping'],
+                    ['nature', '🌿 Nature'], ['nightlife', '🌃 Nightlife'], ['art', '🎨 Art'],
+                  ].map(([id, label]) => (
+                    <button
+                      key={id}
+                      onClick={() => setPrefInterests((prev) =>
+                        prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+                      )}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                        prefInterests.includes(id)
+                          ? 'bg-[#ff5a5f] text-white'
+                          : 'bg-gray-100 text-[#767676] hover:bg-gray-200'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={handleSaveTravelerPrefs}
+                disabled={prefSaving}
+                className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+              >
+                {prefSaving ? 'Saving...' : prefSaved ? '✓ Saved!' : 'Save Travel Preferences'}
+              </button>
+            </div>
+
+            {/* App Preferences */}
             <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 animate-slide-up" style={{ animationDelay: '0.15s' }}>
-              <h2 className="text-lg font-bold text-[#484848] mb-4">{t('ProfileRoutePage.settingsPreferences')}</h2>
+              <h2 className="text-lg font-bold text-[#484848] mb-4">{t('ProfileRoutePage.settingsPreferences')} (App)</h2>
               
               <div className="stagger-item">
                 <label className="block text-sm font-medium text-[#767676] mb-2">
@@ -821,6 +946,17 @@ export default function ProfilePage() {
                 className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover-lift tap-feedback animate-pulse"
               >
                 {t('ProfileRoutePage.settingsSave')}
+              </button>
+            </div>
+
+            {/* Sign Out */}
+            <div className="bg-white rounded-2xl shadow-md p-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+              <h2 className="text-lg font-bold text-[#484848] mb-4">{t('ProfileRoutePage.settingsAccount')}</h2>
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="w-full py-3 bg-gray-100 text-[#484848] rounded-xl font-semibold hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+              >
+                <span>🚪</span> Sign Out
               </button>
             </div>
 

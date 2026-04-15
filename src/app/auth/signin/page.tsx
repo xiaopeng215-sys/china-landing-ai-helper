@@ -214,7 +214,7 @@ function SignInForm() {
           <div className="space-y-3 mb-6">
             <button
               type="button"
-              onClick={() => signIn('google', { callbackUrl: '/' })}
+              onClick={() => signIn('google', { callbackUrl: '/auth/post-login' })}
               disabled={loading}
               className="w-full py-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 flex items-center justify-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -229,7 +229,7 @@ function SignInForm() {
 
             <button
               type="button"
-              onClick={() => signIn('facebook', { callbackUrl: '/' })}
+              onClick={() => signIn('facebook', { callbackUrl: '/auth/post-login' })}
               disabled={loading}
               className="w-full py-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 flex items-center justify-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
