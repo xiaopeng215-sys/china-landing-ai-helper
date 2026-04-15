@@ -16,8 +16,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { getAuthOptions } from '../../../lib/auth-options';
+import { auth } from '@/auth';
 import * as Sentry from '@sentry/nextjs';
 
 // 优化：使用统一的中间件和缓存服务
@@ -319,7 +318,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 获取用户会话 (支持游客模式)
-    const session = await getServerSession(getAuthOptions());
+    const session = await auth();
     const userId = (session?.user as any)?.id || `guest-${Date.now()}`;
     const isGuest = !(session?.user as any)?.id;
 
@@ -531,7 +530,7 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(getAuthOptions());
+    const session = await auth();
     
     if (!session || !(session.user as any)?.id) {
       throw createValidationError('请先登录');

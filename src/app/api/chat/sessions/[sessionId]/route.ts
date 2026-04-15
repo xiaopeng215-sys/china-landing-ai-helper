@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { getAuthOptions } from '@/lib/auth-options';
+import { auth } from '@/auth';
 import { getMessages, deleteChatSession } from '@/lib/database';
 import { handleApiError, createAuthError, createValidationError } from '@/app/api/middleware/error-handler';
 
@@ -12,7 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
   try {
-    const session = await getServerSession(getAuthOptions());
+    const session = await auth();
     
     if (!session?.user?.id) {
       throw createAuthError('请先登录');
@@ -40,7 +39,7 @@ export async function DELETE(
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
   try {
-    const session = await getServerSession(getAuthOptions());
+    const session = await auth();
     
     if (!session?.user?.id) {
       throw createAuthError('请先登录');
