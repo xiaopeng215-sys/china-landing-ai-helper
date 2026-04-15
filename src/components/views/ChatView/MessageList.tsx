@@ -75,9 +75,10 @@ function TransportBookingCard({ card }: { card: TransportCardData }) {
 interface MessageListProps {
   messages: Message[];
   messagesEndRef: React.RefObject<HTMLDivElement>;
+  onNavigate?: (tab: string) => void;
 }
 
-export function MessageList({ messages, messagesEndRef }: MessageListProps) {
+export function MessageList({ messages, messagesEndRef, onNavigate }: MessageListProps) {
   const { t, locale } = useClientI18n();
 
   if (messages.length === 0) {
@@ -106,7 +107,22 @@ export function MessageList({ messages, messagesEndRef }: MessageListProps) {
                 : 'bg-white text-[#484848] shadow-md border border-gray-100'
             }`}
           >
-            {/* 文本内容 + Transport Card 解析 */}
+          {/* Itinerary nudge card */}
+          {message.content === '__ITINERARY_NUDGE__' ? (
+            <div className="bg-teal-50 border border-teal-200 rounded-xl p-3">
+              <p className="text-sm font-semibold text-teal-800 mb-1">🗺️ Want a full itinerary?</p>
+              <p className="text-xs text-teal-700 mb-2">Use the AI Trip Planner to get a detailed day-by-day plan with activities, meals, and tips.</p>
+              {onNavigate && (
+                <button
+                  onClick={() => onNavigate('itinerary')}
+                  className="bg-teal-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-teal-700 transition-colors"
+                >
+                  Open Trip Planner →
+                </button>
+              )}
+            </div>
+          ) : (
+          <>{/* 文本内容 + Transport Card 解析 */}
             {(() => {
               const { text, card } = parseTransportCard(message.content);
               return (
@@ -163,6 +179,7 @@ export function MessageList({ messages, messagesEndRef }: MessageListProps) {
                 : message.timestamp.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
               }
             </div>
+          </>)}
           </div>
         </div>
       ))}

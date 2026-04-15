@@ -114,6 +114,19 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
+
+    // Detect itinerary intent — inject a nudge card before AI reply
+    if (onNavigate && detectItineraryIntent(userMessage.content)) {
+      const nudge: Message = {
+        id: `nudge_${Date.now()}`,
+        type: 'ai',
+        role: 'assistant',
+        content: '__ITINERARY_NUDGE__',
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, nudge]);
+    }
+
     setIsTyping(true);
 
     try {
@@ -308,7 +321,7 @@ export default function ChatView({ onNavigate }: ChatViewProps = {}) {
       {/* Model Selector hidden - internal use only */}
 
       {/* Messages */}
-      <MessageList messages={messages} messagesEndRef={messagesEndRef} />
+      <MessageList messages={messages} messagesEndRef={messagesEndRef} onNavigate={onNavigate} />
 
       {/* Welcome screen - shown when chat is empty */}
       {messages.length === 0 && !isTyping && (
