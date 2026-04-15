@@ -15,17 +15,12 @@ function buildProviders() {
       clientId: googleId,
       clientSecret: googleSecret,
       authorization: {
-        url: "https://accounts.google.com/o/oauth2/v2/auth",
         params: {
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
-          scope: "openid email profile",
         },
       },
-      token: "https://oauth2.googleapis.com/token",
-      userinfo: "https://www.googleapis.com/oauth2/v3/userinfo",
-      issuer: "https://accounts.google.com",
     }))
   }
 
