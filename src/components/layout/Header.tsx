@@ -18,7 +18,7 @@ export default function Header({
   showBack = false,
   onBack,
   rightAction,
-  showUserMenu = false,
+  showUserMenu = true,
 }: HeaderProps) {
   const { data: session } = useSession();
   const [showMenu, setShowMenu] = React.useState(false);

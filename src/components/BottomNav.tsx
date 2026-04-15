@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useSession } from "next-auth/react";
 import { useClientI18n } from "@/lib/i18n/client";
 
 export type Tab = "chat" | "trips" | "food" | "food-encyclopedia" | "transport" | "essentials" | "hotels" | "timeline" | "profile" | "explore" | "itinerary" | "ar" | "map";
@@ -15,6 +16,7 @@ interface BottomNavProps {
  */
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const { t } = useClientI18n();
+  const { data: session } = useSession();
 
   // Explore tab is active when any of its sub-tabs are active
   const exploreSubTabs = ["food-encyclopedia", "hotels", "transport", "explore"];
@@ -26,7 +28,7 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
     { id: "food", label: t("NavBar.food", "Food"), icon: "🍜" },
     { id: "explore", label: t("NavBar.explore", "Explore"), icon: "🔍", isActive: isExploreActive },
     { id: "essentials", label: t("NavBar.essentials", "Essentials"), icon: "🛡️" },
-    { id: "profile", label: t("NavBar.profile", "Profile"), icon: "👤" },
+    { id: "profile", label: t("NavBar.profile", "Profile"), icon: session ? null : "👤" },
   ];
 
   return (
@@ -46,9 +48,20 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
               type="button"
               aria-current={isActive ? "page" : undefined}
             >
-              <span className="text-[20px] mb-1" aria-hidden="true">
-                {item.icon}
-              </span>
+              {item.id === "profile" && session ? (
+                <span
+                  className={`w-6 h-6 mb-1 rounded-full flex items-center justify-center text-white text-xs font-bold ${
+                    isActive ? "bg-teal-600" : "bg-gray-400"
+                  }`}
+                  aria-hidden="true"
+                >
+                  {session.user?.name?.charAt(0).toUpperCase() || "U"}
+                </span>
+              ) : (
+                <span className="text-[20px] mb-1" aria-hidden="true">
+                  {item.icon}
+                </span>
+              )}
               <span className="text-[11px] font-medium leading-tight">
                 {item.label}
               </span>
