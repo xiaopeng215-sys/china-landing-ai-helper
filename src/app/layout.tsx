@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     default: 'TravelerLocal.ai - AI Travel Assistant for China',
     template: '%s | TravelerLocal.ai',
   },
-  description: 'Your AI-powered guide for traveling in China. Get help with visa, payments, transport, and more in 8 languages.',
+  description: 'The #1 AI travel guide for foreigners visiting China. Get real-time help with visa, WeChat Pay, transport, food, and itineraries in 8 languages.',
   keywords: [
     'China travel', 'China travel guide', 'AI travel assistant', 'visit China',
     'China itinerary', 'China tourism', 'Beijing travel', 'Shanghai travel',
@@ -97,7 +97,7 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: 'TravelerLocal.ai',
     title: 'TravelerLocal.ai - AI Travel Assistant for China',
-    description: 'Your AI-powered guide for traveling in China. Get help with visa, payments, transport, and more in 8 languages.',
+    description: 'The #1 AI travel guide for foreigners visiting China. Get real-time help with visa, WeChat Pay, transport, food, and itineraries in 8 languages.',
     images: [
       {
         url: '/og-image.png',
@@ -122,7 +122,7 @@ export const metadata: Metadata = {
     site: '@ChinaAIHelper',
     creator: '@ChinaAIHelper',
     title: 'TravelerLocal.ai - AI Travel Assistant for China',
-    description: 'Your AI-powered guide for traveling in China. Get help with visa, payments, transport, and more in 8 languages.',
+    description: 'The #1 AI travel guide for foreigners visiting China. Get real-time help with visa, WeChat Pay, transport, food, and itineraries in 8 languages.',
     images: ['/og-image.png'],
   },
   

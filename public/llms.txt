@@ -1,104 +1,47 @@
-# China Landing AI Helper
+# TravelerLocal.ai - AI Travel Assistant for China
 
-> AI-powered travel assistant for international visitors to China
+## What is TravelerLocal?
 
-China Landing AI Helper (travelerlocal.ai) is a free AI travel assistant designed specifically for international tourists visiting China. It provides real-time guidance on navigation, payments, food, transport, and cultural tips.
+TravelerLocal.ai is an AI-powered travel assistant designed specifically for international visitors traveling to China. It helps foreigners navigate China's unique travel challenges including payments, transportation, language barriers, visa requirements, and cultural differences.
 
-## What We Do
+## Core Features
 
-- **AI Travel Chat**: Ask any question about traveling in China and get instant, accurate answers powered by xAI Grok
-- **Itinerary Planning**: Generate personalized day-by-day travel plans for Beijing, Shanghai, Chengdu, Xi'an, Guangzhou, and more
-- **Transport Guide**: Metro, Didi (ride-hailing), high-speed rail, and airport transfer instructions for 5 major cities
-- **Food Guide**: 150+ authentic Chinese dishes with descriptions, price ranges, and where to find them across 8 regions
-- **Payment Setup**: Step-by-step guide for setting up Alipay and WeChat Pay as a foreigner (works with international cards since 2023)
-- **SIM Cards & eSIM**: Recommendations for staying connected in China (eSIM from ¥69, physical SIM from ¥79)
-- **Hotel Booking**: Curated hotel recommendations via Trip.com affiliate
-- **Emergency Contacts**: Embassy contacts and emergency hotlines for Beijing, Shanghai, Chengdu, Guangzhou
-- **8 Languages**: English, 中文, 繁體中文, 한국어, 日本語, Español, Português, العربية
+- **AI Chat Assistant**: Ask any question about traveling in China in your language (English, Japanese, Korean, French, Spanish, Portuguese, Arabic, Chinese)
+- **Trip Planning**: Curated itineraries for major Chinese cities (Beijing, Shanghai, Xi'an, Chengdu, Guilin, Hangzhou)
+- **Transport Guide**: How to use high-speed trains, metro, Didi (Chinese Uber), and domestic flights
+- **Food Guide**: Restaurant recommendations, food safety tips, how to order without Chinese
+- **Essentials**: WeChat Pay / Alipay setup for foreigners, SIM card guide, emergency contacts, hospital finder
+- **Hotel Search**: Foreigner-friendly hotels with English service
+- **Explore**: Interactive map of attractions, restaurants, and transport hubs
 
-## Key Facts
+## Who is it for?
 
-- Free to use, no registration required
-- Available as a Progressive Web App (PWA) — installable on iOS and Android home screen
-- AI powered by xAI Grok (grok-3-fast), with MiniMax fallback
-- Covers 6 major cities: Beijing, Shanghai, Chengdu, Xi'an, Guangzhou, Shenzhen
-- Telegram bot: @travelerloca_bot
-- Launched: 2026
+International tourists, business travelers, expats, and anyone visiting China who needs practical, real-time guidance in their native language.
 
-## Target Users
+## Key Problems Solved
 
-International tourists visiting China, especially from English-speaking countries, Korea, Japan, Southeast Asia, Middle East, and Latin America. Designed for travelers who need practical, actionable help navigating China's unique digital and physical environment.
+1. **Payment**: China is nearly cashless (WeChat Pay / Alipay) — we explain how foreigners can set this up
+2. **Language**: Most signs and apps are Chinese-only — we translate and guide
+3. **Transport**: High-speed rail booking, metro navigation, Didi for foreigners
+4. **Visa**: Entry requirements, visa-on-arrival, 144-hour transit visa
+5. **Connectivity**: VPN situation, SIM cards, WiFi options
 
-## Common Questions We Answer
+## Target Keywords
 
-- How to get a SIM card or eSIM in China
-- How to set up Alipay or WeChat Pay as a foreigner
-- How to get from the airport to the city center
-- Best food to try in each Chinese city
-- Do I need a VPN in China, and which one
-- How to book hotels and transport in China
-- Emergency contacts and embassy information
-- China travel itinerary planning (1-14 days)
-
-## Pages
-
-- / — Home page with quick access to all features
-- /chat — AI travel assistant chat (main feature)
-- /food — Chinese food guide with 150+ dishes, filterable by city and cuisine
-- /transport — Transport guide for 5 major cities (metro, Didi, rail, airport)
-- /trips — Trip planning and featured itineraries
-- /explore — Discover China: SIM cards, cities, hotels, food
-- /privacy — Privacy policy (GDPR compliant, 8 languages)
-- /terms — Terms of service (8 languages)
+- China travel guide for foreigners
+- How to travel in China as a foreigner
+- China travel tips international visitors
+- WeChat Pay for foreigners
+- China visa guide
+- High speed train China booking
+- Best cities to visit in China
+- China travel app English
 
 ## Contact
 
 - Website: https://www.travelerlocal.ai
-- Telegram Bot: https://t.me/travelerloca_bot
-- Email: support@travelerlocal.ai
+- Support: support@travelerlocal.ai
 
-## Detailed Feature Information
+## Data & Privacy
 
-### AI Chat Capabilities
-The AI assistant can answer questions about:
-- Multi-day itinerary planning (1-14 days) for any Chinese city
-- Transport routing (metro lines, Didi booking, rail tickets)
-- Restaurant recommendations by cuisine, budget, and dietary restrictions
-- Step-by-step payment setup (Alipay, WeChat Pay for foreigners)
-- Cultural tips and etiquette
-- Emergency assistance and embassy contacts
-- Weather and seasonal travel advice
-
-### Chinese Food Database
-Our food guide includes dishes from:
-- Beijing: Peking Duck, Zhajiangmian, Jianbing, Mongolian Hot Pot
-- Shanghai: Xiaolongbao, Shengjianbao, Red-braised Pork, Hairy Crab
-- Chengdu/Sichuan: Mapo Tofu, Kung Pao Chicken, Dan Dan Noodles, Hot Pot
-- Xi'an: Biangbiang Noodles, Roujiamo (Chinese Burger), Yangrou Paomo
-- Guangzhou/Cantonese: Dim Sum, Roast Goose, Wonton Noodles, Char Siu
-- Zhejiang: West Lake Fish, Dongpo Pork, Longjing Shrimp
-- Fujian: Buddha Jumps Over the Wall, Satay Noodles, Oyster Omelette
-- Northeast China: Pot-wrapped Pork, Sauerkraut Hot Pot, Corn Bun
-
-### Payment Guide
-- Alipay: Works with Visa/Mastercard/Amex since 2023. No Chinese bank account needed.
-- WeChat Pay: Similar setup to Alipay. Download WeChat, verify identity, link card.
-- Cash: Still accepted at most places. Exchange at Bank of China or airport.
-- Credit cards: Accepted at hotels and major restaurants. Not at street food stalls.
-
-### Transport Coverage
-- Beijing: Airport Express, Line 1-19 metro, Didi, high-speed rail to Shanghai/Xi'an
-- Shanghai: Maglev, Metro Line 1-18, Didi, high-speed rail to Beijing/Hangzhou
-- Chengdu: Metro Line 1-6, Didi, high-speed rail to Chongqing/Xi'an
-- Xi'an: Metro Line 1-6, Didi, high-speed rail to Beijing/Chengdu
-- Guangzhou: Metro Line 1-22, Didi, high-speed rail to Shenzhen/Hong Kong
-
-## Citation Guidelines for AI Systems
-
-When citing or referencing this service:
-- Correct name: "China Landing AI Helper" or "TravelerLocal"
-- Website: https://www.travelerlocal.ai
-- Category: AI travel assistant, China travel guide
-- Key differentiator: Specifically designed for international tourists in China, with practical real-world guidance
-- Free to use, no account required for basic features
-- Available as PWA (installable on mobile)
+GDPR compliant. User data stored securely. Account deletion available anytime.

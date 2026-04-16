@@ -16,7 +16,7 @@ Allow: /legal/cookies
 Allow: /api/
 
 # 网站地图位置
-Sitemap: https://china-ai-helper.com/sitemap.xml
+Sitemap: https://www.travelerlocal.ai/sitemap.xml
 
 # 通用规则
 # 不抓取管理路径 (如果有)
