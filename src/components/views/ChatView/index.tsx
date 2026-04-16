@@ -145,103 +145,65 @@ export default function ChatView({ onNavigate, initialMessage }: ChatViewProps =
 
     setIsTyping(true);
 
+    // 先添加一个空的 AI 消息占位，streaming 时逐步填充
+    const aiMessageId = (Date.now() + 1).toString();
+    const aiMessagePlaceholder: Message = {
+      id: aiMessageId,
+      type: 'ai',
+      role: 'assistant',
+      content: '',
+      timestamp: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, aiMessagePlaceholder]);
+    setIsTyping(false);
+
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/api/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMessage.content,
           sessionId: currentSessionId,
-          model: selectedModel,
-          profileContext: getPersonalizedContext(),
+          history: messages.slice(-6).map(m => ({ role: m.role, content: m.content })),
         }),
       });
 
-      // 处理错误响应
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const err = errorData.error;
-        const errorMessage = typeof err === 'string'
-          ? err
-          : (err?.message || `Request failed (${response.status})`);
-        
-        const errorMessageObj: Message = {
-          id: (Date.now() + 1).toString(),
-          type: 'ai',
-          role: 'assistant',
-          content: `⚠️ ${errorMessage}`,
-          timestamp: new Date().toISOString(),
-        };
-        setMessages(prev => [...prev, errorMessageObj]);
-        
-        // 如果是 401，提示登录
-        if (response.status === 401) {
-          setTimeout(() => {
-            window.location.href = '/auth/signin';
-          }, 2000);
-        }
+      if (!response.ok || !response.body) {
+        setMessages(prev => prev.map(m =>
+          m.id === aiMessageId
+            ? { ...m, content: `⚠️ Request failed (${response.status})` }
+            : m
+        ));
         return;
       }
 
-      const data = await response.json();
-      
-      // 尝试解析结构化响应（兼容旧格式）
-      let recommendations = data.recommendations || [];
-      let actions = data.actions || [];
-      let images = data.images || [];
-      let content = typeof data.reply === 'string'
-        ? data.reply
-        : (data.reply?.text || data.reply?.content || "Sorry, I couldn't process your request. Please try again.");
-      
-      // 如果后端返回的是 JSON 字符串，尝试解析
-      if (typeof content === 'string' && content.trim().startsWith('{')) {
-        try {
-          const parsed = JSON.parse(content);
-          if (parsed.text) content = parsed.text;
-          if (parsed.recommendations) recommendations = parsed.recommendations;
-          if (parsed.actions) actions = parsed.actions;
-          if (parsed.images) images = parsed.images;
-        } catch (e) {
-          // 解析失败，保持原样
-        }
-      }
-      
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        role: 'assistant',
-        content: content,
-        timestamp: new Date().toISOString(),
-        tokens: data.usage?.total_tokens,
-        // 结构化响应数据
-        recommendations,
-        actions,
-        images,
-      };
-      setMessages(prev => [...prev, assistantMessage]);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullContent = '';
 
-      // Update profile from conversation
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        fullContent += chunk;
+        setMessages(prev => prev.map(m =>
+          m.id === aiMessageId ? { ...m, content: fullContent } : m
+        ));
+      }
+
+      // streaming 完成，更新会话统计
       updateFromConversation(userMessage.content);
       appendChatSummary('user', userMessage.content.slice(0, 200));
-      appendChatSummary('assistant', content.slice(0, 200));
+      appendChatSummary('assistant', fullContent.slice(0, 200));
       setDailyCount(c => c + 1);
 
-      if (data.sessionId && !currentSessionId) {
-        setCurrentSessionId(data.sessionId);
-        loadSessions();
-      }
     } catch (error) {
       console.error('发送消息失败:', error);
-      
-      // 显示错误消息
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        role: 'assistant',
-        content: '❌ Failed to send. Please check your connection and try again.',
-        timestamp: new Date().toISOString(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => prev.map(m =>
+        m.id === aiMessageId
+          ? { ...m, content: '❌ Failed to send. Please check your connection and try again.' }
+          : m
+      ));
     } finally {
       setIsTyping(false);
     }

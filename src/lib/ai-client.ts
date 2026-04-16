@@ -545,7 +545,7 @@ async function sendToMiniMax(
       // M2.7 是推理模型，限制 thinking_budget 避免推理 token 耗尽导致回复为空
       // 注意：thinking_budget 仅在 /v1/text/chatcompletion_v2 端点有效
       max_tokens: parseInt(process.env.MINIMAX_MAX_TOKENS || '2000'),
-      thinking_budget: 800,
+      thinking_budget: 200,
     };
 
     console.log('🤖 发送请求到 MiniMax API...');
@@ -904,7 +904,73 @@ export async function sendToAIStreaming(
     variables?: Record<string, string>;
   }
 ): Promise<void> {
-  // 简化实现：直接返回完整回复
   const response = await sendToAI(messages, options);
   onChunk(response.content);
+}
+
+/**
+ * 真正的 MiniMax streaming，返回 ReadableStream 供 Next.js route 直接使用
+ */
+export async function sendToAIStreamingResponse(
+  messages: Message[],
+  systemPrompt: string
+): Promise<ReadableStream<Uint8Array>> {
+  const MINIMAX_API_KEY = process.env.MINIMAX_API_KEY;
+  const MINIMAX_API_URL = process.env.MINIMAX_API_URL || 'https://api.minimaxi.chat/v1';
+
+  const finalMessages = [
+    { role: 'system' as const, content: systemPrompt },
+    ...messages,
+  ];
+
+  const response = await fetch(`${MINIMAX_API_URL}/text/chatcompletion_v2`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${MINIMAX_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: process.env.MINIMAX_MODEL || 'MiniMax-M2.7',
+      messages: finalMessages,
+      temperature: 0.7,
+      max_tokens: 1500,
+      thinking_budget: 200,
+      stream: true,
+    }),
+    signal: AbortSignal.timeout(30000),
+  });
+
+  if (!response.ok || !response.body) {
+    throw new Error(`MiniMax streaming error: ${response.status}`);
+  }
+
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
+
+  return new ReadableStream<Uint8Array>({
+    async start(controller) {
+      const reader = response.body!.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n').filter(l => l.startsWith('data: '));
+          for (const line of lines) {
+            const data = line.slice(6).trim();
+            if (data === '[DONE]') { controller.close(); return; }
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) controller.enqueue(encoder.encode(content));
+            } catch {}
+          }
+        }
+      } catch (e) {
+        controller.error(e);
+      } finally {
+        controller.close();
+      }
+    },
+  });
 }
