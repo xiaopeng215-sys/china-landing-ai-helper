@@ -70,7 +70,8 @@ const privacyContent: Record<string, LocaleContent> = {
       },
     ],
   },
-    title: '隐私政策',
+
+  'zh-CN': {
     lastUpdated: '最后更新：2025年1月',
     backToTerms: '服务条款',
     backToHome: '← 返回首页',
