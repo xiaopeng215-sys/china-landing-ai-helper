@@ -289,7 +289,7 @@ export default function Home() {
         </Suspense>
       </main>
       <PWAInstallPrompt />
-      <Footer />
+      {activeTab !== 'chat' && <Footer />}
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );

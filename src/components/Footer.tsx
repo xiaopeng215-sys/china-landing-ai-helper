@@ -9,7 +9,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-100 border-t border-gray-200 py-6 mt-auto" role="contentinfo">
+    <footer className="bg-gray-100 border-t border-gray-200 py-6 mt-auto pb-24" role="contentinfo">
       <div className="max-w-4xl mx-auto px-4">
         <div className="flex flex-wrap justify-center gap-4 mb-4 text-sm">
           <Link href="/legal/privacy" className="text-gray-600 hover:text-teal-600 transition-colors">
