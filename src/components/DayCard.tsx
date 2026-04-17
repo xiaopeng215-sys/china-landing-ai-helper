@@ -141,9 +141,9 @@ export default function DayCard({
                 <div className="text-sm font-medium text-gray-900">
                   {activity.title}
                 </div>
-                {activity.description && (
+                {(activity.descriptionEn ?? activity.description) && (
                   <p className="text-xs text-gray-600 mt-1">
-                    {activity.description}
+                    {activity.descriptionEn ?? activity.description}
                   </p>
                 )}
                 {activity.cost && (

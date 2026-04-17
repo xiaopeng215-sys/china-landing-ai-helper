@@ -66,7 +66,7 @@ export default function ItineraryCard({ activities = DEFAULT_ACTIVITIES }: Itine
                 </span>
                 <span className="font-semibold text-gray-900 text-base">{activity.title}</span>
               </div>
-              <div className="text-sm text-gray-600 mb-2">{activity.description}</div>
+              <div className="text-sm text-gray-600 mb-2">{activity.descriptionEn ?? activity.description}</div>
               <span className="inline-block px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full border border-green-200">
                 💰 {activity.cost}
               </span>
