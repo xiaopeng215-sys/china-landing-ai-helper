@@ -35,6 +35,9 @@ import { recordApiMetrics } from '../../../lib/metrics';
 // 旅行垂直技能库
 import { TravelSkillsEngine, matchesTravelSkill, formatSkillContext } from '../../../lib/travel-skills';
 
+// POI 数据上下文注入 (P1 数据路线图)
+import { extractPOIContext, type POIContextResult } from '../../../lib/data/poi-context';
+
 // 数据库操作 - 用于会话和消息管理 (修复 CHAT-01/CHAT-02)
 import {
   createChatSession,
@@ -422,6 +425,31 @@ export async function POST(request: NextRequest) {
       } catch (skillError) {
         console.warn('[Chat API] 技能处理失败，继续正常流程:', skillError);
       }
+    }
+
+    // P1 数据路线图：POI 上下文注入
+    // 当用户问景点/餐厅时，从结构化 POI 数据中提取相关信息
+    let poiContext: POIContextResult | null = null;
+    try {
+      poiContext = await extractPOIContext(message, {
+        language: detectedLanguage,
+        city: body.city,
+      });
+      
+      if (poiContext.context) {
+        // 将 POI 上下文注入到 system prompt
+        const poiContextBlock = `\n\n=== 景点/餐厅参考数据 ===\n${poiContext.context}\n\n当你回答用户问题时，优先使用上述参考数据中的信息。\n对于门票价格、营业时间等具体信息，请注明"根据最新数据"，不要编造具体数字。`;
+        
+        // 插入在 langInstruction 之前
+        systemPrompt = systemPrompt.replace(
+          langInstruction,
+          poiContextBlock + '\n\n' + langInstruction
+        );
+        
+        console.log(`📍 [Chat API] POI 上下文注入：${poiContext.attractions.length} 景点, ${poiContext.restaurants.length} 餐厅, ${poiContext.localTips.length} 提示`);
+      }
+    } catch (poiError) {
+      console.warn('[Chat API] POI 上下文加载失败，继续正常流程:', poiError);
     }
 
     // 优化：使用 AI 响应缓存 (包含消息历史)
