@@ -616,18 +616,18 @@
   },
   "DailyRecommendation": {
     "todaysPick": "Today's Pick",
-    "exploreCta": "Explore Today's Pick \u2192",
-    "beijing_title": "Beijing \u2014 Where History Meets Modernity",
+    "exploreCta": "Explore Today's Pick →",
+    "beijing_title": "Beijing — Where History Meets Modernity",
     "beijing_desc": "Walk the Great Wall, explore the Forbidden City, and feast on Peking duck in the ancient hutongs.",
-    "shanghai_title": "Shanghai \u2014 The City That Never Sleeps",
+    "shanghai_title": "Shanghai — The City That Never Sleeps",
     "shanghai_desc": "Stroll the Bund at night, ride the Maglev, and discover world-class food in every alley.",
-    "chengdu_title": "Chengdu \u2014 Spice, Pandas & Slow Living",
+    "chengdu_title": "Chengdu — Spice, Pandas & Slow Living",
     "chengdu_desc": "Meet giant pandas, burn your tongue on hot pot, and sip tea in a bamboo garden.",
-    "xian_title": "Xi'an \u2014 The Ancient Capital",
+    "xian_title": "Xi'an — The Ancient Capital",
     "xian_desc": "Stand face-to-face with the Terracotta Army and devour a bowl of biang biang noodles.",
-    "hangzhou_title": "Hangzhou \u2014 Heaven on Earth",
+    "hangzhou_title": "Hangzhou — Heaven on Earth",
     "hangzhou_desc": "Cycle around West Lake, sip fresh Longjing tea, and lose yourself in misty mountain trails.",
-    "xiamen_title": "Xiamen \u2014 Coastal Charm",
+    "xiamen_title": "Xiamen — Coastal Charm",
     "xiamen_desc": "Wander the car-free island of Gulangyu, eat oyster omelettes, and watch the sunset over the sea."
   },
   "QuickActions": {
@@ -641,7 +641,7 @@
   },
   "ChatWelcome": {
     "greeting": "Hi, I'm your China Travel AI",
-    "greetingDesc": "Ask me anything about traveling in China \u2014 itineraries, food, transport, payments, and more.",
+    "greetingDesc": "Ask me anything about traveling in China — itineraries, food, transport, payments, and more.",
     "tryAsking": "Try asking:",
     "q1": "Plan a 3-day Beijing itinerary",
     "q2": "Best street food in Shanghai",
@@ -651,8 +651,8 @@
     "q6": "Budget hotels in Chengdu"
   },
   "WelcomeCard": {
-    "title": "\ud83c\udde8\ud83c\uddf3 Welcome to China!",
-    "desc": "I'm your AI travel assistant \u2014 helping you plan trips, find local food, and get around with ease.",
+    "title": "🇨🇳 Welcome to China!",
+    "desc": "I'm your AI travel assistant — helping you plan trips, find local food, and get around with ease.",
     "feature1Text": "AI Trip Planning",
     "feature1Sub": "Custom routes",
     "feature2Text": "Local Food",
@@ -661,7 +661,20 @@
     "feature3Sub": "Metro + Bus",
     "feature4Text": "Payment & ID",
     "feature4Sub": "Alipay + WeChat",
-    "ctaStart": "\ud83d\ude80 Start Planning",
-    "ctaTutorial": "\u25b6\ufe0f Watch Tutorial"
+    "ctaStart": "🚀 Start Planning",
+    "ctaTutorial": "▶️ Watch Tutorial"
+  },
+  "FeaturedDestinations": {
+    "sectionTitle": "Featured Destinations",
+    "beijingEssential_title": "Beijing Essential",
+    "beijingEssential_desc": "Great Wall, Forbidden City & hutong food in 3 days",
+    "shanghaiFood_title": "Shanghai Local Food",
+    "shanghaiFood_desc": "Bund, soup dumplings & French Concession in 2 days",
+    "chengduPandas_title": "Chengdu Pandas & More",
+    "chengduPandas_desc": "Panda Base, hot pot & tea houses in 3 days",
+    "xianHistory_title": "Xi'an History Hunt",
+    "xianHistory_desc": "Terracotta Warriors, city wall & night market in 2 days",
+    "hangzhouWestLake_title": "Hangzhou West Lake",
+    "hangzhouWestLake_desc": "West Lake scenery, tea & Longjing shrimp in 2 days"
   }
 }

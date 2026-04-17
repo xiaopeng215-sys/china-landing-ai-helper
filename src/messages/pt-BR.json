@@ -590,5 +590,18 @@
     "tipsLabel": "Dicas",
     "allDoneTitle": "Tudo pronto!",
     "allDoneSubtitle": "Bem-vindo à China. Vá explorar!"
+  },
+  "FeaturedDestinations": {
+    "sectionTitle": "Featured Destinations",
+    "beijingEssential_title": "Beijing Essential",
+    "beijingEssential_desc": "Great Wall, Forbidden City & hutong food in 3 days",
+    "shanghaiFood_title": "Shanghai Local Food",
+    "shanghaiFood_desc": "Bund, soup dumplings & French Concession in 2 days",
+    "chengduPandas_title": "Chengdu Pandas & More",
+    "chengduPandas_desc": "Panda Base, hot pot & tea houses in 3 days",
+    "xianHistory_title": "Xi'an History Hunt",
+    "xianHistory_desc": "Terracotta Warriors, city wall & night market in 2 days",
+    "hangzhouWestLake_title": "Hangzhou West Lake",
+    "hangzhouWestLake_desc": "West Lake scenery, tea & Longjing shrimp in 2 days"
   }
 }

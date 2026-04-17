@@ -12,6 +12,7 @@ import { useClientI18n } from "@/lib/i18n/client";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { ESSENTIALS_DATA } from "@/data/essentials";
 import DailyRecommendation from "@/components/home/DailyRecommendation";
+import FeaturedDestinations from "@/components/home/FeaturedDestinations";
 import QuickActions from "@/components/home/QuickActions";
 
 // 动态导入 - 按需加载，减少初始包体积
@@ -168,6 +169,12 @@ export default function Home() {
     setShowHero(false);
   };
 
+  const handleDestinationPrompt = (prompt: string) => {
+    setChatInitialMessage(prompt);
+    setActiveTab("chat");
+    setShowHero(false);
+  };
+
   const handleQuickAction = ({ message, tab }: { message?: string; tab?: string }) => {
     if (tab) {
       setActiveTab(tab as Tab);
@@ -230,6 +237,9 @@ export default function Home() {
 
           {/* Daily Recommendation */}
           <DailyRecommendation onCitySelect={handleCitySelect} />
+
+          {/* Featured Destinations - Quick Win P0 */}
+          <FeaturedDestinations onPrompt={handleDestinationPrompt} />
 
           {/* Quick Actions */}
           <QuickActions onAction={handleQuickAction} />
