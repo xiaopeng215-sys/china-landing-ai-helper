@@ -23,14 +23,7 @@
     "MINIMAX_MAX_TOKENS": "2000",
     "NEXT_PUBLIC_SUPABASE_URL": "https://jsuqbaumrrrgexfdvras.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzdXFiYXVtcnJyZ2V4ZmR2cmFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5ODkzOTksImV4cCI6MjA5MTU2NTM5OX0.lCkCALfXnIlciMfXRj8bkK72bX4xn1miN-x5l5Gi7f4",
-    "NEXTAUTH_SECRET": "travelerlocal-nextauth-secret-2026-prod-x9k2m",
-    "AUTH_FACEBOOK_ID": "1487908142746360",
-    "AUTH_FACEBOOK_SECRET": "fe8dc2c3350b8c6e4bef1355505085b4",
-    "AUTH_GOOGLE_ID": "771411045609-el0ufcnuef58tnb7ol46sg2abip5pp4f.apps.googleusercontent.com",
-    "AUTH_GOOGLE_SECRET": "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",
-    "MINIMAX_API_KEY": "sk-cp-bdtFJYcr6FojRc7aQcnlFie9Tb_gvBdBUHHSbKntjIs1iB24FVaplO80DCmS9LXgl16OVMnslz5c2-VdwbuXlBLlHVkDx7bmcbVxsthvkTARsqqtAZQsopQ",
-    "UPSTASH_REDIS_REST_URL": "https://vector-redis-test.upstash.io",
-    "UPSTASH_REDIS_REST_TOKEN": "test_token_for_p1_redis_config"
+    "UPSTASH_REDIS_REST_URL": "https://vector-redis-test.upstash.io"
   },
   "build": {
     "env": {
