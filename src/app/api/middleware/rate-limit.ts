@@ -30,6 +30,30 @@ const DEFAULT_RATE_LIMIT_CONFIG: RateLimitConfig = {
 const memoryStore = new Map<string, { count: number; resetAt: number }>();
 const MEMORY_FALLBACK_LIMIT = 60; // 60 次/分钟
 const MEMORY_FALLBACK_WINDOW_MS = 60 * 1000;
+const CLEANUP_INTERVAL_MS = 5 * 60 * 1000; // 每 5 分钟清理一次过期条目
+
+let lastCleanup = Date.now();
+
+/**
+ * 清理过期的内存限流条目 (防止内存泄漏)
+ * 修复 #3: 内存限流 Map 无清理机制
+ */
+function cleanupExpiredEntries(): void {
+  const now = Date.now();
+  if (now - lastCleanup < CLEANUP_INTERVAL_MS) return;
+
+  let cleaned = 0;
+  for (const [key, entry] of memoryStore.entries()) {
+    if (now > entry.resetAt) {
+      memoryStore.delete(key);
+      cleaned++;
+    }
+  }
+  lastCleanup = now;
+  if (cleaned > 0) {
+    console.log(`[RateLimit] 清理了 ${cleaned} 个过期限流条目，剩余 ${memoryStore.size} 个`);
+  }
+}
 
 function checkMemoryRateLimit(identifier: string): {
   success: boolean;
@@ -37,6 +61,9 @@ function checkMemoryRateLimit(identifier: string): {
   reset: number;
   limit: number;
 } {
+  // 修复 #3: 定期清理过期条目，防止内存泄漏
+  cleanupExpiredEntries();
+
   const now = Date.now();
   const entry = memoryStore.get(identifier);
 

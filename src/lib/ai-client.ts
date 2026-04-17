@@ -913,9 +913,13 @@ export async function sendToAIStreaming(
  */
 export async function sendToAIStreamingResponse(
   messages: Message[],
-  systemPrompt: string
+  systemPrompt: string,
+  options?: {
+    thinking_budget?: number;
+  }
 ): Promise<ReadableStream<Uint8Array>> {
   const MINIMAX_API_KEY = process.env.MINIMAX_API_KEY;
+  // 修复 #1: MiniMax 流式端点应为 /text/chatcompletion_v2_stream
   const MINIMAX_API_URL = process.env.MINIMAX_API_URL || 'https://api.minimaxi.chat/v1';
 
   const finalMessages = [
@@ -923,7 +927,10 @@ export async function sendToAIStreamingResponse(
     ...messages,
   ];
 
-  const response = await fetch(`${MINIMAX_API_URL}/text/chatcompletion_v2`, {
+  // 修复 #1: 使用正确的流式端点
+  const streamEndpoint = `${MINIMAX_API_URL}/text/chatcompletion_v2_stream`;
+  
+  const response = await fetch(streamEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -934,7 +941,8 @@ export async function sendToAIStreamingResponse(
       messages: finalMessages,
       temperature: 0.7,
       max_tokens: 1500,
-      thinking_budget: 200,
+      // 修复 #2: 使用传入的 thinking_budget，默认 200
+      thinking_budget: options?.thinking_budget ?? 200,
       stream: true,
     }),
     signal: AbortSignal.timeout(30000),

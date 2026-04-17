@@ -33,7 +33,9 @@ export async function POST(request: NextRequest) {
       { role: 'user' as const, content: message.trim() },
     ];
 
-    const stream = await sendToAIStreamingResponse(messages, systemPrompt);
+    // 修复 #2: 传递 thinking_budget 避免空回复
+    const thinkingBudget = parseInt(process.env.MINIMAX_THINKING_BUDGET || '200');
+    const stream = await sendToAIStreamingResponse(messages, systemPrompt, { thinkingBudget });
 
     return new Response(stream, {
       headers: {

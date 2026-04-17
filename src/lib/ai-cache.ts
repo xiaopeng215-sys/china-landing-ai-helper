@@ -29,10 +29,12 @@ export interface AIRequestContext {
 function createCacheKey(context: AIRequestContext): string {
   const crypto = require('crypto');
   
-  // 规范化消息 (移除时间戳等动态字段)
+  // 修复 #4: 移除 toLowerCase，改用 whitespace 规范化
+  // 保留原始大小写以维护语义准确性 (专有名词、缩写等)
   const normalizedMessages = context.messages.map(msg => ({
     role: msg.role,
-    content: msg.content.trim().toLowerCase(),
+    // 只做首尾空格去除和连续空白规范化，保留原始大小写
+    content: msg.content.replace(/\s+/g, ' ').trim(),
   }));
   
   const hashInput = JSON.stringify({
