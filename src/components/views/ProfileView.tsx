@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+import { motion } from 'framer-motion';
 import { useClientI18n } from '@/lib/i18n/client';
 import { useTravelerProfile } from '@/hooks/useTravelerProfile';
 import type { TravelerProfile } from '@/lib/traveler-profile';
@@ -17,7 +18,174 @@ const PREP_STEPS: { key: keyof TravelerProfile['completedSteps']; emoji: string;
   { key: 'accommodation', emoji: '🏨', label: 'Accommodation' },
 ];
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+// ─── CountdownBanner ──────────────────────────────────────────────────────────
+
+function getDaysUntil(dateStr: string): number | null {
+  if (!dateStr) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(dateStr);
+  target.setHours(0, 0, 0, 0);
+  const diff = target.getTime() - today.getTime();
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.4, ease: 'easeOut' },
+  }),
+};
+
+function CountdownBanner({ profile }: { profile: TravelerProfile | null }) {
+  const { t } = useClientI18n();
+  const daysLeft = profile?.travelDates?.arrival
+    ? getDaysUntil(profile.travelDates.arrival)
+    : null;
+  const destination = profile?.plannedCities?.[0] ?? null;
+
+  if (!profile) {
+    return (
+      <motion.div
+        className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-3xl shadow-xl p-6 text-white"
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        custom={0}
+      >
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-3xl">
+            👤
+          </div>
+          <div className="flex-1">
+            <h2 className="text-xl font-bold">{t('ProfileViewPage.guestUser')}</h2>
+            <p className="text-white/80 text-sm">{t('ProfileViewPage.guestDesc')}</p>
+            <button
+              onClick={() => window.location.href = '/auth/signin?callbackUrl=/profile'}
+              className="mt-2 px-4 py-1.5 bg-white text-teal-600 rounded-lg text-xs font-semibold hover:bg-white/90 transition-all"
+            >
+              Sign In
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-3xl shadow-xl p-6 text-white overflow-hidden relative"
+      variants={fadeUp}
+      initial="hidden"
+      animate="visible"
+      custom={0}
+    >
+      {/* Decorative circles */}
+      <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full" />
+      <div className="absolute -bottom-4 -right-12 w-24 h-24 bg-white/5 rounded-full" />
+
+      <div className="flex items-center gap-4 relative">
+        <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-3xl shrink-0">
+          {profile.nationality ? '🌍' : '👤'}
+        </div>
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl font-bold truncate">
+            {profile.nationality ? `${profile.nationality} Traveler` : t('ProfileViewPage.guestUser')}
+          </h2>
+
+          {daysLeft !== null && daysLeft > 0 ? (
+            <div className="mt-1">
+              <p className="text-white/80 text-sm">
+                {destination ? `下一站：${destination}` : '准备出发'} ·
+                <span className="font-bold text-white ml-1">{daysLeft}天后</span>
+              </p>
+              <div className="mt-2 flex gap-2 flex-wrap">
+                <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium capitalize">
+                  💰 {profile.preferences.budget}
+                </span>
+                <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium capitalize">
+                  🎯 {profile.visitPurpose}
+                </span>
+              </div>
+            </div>
+          ) : daysLeft === 0 ? (
+            <p className="text-white/80 text-sm mt-1">🎉 今天出发！</p>
+          ) : !destination ? (
+            <p className="text-white/80 text-sm mt-1">{t('ProfileViewPage.guestDesc')}</p>
+          ) : (
+            <p className="text-white/80 text-sm mt-1">
+              <span className="font-bold text-yellow-200">行程已结束</span> · 期待下次旅行
+            </p>
+          )}
+        </div>
+      </div>
+
+      {daysLeft !== null && daysLeft > 0 && (
+        <div className="mt-4 relative">
+          <div className="flex justify-between text-xs text-white/70 mb-1">
+            <span>准备进度</span>
+            <span>{Math.round(((Object.values(profile.completedSteps).filter(Boolean).length) / Object.keys(profile.completedSteps).length) * 100)}%</span>
+          </div>
+          <div className="w-full bg-white/20 rounded-full h-2">
+            <motion.div
+              className="bg-yellow-300 h-2 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.round(((Object.values(profile.completedSteps).filter(Boolean).length) / Object.keys(profile.completedSteps).length) * 100)}%` }}
+              transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+            />
+          </div>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+// ─── QuickActionCards ─────────────────────────────────────────────────────────
+
+const QUICK_ACTIONS = [
+  { emoji: '❤️', label: 'My Favorites', labelKey: 'ProfileViewPage.myFavorites', icon: '→' },
+  { emoji: '📅', label: 'My Trips', labelKey: 'ProfileViewPage.myTrips', icon: '→' },
+  { emoji: '💰', label: 'Expenses', labelKey: 'ProfileViewPage.expenses', icon: '→' },
+  { emoji: '🎫', label: 'Coupons', labelKey: 'ProfileViewPage.coupons', icon: '→' },
+];
+
+function QuickActionCards() {
+  const { t } = useClientI18n();
+
+  const handleClick = (labelKey: string) => {
+    if (labelKey === 'ProfileViewPage.myTrips') {
+      window.location.href = '/trips';
+    }
+    // Other actions can be wired up later
+  };
+
+  return (
+    <motion.div
+      className="grid grid-cols-2 gap-3"
+      variants={fadeUp}
+      initial="hidden"
+      animate="visible"
+      custom={2}
+    >
+      {QUICK_ACTIONS.map((action) => (
+        <motion.button
+          key={action.labelKey}
+          onClick={() => handleClick(action.labelKey)}
+          className="bg-white rounded-2xl shadow-md border border-gray-100 p-4 flex flex-col items-start gap-2 hover:shadow-lg active:scale-95 transition-all cursor-pointer text-left"
+          whileTap={{ scale: 0.97 }}
+        >
+          <span className="text-2xl">{action.emoji}</span>
+          <span className="text-sm font-semibold text-[#484848]">{t(action.labelKey)}</span>
+          <span className="text-xs text-[#767676]">{action.icon}</span>
+        </motion.button>
+      ))}
+    </motion.div>
+  );
+}
+
+// ─── PrepProgress ─────────────────────────────────────────────────────────────
 
 function PrepProgress({ steps }: { steps: TravelerProfile['completedSteps'] }) {
   const done = Object.values(steps).filter(Boolean).length;
@@ -25,16 +193,24 @@ function PrepProgress({ steps }: { steps: TravelerProfile['completedSteps'] }) {
   const pct = Math.round((done / total) * 100);
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
+    <motion.div
+      className="bg-white rounded-2xl shadow-md p-5 border border-gray-100"
+      variants={fadeUp}
+      initial="hidden"
+      animate="visible"
+      custom={1}
+    >
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-[#484848]">🗺️ China Trip Prep</h3>
         <span className="text-sm font-semibold text-teal-600">{done}/{total} done</span>
       </div>
       {/* Progress bar */}
       <div className="w-full bg-gray-100 rounded-full h-2 mb-4">
-        <div
-          className="bg-teal-500 h-2 rounded-full transition-all duration-500"
-          style={{ width: `${pct}%` }}
+        <motion.div
+          className="bg-teal-500 h-2 rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         />
       </div>
       {/* Step list */}
@@ -51,9 +227,11 @@ function PrepProgress({ steps }: { steps: TravelerProfile['completedSteps'] }) {
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
+
+// ─── EditModal ───────────────────────────────────────────────────────────────
 
 function EditModal({
   profile,
@@ -106,7 +284,6 @@ function EditModal({
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
         </div>
 
-        {/* Nationality */}
         <label className="block">
           <span className="text-sm font-medium text-gray-600">Nationality</span>
           <input
@@ -117,7 +294,6 @@ function EditModal({
           />
         </label>
 
-        {/* Visit Purpose */}
         <label className="block">
           <span className="text-sm font-medium text-gray-600">Visit Purpose</span>
           <select
@@ -132,7 +308,6 @@ function EditModal({
           </select>
         </label>
 
-        {/* Budget */}
         <label className="block">
           <span className="text-sm font-medium text-gray-600">Budget Level</span>
           <select
@@ -146,7 +321,6 @@ function EditModal({
           </select>
         </label>
 
-        {/* Planned Cities */}
         <label className="block">
           <span className="text-sm font-medium text-gray-600">Planned Cities</span>
           <input
@@ -157,7 +331,6 @@ function EditModal({
           />
         </label>
 
-        {/* Travel Dates */}
         <div className="grid grid-cols-2 gap-3">
           <label className="block">
             <span className="text-sm font-medium text-gray-600">Arrival</span>
@@ -181,7 +354,6 @@ function EditModal({
           </label>
         </div>
 
-        {/* Food Restrictions */}
         <label className="block">
           <span className="text-sm font-medium text-gray-600">Food Restrictions</span>
           <input
@@ -192,7 +364,6 @@ function EditModal({
           />
         </label>
 
-        {/* Interests */}
         <label className="block">
           <span className="text-sm font-medium text-gray-600">Interests</span>
           <input
@@ -203,7 +374,6 @@ function EditModal({
           />
         </label>
 
-        {/* Prep Steps */}
         <div>
           <span className="text-sm font-medium text-gray-600">Prep Checklist</span>
           <div className="mt-2 space-y-2">
@@ -268,61 +438,24 @@ export default function ProfileView() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-5">
-        {/* Traveler Card */}
-        <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-3xl shadow-xl p-6 text-white">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-3xl">
-              {profile?.nationality ? '🌍' : '👤'}
-            </div>
-            <div className="flex-1">
-              <h2 className="text-xl font-bold">
-                {profile?.nationality ? `${profile.nationality} Traveler` : t('ProfileViewPage.guestUser')}
-              </h2>
-              <p className="text-white/80 text-sm">
-                {profile?.plannedCities.length
-                  ? `Visiting: ${profile.plannedCities.join(' · ')}`
-                  : t('ProfileViewPage.guestDesc')}
-              </p>
-              {!profile?.nationality && (
-                <button
-                  onClick={() => window.location.href = '/auth/signin?callbackUrl=/profile'}
-                  className="mt-2 px-4 py-1.5 bg-white text-teal-600 rounded-lg text-xs font-semibold hover:bg-white/90 transition-all"
-                >
-                  Sign In
-                </button>
-              )}
-              {profile?.travelDates && (
-                <p className="text-white/70 text-xs mt-1">
-                  📅 {profile.travelDates.arrival} → {profile.travelDates.departure}
-                </p>
-              )}
-            </div>
-          </div>
+        {/* 1. CountdownBanner */}
+        <CountdownBanner profile={profile} />
 
-          {/* Budget + Purpose badges */}
-          {profile && (
-            <div className="flex gap-2 mt-4 flex-wrap">
-              <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium capitalize">
-                💰 {profile.preferences.budget}
-              </span>
-              <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium capitalize">
-                🎯 {profile.visitPurpose}
-              </span>
-              {profile.preferences.foodRestrictions.map(r => (
-                <span key={r} className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium">
-                  🍽️ {r}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Prep Progress */}
+        {/* 2. PrepProgress */}
         {profile && <PrepProgress steps={profile.completedSteps} />}
 
-        {/* Interests */}
+        {/* 3. QuickActionCards */}
+        <QuickActionCards />
+
+        {/* 4. Interests */}
         {profile && profile.preferences.interests.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
+          <motion.div
+            className="bg-white rounded-2xl shadow-md p-5 border border-gray-100"
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={3}
+          >
             <h3 className="font-bold text-[#484848] mb-3">✨ Your Interests</h3>
             <div className="flex flex-wrap gap-2">
               {profile.preferences.interests.map(i => (
@@ -331,28 +464,17 @@ export default function ProfileView() {
                 </span>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
-        {/* Sign In CTA (if no nationality set) */}
-        {profile && !profile.nationality && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center gap-3">
-            <span className="text-2xl">💡</span>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-amber-800">Complete your profile</p>
-              <p className="text-xs text-amber-600">Tell us about yourself so AI can give personalized advice</p>
-            </div>
-            <button
-              onClick={() => setShowEdit(true)}
-              className="px-3 py-1.5 bg-amber-500 text-white rounded-xl text-xs font-semibold"
-            >
-              Set up
-            </button>
-          </div>
-        )}
-
-        {/* Support */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        {/* 5. Settings Menu */}
+        <motion.div
+          className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={4}
+        >
           <div className="p-4 border-b border-gray-100">
             <h3 className="font-bold text-[#484848]">{t('ProfileViewPage.support')}</h3>
           </div>
@@ -376,10 +498,16 @@ export default function ProfileView() {
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Sign Out */}
-        <div className="px-2">
+        {/* 6. Sign Out */}
+        <motion.div
+          className="px-2"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={5}
+        >
           <button
             onClick={async () => {
               await signOut({ redirect: false });
@@ -389,15 +517,21 @@ export default function ProfileView() {
           >
             Sign Out
           </button>
-        </div>
+        </motion.div>
 
         {/* App Info */}
-        <div className="text-center py-6">
+        <motion.div
+          className="text-center py-6"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={6}
+        >
           <div className="text-4xl mb-2">🌏</div>
           <p className="font-bold text-[#484848]">{t('ProfileViewPage.appName')}</p>
           <p className="text-sm text-[#767676]">{t('ProfileViewPage.version')}</p>
           <p className="text-xs text-[#767676] mt-4">{t('ProfileViewPage.madeWith')}</p>
-        </div>
+        </motion.div>
       </main>
 
       {/* Edit Modal */}

@@ -1,8 +1,60 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useClientI18n } from '@/lib/i18n/client';
 
+// ============================================================
+// FlyAI types (mirror of lib/flyai.ts)
+// ============================================================
+export interface FlightSegment {
+  depCityName: string;
+  depStationName: string;
+  depDateTime: string;
+  arrCityName: string;
+  arrStationName: string;
+  arrDateTime: string;
+  duration: string;
+  transportType: string;
+  marketingTransportName: string;
+  marketingTransportNo: string;
+  seatClassName: string;
+  depTerm?: string;
+  arrTerm?: string;
+}
+
+export interface FlightResult {
+  ticketPrice: string;
+  totalDuration: string;
+  journeyType: string;
+  segments: FlightSegment[];
+  jumpUrl: string;
+}
+
+export interface TrainSegment {
+  depCityName: string;
+  depStationName: string;
+  depDateTime: string;
+  arrCityName: string;
+  arrStationName: string;
+  arrDateTime: string;
+  duration: string;
+  transportType: string;
+  marketingTransportNo: string;
+  seatClassName: string;
+}
+
+export interface TrainResult {
+  price: string;
+  totalDuration: string;
+  journeyType: string;
+  segments: TrainSegment[];
+  jumpUrl: string;
+}
+
+// ============================================================
+// Static data
+// ============================================================
 type City = 'shanghai' | 'beijing' | 'chengdu' | 'xian' | 'guangzhou';
 
 interface AirportInfo {
@@ -110,7 +162,7 @@ const CITY_DATA: Record<City, CityTransportData> = {
       lines: '8 lines',
       hours: '6:00am – 11:00pm',
       price: '¥2–5 per trip',
-      app: 'Xi\'an Metro / Alipay',
+      app: "Xi'an Metro / Alipay",
       tips: [
         'Line 2 runs north-south through city center',
         'Muslim Quarter is a short walk from Bell Tower station',
@@ -135,7 +187,7 @@ const CITY_DATA: Record<City, CityTransportData> = {
       price: '¥2–8 per trip',
       app: 'Guangzhou Metro / Alipay',
       tips: [
-        'One of China\'s most extensive metro networks',
+        "One of China's most extensive metro networks",
         'Line 1 connects major tourist spots',
         'Cantonese and Mandarin announcements',
         'Alipay QR code payment widely accepted',
@@ -149,7 +201,7 @@ const DIDI_STEPS = [
   { step: '2', title: 'Register with Phone', desc: 'Use your international phone number. SMS verification required.', icon: '📞' },
   { step: '3', title: 'Add Payment', desc: 'Link international Visa/Mastercard or use Alipay/WeChat Pay.', icon: '💳' },
   { step: '4', title: 'Book a Ride', desc: 'Enter destination in English or Chinese. Driver will find you.', icon: '🚕' },
-  { step: '5', title: 'Show Driver', desc: 'Show your phone screen — driver sees your destination in Chinese.', icon: '📍' },
+  { step: '5', title: 'Show Driver', desc: "Show your phone screen — driver sees your destination in Chinese.", icon: '📍' },
 ];
 
 const RAIL_TIPS = [
@@ -172,28 +224,182 @@ type Section = 'airport' | 'metro' | 'didi' | 'rail' | 'flights' | 'trains';
 
 const TRIP_AFFILIATE = 'https://www.trip.com/t/gBO6LQDOIU2';
 
-const FLIGHT_CITIES = [
-  { value: 'SHA', label: 'Shanghai (SHA)' },
-  { value: 'PEK', label: 'Beijing (PEK)' },
-  { value: 'CTU', label: 'Chengdu (CTU)' },
-  { value: 'CAN', label: 'Guangzhou (CAN)' },
-  { value: 'XIY', label: "Xi'an (XIY)" },
-  { value: 'HGH', label: 'Hangzhou (HGH)' },
-  { value: 'SZX', label: 'Shenzhen (SZX)' },
-];
+// ============================================================
+// Helper: format datetime string "2025-04-18 08:30" → "08:30"
+// ============================================================
+function fmtTime(dt: string) {
+  if (!dt) return '--:--';
+  const parts = dt.split(' ');
+  return parts.length >= 2 ? parts[1].slice(0, 5) : dt.slice(11, 16);
+}
 
-const POPULAR_FLIGHTS = [
-  { from: 'SHA', to: 'PEK', label: 'Shanghai → Beijing' },
-  { from: 'PEK', to: 'CTU', label: 'Beijing → Chengdu' },
-  { from: 'CAN', to: 'SHA', label: 'Guangzhou → Shanghai' },
-];
+function fmtDate(dt: string) {
+  if (!dt) return '';
+  return dt.split(' ')[0];
+}
 
-const POPULAR_TRAINS = [
-  { from: 'Beijing', to: 'Shanghai', label: 'Beijing → Shanghai' },
-  { from: 'Chengdu', to: "Xi'an", label: "Chengdu → Xi'an" },
-  { from: 'Shanghai', to: 'Hangzhou', label: 'Shanghai → Hangzhou' },
-];
+// ============================================================
+// Loading skeleton card
+// ============================================================
+function SkeletonCard() {
+  return (
+    <div className="bg-white rounded-2xl shadow-md p-4 border border-gray-100 animate-pulse">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-gray-200 rounded-full" />
+        <div className="flex-1 space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-3/4" />
+          <div className="h-3 bg-gray-100 rounded w-1/2" />
+        </div>
+        <div className="h-6 bg-gray-200 rounded w-16" />
+      </div>
+    </div>
+  );
+}
 
+// ============================================================
+// Flight result card with motion
+// ============================================================
+const FlightCard: React.FC<{ result: FlightResult; index: number }> = ({ result, index }) => {
+  const seg = result.segments[0];
+  if (!seg) return null;
+
+  const depTime = fmtTime(seg.depDateTime);
+  const arrTime = fmtTime(seg.arrDateTime);
+  const depDate = fmtDate(seg.depDateTime);
+  const airline = seg.marketingTransportName || seg.marketingTransportNo;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: index * 0.06, ease: 'easeOut' }}
+      className="bg-white rounded-2xl shadow-md p-4 border border-gray-100 hover:shadow-lg transition-shadow"
+    >
+      {/* Airline + flight no */}
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center text-sm">✈️</div>
+        <span className="font-semibold text-sm text-[#484848]">{airline}</span>
+        <span className="text-xs text-[#767676] ml-auto">{seg.marketingTransportNo}</span>
+      </div>
+
+      {/* Times */}
+      <div className="flex items-center gap-2 mb-2">
+        <div className="text-center">
+          <p className="text-lg font-bold text-[#484848]">{depTime}</p>
+          <p className="text-xs text-[#767676]">{seg.depCityName}</p>
+          <p className="text-xs text-[#767676]">{seg.depStationName}{seg.depTerm ? ` T${seg.depTerm}` : ''}</p>
+        </div>
+        <div className="flex-1 flex flex-col items-center px-2">
+          <p className="text-xs text-[#767676] mb-0.5">{result.totalDuration || seg.duration}</p>
+          <div className="w-full h-px bg-gradient-to-r from-blue-200 via-blue-400 to-blue-200 relative">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full" />
+          </div>
+          <p className="text-xs text-blue-500 mt-0.5">Direct</p>
+        </div>
+        <div className="text-center">
+          <p className="text-lg font-bold text-[#484848]">{arrTime}</p>
+          <p className="text-xs text-[#767676]">{seg.arrCityName}</p>
+          <p className="text-xs text-[#767676]">{seg.arrStationName}{seg.arrTerm ? ` T${seg.arrTerm}` : ''}</p>
+        </div>
+      </div>
+
+      {/* Date + seat + price */}
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+        <div>
+          {depDate && <p className="text-xs text-[#767676]">📅 {depDate}</p>}
+          <p className="text-xs text-[#767676]">💺 {seg.seatClassName || 'Economy'}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-lg font-bold text-[#ff5a5f]">¥{result.ticketPrice}</p>
+          {result.jumpUrl && (
+            <a
+              href={result.jumpUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-1 px-3 py-1 bg-[#ff5a5f] text-white text-xs rounded-full font-medium hover:bg-[#e63235] transition-colors"
+            >
+              Book →
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// ============================================================
+// Train result card with motion
+// ============================================================
+const TrainCard: React.FC<{ result: TrainResult; index: number }> = ({ result, index }) => {
+  const seg = result.segments[0];
+  if (!seg) return null;
+
+  const depTime = fmtTime(seg.depDateTime);
+  const arrTime = fmtTime(seg.arrDateTime);
+  const depDate = fmtDate(seg.depDateTime);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: index * 0.06, ease: 'easeOut' }}
+      className="bg-white rounded-2xl shadow-md p-4 border border-gray-100 hover:shadow-lg transition-shadow"
+    >
+      {/* Train no */}
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-8 h-8 bg-green-50 rounded-full flex items-center justify-center text-sm">🚄</div>
+        <span className="font-semibold text-sm text-[#484848]">{seg.marketingTransportNo}</span>
+        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-auto">
+          {seg.transportType?.includes('G') ? 'G-Train' : seg.transportType?.includes('D') ? 'D-Train' : 'Train'}
+        </span>
+      </div>
+
+      {/* Times */}
+      <div className="flex items-center gap-2 mb-2">
+        <div className="text-center">
+          <p className="text-lg font-bold text-[#484848]">{depTime}</p>
+          <p className="text-xs text-[#767676]">{seg.depStationName}</p>
+        </div>
+        <div className="flex-1 flex flex-col items-center px-2">
+          <p className="text-xs text-[#767676] mb-0.5">{result.totalDuration || seg.duration}</p>
+          <div className="w-full h-px bg-gradient-to-r from-green-200 via-green-400 to-green-200 relative">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-green-500 rounded-full" />
+          </div>
+          <p className="text-xs text-green-500 mt-0.5">Direct</p>
+        </div>
+        <div className="text-center">
+          <p className="text-lg font-bold text-[#484848]">{arrTime}</p>
+          <p className="text-xs text-[#767676]">{seg.arrStationName}</p>
+        </div>
+      </div>
+
+      {/* Date + seat + price */}
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+        <div>
+          {depDate && <p className="text-xs text-[#767676]">📅 {depDate}</p>}
+          <p className="text-xs text-[#767676]">💺 {seg.seatClassName || 'Second Class'}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-lg font-bold text-[#34a853]">¥{result.price}</p>
+          {result.jumpUrl && (
+            <a
+              href={result.jumpUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-1 px-3 py-1 bg-[#34a853] text-white text-xs rounded-full font-medium hover:bg-[#2d8f4e] transition-colors"
+            >
+              Book →
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// ============================================================
+// Main component
+// ============================================================
 export default function TransportView() {
   const { t } = useClientI18n();
   const [selectedCity, setSelectedCity] = useState<City>('shanghai');
@@ -201,31 +407,129 @@ export default function TransportView() {
   const [fromInput, setFromInput] = useState('');
   const [toInput, setToInput] = useState('');
 
-  // Flights state
+  // ---- Flights state ----
   const [flightFrom, setFlightFrom] = useState('SHA');
   const [flightTo, setFlightTo] = useState('PEK');
-  const [flightDate, setFlightDate] = useState('');
+  const [flightDate, setFlightDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return d.toISOString().split('T')[0];
+  });
   const [flightPassengers, setFlightPassengers] = useState(1);
+  const [flightResults, setFlightResults] = useState<FlightResult[]>([]);
+  const [flightLoading, setFlightLoading] = useState(false);
+  const [flightError, setFlightError] = useState<string | null>(null);
+  const [flightSearched, setFlightSearched] = useState(false);
 
-  // Trains state
+  // ---- Trains state ----
   const [trainFrom, setTrainFrom] = useState('Beijing');
   const [trainTo, setTrainTo] = useState('Shanghai');
-  const [trainDate, setTrainDate] = useState('');
+  const [trainDate, setTrainDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return d.toISOString().split('T')[0];
+  });
+  const [trainResults, setTrainResults] = useState<TrainResult[]>([]);
+  const [trainLoading, setTrainLoading] = useState(false);
+  const [trainError, setTrainError] = useState<string | null>(null);
+  const [trainSearched, setTrainSearched] = useState(false);
 
-  const handleFlightSearch = () => {
-    const url = new URL(TRIP_AFFILIATE);
-    url.searchParams.set('dcity', flightFrom);
-    url.searchParams.set('acity', flightTo);
-    if (flightDate) url.searchParams.set('ddate', flightDate);
-    url.searchParams.set('adult', String(flightPassengers));
-    window.open(url.toString(), '_blank', 'noopener,noreferrer');
+  const handleFlightSearch = async () => {
+    setFlightLoading(true);
+    setFlightError(null);
+    setFlightResults([]);
+    setFlightSearched(true);
+    try {
+      const params = new URLSearchParams({
+        origin: flightFrom,
+        destination: flightTo,
+        depDate: flightDate,
+      });
+      const res = await fetch(`/api/flight?${params.toString()}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      // TODO: Replace with real FlyAI data when API route is fully deployed
+      // Expected FlyAI shape: { status: 0, data: { itemList: [...] } }
+      // For now, render redirect links if returned, or show error
+      if (data.type === 'redirect' && data.links?.length) {
+        // API not yet hooked to FlyAI — show friendly message
+        setFlightError('Live flight data not yet connected. Showing Trip.com links below.');
+        // Build mock cards from redirect links so UI is not empty
+        setFlightResults([]);
+      } else if (data.status === 0 && data.data?.itemList?.length) {
+        // Real FlyAI response
+        setFlightResults(
+          data.data.itemList.map((item: any): FlightResult => ({
+            ticketPrice: item.ticketPrice,
+            totalDuration: item.totalDuration,
+            journeyType: item.journeys?.[0]?.journeyType || '',
+            segments: item.journeys?.[0]?.segments || [],
+            jumpUrl: item.jumpUrl,
+          }))
+        );
+      } else {
+        setFlightError('No flights found for this route.');
+      }
+    } catch (err: any) {
+      setFlightError(err.message || 'Search failed. Please try again.');
+    } finally {
+      setFlightLoading(false);
+    }
   };
 
-  const handleTrainSearch = () => {
+  const handleTrainSearch = async () => {
+    setTrainLoading(true);
+    setTrainError(null);
+    setTrainResults([]);
+    setTrainSearched(true);
+    try {
+      const params = new URLSearchParams({
+        origin: trainFrom,
+        destination: trainTo,
+        depDate: trainDate,
+      });
+      const res = await fetch(`/api/train?${params.toString()}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (data.type === 'redirect' && data.links?.length) {
+        // TODO: API not yet hooked to FlyAI
+        setTrainError('Live train data not yet connected. Showing Trip.com links below.');
+        setTrainResults([]);
+      } else if (data.status === 0 && data.data?.itemList?.length) {
+        setTrainResults(
+          data.data.itemList.map((item: any): TrainResult => ({
+            price: item.price || item.adultPrice,
+            totalDuration: item.totalDuration,
+            journeyType: item.journeys?.[0]?.journeyType || '',
+            segments: item.journeys?.[0]?.segments || [],
+            jumpUrl: item.jumpUrl,
+          }))
+        );
+      } else {
+        setTrainError('No trains found for this route.');
+      }
+    } catch (err: any) {
+      setTrainError(err.message || 'Search failed. Please try again.');
+    } finally {
+      setTrainLoading(false);
+    }
+  };
+
+  // Fallback to Trip.com external search
+  const handleTripAffiliate = (type: 'flight' | 'train') => {
     const url = new URL(TRIP_AFFILIATE);
-    url.searchParams.set('from', trainFrom);
-    url.searchParams.set('to', trainTo);
-    if (trainDate) url.searchParams.set('date', trainDate);
+    if (type === 'flight') {
+      url.searchParams.set('dcity', flightFrom);
+      url.searchParams.set('acity', flightTo);
+      if (flightDate) url.searchParams.set('ddate', flightDate);
+      url.searchParams.set('adult', String(flightPassengers));
+    } else {
+      url.searchParams.set('from', trainFrom);
+      url.searchParams.set('to', trainTo);
+      if (trainDate) url.searchParams.set('date', trainDate);
+    }
     window.open(url.toString(), '_blank', 'noopener,noreferrer');
   };
 
@@ -240,6 +544,29 @@ export default function TransportView() {
     { id: 'trains', label: 'Trains', icon: '🚅' },
   ];
 
+  // City code mapping for display
+  const FLIGHT_CITIES = [
+    { value: 'SHA', label: 'Shanghai (SHA)' },
+    { value: 'PEK', label: 'Beijing (PEK)' },
+    { value: 'CTU', label: 'Chengdu (CTU)' },
+    { value: 'CAN', label: 'Guangzhou (CAN)' },
+    { value: 'XIY', label: "Xi'an (XIY)" },
+    { value: 'HGH', label: 'Hangzhou (HGH)' },
+    { value: 'SZX', label: 'Shenzhen (SZX)' },
+  ];
+
+  const POPULAR_FLIGHTS = [
+    { from: 'SHA', to: 'PEK', label: 'Shanghai → Beijing' },
+    { from: 'PEK', to: 'CTU', label: 'Beijing → Chengdu' },
+    { from: 'CAN', to: 'SHA', label: 'Guangzhou → Shanghai' },
+  ];
+
+  const POPULAR_TRAINS = [
+    { from: 'Beijing', to: 'Shanghai', label: 'Beijing → Shanghai' },
+    { from: 'Chengdu', to: "Xi'an", label: "Chengdu → Xi'an" },
+    { from: 'Shanghai', to: 'Hangzhou', label: 'Shanghai → Hangzhou' },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -252,6 +579,7 @@ export default function TransportView() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-5">
+
         {/* Route Planner */}
         <div className="bg-white rounded-3xl shadow-xl p-5 border border-gray-100">
           <h3 className="text-base font-bold text-[#484848] mb-4">🗺️ {t('TransportPage.routePlanner')}</h3>
@@ -279,7 +607,6 @@ export default function TransportView() {
             <button
               onClick={() => {
                 if (fromInput || toInput) {
-                  // Route planning via AI chat
                   window.location.href = `/?tab=chat&q=${encodeURIComponent(`How do I get from ${fromInput || 'my location'} to ${toInput || 'my destination'} in China?`)}`;
                 }
               }}
@@ -323,12 +650,12 @@ export default function TransportView() {
               }`}
             >
               <span className="text-xl">{s.icon}</span>
-              <span className="text-center leading-tight">{s.label.replace(/^[^\s]+\s/, '')}</span>
+              <span className="text-center leading-tight">{s.label}</span>
             </button>
           ))}
         </div>
 
-        {/* Airport Section */}
+        {/* ── Airport Section ── */}
         {activeSection === 'airport' && (
           <div className="space-y-4">
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
@@ -355,7 +682,7 @@ export default function TransportView() {
           </div>
         )}
 
-        {/* Metro Section */}
+        {/* ── Metro Section ── */}
         {activeSection === 'metro' && (
           <div className="space-y-4">
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
@@ -390,7 +717,7 @@ export default function TransportView() {
           </div>
         )}
 
-        {/* DiDi Section */}
+        {/* ── DiDi Section ── */}
         {activeSection === 'didi' && (
           <div className="space-y-4">
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
@@ -416,11 +743,12 @@ export default function TransportView() {
           </div>
         )}
 
-        {/* Flights Section */}
+        {/* ── Flights Section (FlyAI) ── */}
         {activeSection === 'flights' && (
           <div className="space-y-4">
+            {/* Search form */}
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
-              <h3 className="font-bold text-[#484848] mb-4">🛫 Book Flights</h3>
+              <h3 className="font-bold text-[#484848] mb-4">🛫 Search Flights</h3>
               <div className="space-y-3">
                 <div>
                   <label className="text-xs text-[#767676] mb-1 block">From</label>
@@ -450,7 +778,8 @@ export default function TransportView() {
                   <div>
                     <label className="text-xs text-[#767676] mb-1 block">Date</label>
                     <input
-                      type="date" lang="en" placeholder="MM/DD/YYYY"
+                      type="date"
+                      lang="en"
                       value={flightDate}
                       onChange={(e) => setFlightDate(e.target.value)}
                       className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
@@ -471,22 +800,22 @@ export default function TransportView() {
                 </div>
                 <button
                   onClick={handleFlightSearch}
-                  className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all"
+                  disabled={flightLoading}
+                  className="w-full py-3 bg-gradient-to-r from-[#ff5a5f] to-[#ff3b3f] text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Search Flights on Trip.com →
+                  {flightLoading ? '🔍 Searching...' : '🔍 Search Flights'}
                 </button>
               </div>
             </div>
+
+            {/* Popular routes */}
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
               <h4 className="font-semibold text-sm text-[#484848] mb-3">✈️ Popular Routes</h4>
               <div className="space-y-2">
                 {POPULAR_FLIGHTS.map((route) => (
                   <button
                     key={route.label}
-                    onClick={() => {
-                      setFlightFrom(route.from);
-                      setFlightTo(route.to);
-                    }}
+                    onClick={() => { setFlightFrom(route.from); setFlightTo(route.to); setFlightSearched(false); setFlightResults([]); }}
                     className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl hover:bg-teal-50 hover:border-teal-200 border border-transparent transition-all text-sm"
                   >
                     <span className="font-medium text-[#484848]">{route.label}</span>
@@ -495,14 +824,62 @@ export default function TransportView() {
                 ))}
               </div>
             </div>
+
+            {/* Loading skeletons */}
+            {flightLoading && (
+              <div className="space-y-3">
+                {[0, 1, 2].map((i) => <SkeletonCard key={i} />)}
+              </div>
+            )}
+
+            {/* Error message */}
+            {flightError && !flightLoading && (
+              <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                <p className="text-sm text-amber-700">{flightError}</p>
+                <button
+                  onClick={() => handleTripAffiliate('flight')}
+                  className="mt-2 px-4 py-2 bg-[#ff5a5f] text-white text-xs rounded-full font-medium hover:bg-[#e63235] transition-colors"
+                >
+                  Book via Trip.com →
+                </button>
+              </div>
+            )}
+
+            {/* FlyAI results */}
+            {!flightLoading && flightResults.length > 0 && (
+              <div>
+                <p className="text-xs text-[#767676] mb-2 font-medium">🛫 FlyAI Results ({flightResults.length} flights found)</p>
+                <div className="space-y-3">
+                  <AnimatePresence>
+                    {flightResults.slice(0, 10).map((result, i) => (
+                      <FlightCard key={result.segments[0]?.marketingTransportNo + i} result={result} index={i} />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              </div>
+            )}
+
+            {/* Empty state after search with no results */}
+            {!flightLoading && flightSearched && flightResults.length === 0 && !flightError && (
+              <div className="bg-white rounded-2xl shadow-md p-6 text-center border border-gray-100">
+                <p className="text-sm text-[#767676] mb-3">No flights found for this route.</p>
+                <button
+                  onClick={() => handleTripAffiliate('flight')}
+                  className="px-4 py-2 bg-[#ff5a5f] text-white text-xs rounded-full font-medium hover:bg-[#e63235] transition-colors"
+                >
+                  Try Trip.com →
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Trains Section */}
+        {/* ── Trains Section (FlyAI) ── */}
         {activeSection === 'trains' && (
           <div className="space-y-4">
+            {/* Search form */}
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
-              <h3 className="font-bold text-[#484848] mb-4">🚅 Book Train Tickets</h3>
+              <h3 className="font-bold text-[#484848] mb-4">🚅 Search Trains</h3>
               <div className="space-y-3">
                 <div>
                   <label className="text-xs text-[#767676] mb-1 block">From</label>
@@ -527,7 +904,8 @@ export default function TransportView() {
                 <div>
                   <label className="text-xs text-[#767676] mb-1 block">Date</label>
                   <input
-                    type="date" lang="en" placeholder="MM/DD/YYYY"
+                    type="date"
+                    lang="en"
                     value={trainDate}
                     onChange={(e) => setTrainDate(e.target.value)}
                     className="w-full px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a73e8] text-sm"
@@ -535,22 +913,22 @@ export default function TransportView() {
                 </div>
                 <button
                   onClick={handleTrainSearch}
-                  className="w-full py-3 bg-gradient-to-r from-[#1a73e8] to-[#174ea6] text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all"
+                  disabled={trainLoading}
+                  className="w-full py-3 bg-gradient-to-r from-[#1a73e8] to-[#174ea6] text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Search Trains on Trip.com →
+                  {trainLoading ? '🔍 Searching...' : '🔍 Search Trains'}
                 </button>
               </div>
             </div>
+
+            {/* Popular routes */}
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
               <h4 className="font-semibold text-sm text-[#484848] mb-3">🚄 Popular Routes</h4>
               <div className="space-y-2">
                 {POPULAR_TRAINS.map((route) => (
                   <button
                     key={route.label}
-                    onClick={() => {
-                      setTrainFrom(route.from);
-                      setTrainTo(route.to);
-                    }}
+                    onClick={() => { setTrainFrom(route.from); setTrainTo(route.to); setTrainSearched(false); setTrainResults([]); }}
                     className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl hover:bg-blue-50 hover:border-blue-200 border border-transparent transition-all text-sm"
                   >
                     <span className="font-medium text-[#484848]">{route.label}</span>
@@ -559,10 +937,57 @@ export default function TransportView() {
                 ))}
               </div>
             </div>
+
+            {/* Loading skeletons */}
+            {trainLoading && (
+              <div className="space-y-3">
+                {[0, 1, 2].map((i) => <SkeletonCard key={i} />)}
+              </div>
+            )}
+
+            {/* Error / fallback message */}
+            {trainError && !trainLoading && (
+              <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                <p className="text-sm text-amber-700">{trainError}</p>
+                <button
+                  onClick={() => handleTripAffiliate('train')}
+                  className="mt-2 px-4 py-2 bg-[#1a73e8] text-white text-xs rounded-full font-medium hover:bg-[#174ea6] transition-colors"
+                >
+                  Book via Trip.com →
+                </button>
+              </div>
+            )}
+
+            {/* FlyAI results */}
+            {!trainLoading && trainResults.length > 0 && (
+              <div>
+                <p className="text-xs text-[#767676] mb-2 font-medium">🚅 FlyAI Results ({trainResults.length} trains found)</p>
+                <div className="space-y-3">
+                  <AnimatePresence>
+                    {trainResults.slice(0, 10).map((result, i) => (
+                      <TrainCard key={result.segments[0]?.marketingTransportNo + i} result={result} index={i} />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              </div>
+            )}
+
+            {/* Empty state */}
+            {!trainLoading && trainSearched && trainResults.length === 0 && !trainError && (
+              <div className="bg-white rounded-2xl shadow-md p-6 text-center border border-gray-100">
+                <p className="text-sm text-[#767676] mb-3">No trains found for this route.</p>
+                <button
+                  onClick={() => handleTripAffiliate('train')}
+                  className="px-4 py-2 bg-[#1a73e8] text-white text-xs rounded-full font-medium hover:bg-[#174ea6] transition-colors"
+                >
+                  Try Trip.com →
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        {/* High-Speed Rail Section */}
+        {/* ── High-Speed Rail Guide Section ── */}
         {activeSection === 'rail' && (
           <div className="space-y-4">
             <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
@@ -613,6 +1038,7 @@ export default function TransportView() {
             ))}
           </div>
         </div>
+
       </main>
     </div>
   );
