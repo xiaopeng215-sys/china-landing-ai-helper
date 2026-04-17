@@ -1,51 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Station code mapping for 12306 / Trip.com
-const STATION_CODES: Record<string, { code: string; name: string }> = {
-  shanghai: { code: 'SHH', name: 'Shanghai' },
-  beijing: { code: 'BJP', name: 'Beijing' },
-  chengdu: { code: 'CDW', name: 'Chengdu' },
-  xian: { code: 'XAY', name: "Xi'an" },
-  guangzhou: { code: 'GZQ', name: 'Guangzhou' },
-  shenzhen: { code: 'SZQ', name: 'Shenzhen' },
-  hangzhou: { code: 'HZH', name: 'Hangzhou' },
-  chongqing: { code: 'CQW', name: 'Chongqing' },
-  nanjing: { code: 'NJH', name: 'Nanjing' },
-  wuhan: { code: 'WHN', name: 'Wuhan' },
-  guilin: { code: 'GLQ', name: 'Guilin' },
-  zhangjiajie: { code: 'ZJJ', name: 'Zhangjiajie' },
-};
-
-function getStation(city: string) {
-  return STATION_CODES[city.toLowerCase()] || { code: city.toUpperCase(), name: city };
-}
+const FLYAI_PROXY_URL = process.env.FLYAI_PROXY_URL || 'https://outline-dsc-ethics-kid.trycloudflare.com';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const origin = searchParams.get('origin');
   const destination = searchParams.get('destination');
-  const depDate = searchParams.get('depDate'); // YYYY-MM-DD
+  const depDate = searchParams.get('depDate');
 
   if (!origin) {
     return NextResponse.json({ error: 'Missing origin parameter' }, { status: 400 });
   }
 
-  const from = getStation(origin);
-  const to = destination ? getStation(destination) : null;
+  try {
+    const params = new URLSearchParams({ origin });
+    if (destination) params.set('destination', destination);
+    if (depDate) params.set('depDate', depDate);
 
-  // Trip.com train search URL
-  const tripUrl = `https://trains.trip.com/trains/search?fromStationName=${encodeURIComponent(from.name)}&toStationName=${encodeURIComponent(to?.name || '')}&depDate=${depDate || ''}`;
-
-  // 12306 official URL
-  const url12306 = `https://www.12306.cn/index/`;
-
-  return NextResponse.json({
-    type: 'redirect',
-    links: [
-      { provider: 'Trip.com', url: tripUrl, logo: '🚄' },
-      { provider: '12306 (Official)', url: url12306, logo: '🇨🇳' },
-    ],
-    searchParams: { origin: from.name, destination: to?.name, date: depDate },
-    tip: 'Book via Trip.com for English support, or 12306 for official tickets.',
-  });
+    const res = await fetch(`${FLYAI_PROXY_URL}/train?${params}`, { signal: AbortSignal.timeout(30000) });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Train search failed' }, { status: 500 });
+  }
 }
