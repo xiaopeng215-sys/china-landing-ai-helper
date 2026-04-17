@@ -13,7 +13,9 @@
     "analyze": "ANALYZE=true npm run build",
     "optimize:images": "node scripts/optimize-images.js",
     "i18n:check": "node scripts/generate-translations.js",
-    "monitoring:test": "node scripts/test-monitoring.js"
+    "monitoring:test": "node scripts/test-monitoring.js",
+    "pre-commit-check": "npm run build && node scripts/secret-check.js",
+    "secret-check": "node scripts/secret-check.js"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.11.1",
